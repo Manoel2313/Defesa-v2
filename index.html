@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>TOWER DEFENSE 1970 v7</title>
+<title>TOWER DEFENSE 1970 v8</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
@@ -32,25 +32,16 @@
     0% { opacity: 0.94; } 50% { opacity: 1; } 100% { opacity: 0.96; }
   }
 
-  /* Aviso de HORDA */
   #hordeBanner {
-    position: fixed;
-    top: 40%;
-    left: 50%;
+    position: fixed; top: 40%; left: 50%;
     transform: translate(-50%, -50%) scale(0);
-    font-size: 70px;
-    color: #ff3333;
+    font-size: 70px; color: #ff3333;
     text-shadow: 0 0 30px #ff3333, 0 0 60px #ff3333;
-    letter-spacing: 8px;
-    z-index: 1001;
-    pointer-events: none;
-    opacity: 0;
-    transition: none;
+    letter-spacing: 8px; z-index: 1001;
+    pointer-events: none; opacity: 0;
     font-family: 'VT323', monospace;
   }
-  #hordeBanner.show {
-    animation: hordeIntro 2.5s ease-out forwards;
-  }
+  #hordeBanner.show { animation: hordeIntro 2.5s ease-out forwards; }
   @keyframes hordeIntro {
     0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
     15% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
@@ -66,8 +57,7 @@
     border: 2px solid #33ff33;
     box-shadow: 0 0 20px #33ff33, inset 0 0 10px rgba(51,255,51,0.3);
     font-size: 16px; letter-spacing: 1px;
-    max-height: 96vh;
-    overflow-y: auto;
+    max-height: 96vh; overflow-y: auto;
   }
   #ui::-webkit-scrollbar { width: 6px; }
   #ui::-webkit-scrollbar-track { background: #000; }
@@ -181,7 +171,7 @@
 </style>
 </head>
 <body>
-<div class="title">◄ TOWER DEFENSE · 1970 · v7 ►</div>
+<div class="title">◄ TOWER DEFENSE · 1970 · v8 ►</div>
 <div class="map-info">
   MAPA: <span class="map-name" id="mapName">---</span><br>
   30m × 30m · 1m = 16px<br>
@@ -216,6 +206,10 @@
     <button class="tower-btn" data-type="medico">
       ✚ MÉDICO · 300
       <div class="stat-line">HP 100 · CURA 20 · 5s · 5m</div>
+    </button>
+    <button class="tower-btn" data-type="comerciante">
+      $ COMERCIANTE · 500
+      <div class="stat-line">HP 100 · +50 OURO · 5s</div>
     </button>
 
     <div id="playerHpBox">
@@ -254,7 +248,8 @@ const CYAN = '#33ffff';
 const RED = '#ff3333';
 const WHITE = '#ffffff';
 const ORANGE = '#ffaa33';
-const PINK = '#ff33aa';
+const GOLD = '#ffd700';
+const TOXIC = '#66ff33'; // verde tóxico pro fungo
 
 // ===== MAPAS =====
 const MAPS = [
@@ -317,14 +312,15 @@ const trails = [];
 const texts = [];
 const shockwaves = [];
 const sparks = [];
-const heals = []; // efeitos de cura
+const heals = [];
+const moneyPops = []; // +50 do comerciante
+const healZones = []; // zonas de cura do fungo
 
 let shakeAmount = 0;
 const shakeDecay = 0.9;
 let screenFlash = 0;
 let screenFlashColor = '51,255,51';
 
-// Estado de horda
 let hordeActive = false;
 let hordePulse = 0;
 
@@ -337,7 +333,8 @@ const TOWER_TYPES = {
   faca:         { cost: 75,  range: 2.5 * PPM, damage: 80, fireRate: 30,  hp: 130, maxHp: 130 },
   metralhadora: { cost: 150, range: 5 * PPM,   damage: 20, fireRate: 12,  hp: 100, maxHp: 100 },
   bazuca:       { cost: 200, range: 10 * PPM,  damage: 80, fireRate: 300, hp: 100, maxHp: 100, splash: 3 * PPM },
-  medico:       { cost: 300, range: 5 * PPM,   damage: 0,  fireRate: 300, hp: 100, maxHp: 100, heal: 20, isHealer: true }
+  medico:       { cost: 300, range: 5 * PPM,   damage: 0,  fireRate: 300, hp: 100, maxHp: 100, heal: 20, isHealer: true },
+  comerciante:  { cost: 500, range: 0,         damage: 0,  fireRate: 300, hp: 100, maxHp: 100, income: 50, isMerchant: true }
 };
 
 function speedToPixels(vel) {
@@ -351,16 +348,17 @@ const ENEMY_TYPES = {
   velocista: { hp: 70,  damage: 30,  speed: 200, size: 11, reward: 15, drawStyle: 'arrow' },
   clone:     { hp: 120, damage: 60,  speed: 120, size: 14, reward: 18, drawStyle: 'diamond', onDeath: 'clone' },
   minion:    { hp: 50,  damage: 10,  speed: 80,  size: 9,  reward: 4,  drawStyle: 'dot' },
-  explosivo: { hp: 100, damage: 50,  speed: 100, size: 14, reward: 20, drawStyle: 'star', onDeath: 'explode' }
+  explosivo: { hp: 100, damage: 50,  speed: 100, size: 14, reward: 20, drawStyle: 'star', onDeath: 'explode' },
+  fungo:     { hp: 100, damage: 50,  speed: 100, size: 15, reward: 15, drawStyle: 'mushroom', onDeath: 'fungusZone' }
 };
 
-// Composição de onda normal
 function getWaveComposition(wave) {
   const comp = [];
   comp.push({ type: 'padrao', count: 3 + Math.floor(wave * 0.8) });
   if (wave >= 2) comp.push({ type: 'velocista', count: 2 + Math.floor(wave * 0.5) });
   if (wave >= 3) comp.push({ type: 'ofensivo', count: 1 + Math.floor(wave * 0.4) });
   if (wave >= 4) comp.push({ type: 'explosivo', count: 1 + Math.floor(wave * 0.3) });
+  if (wave >= 4) comp.push({ type: 'fungo', count: 1 + Math.floor(wave * 0.25) });
   if (wave >= 5) comp.push({ type: 'blindado', count: 1 + Math.floor(wave * 0.3) });
   if (wave >= 6) comp.push({ type: 'clone', count: 1 + Math.floor(wave * 0.25) });
 
@@ -375,13 +373,12 @@ function getWaveComposition(wave) {
   return queue;
 }
 
-// Composição de HORDA (3x inimigos, só tipos fortes)
 function getHordeComposition(wave) {
   const comp = [];
-  // Só inimigos fortes — sem padrão nem minion
   comp.push({ type: 'blindado',  count: 3 + Math.floor(wave * 0.4) });
   comp.push({ type: 'ofensivo',  count: 4 + Math.floor(wave * 0.5) });
   comp.push({ type: 'explosivo', count: 3 + Math.floor(wave * 0.4) });
+  comp.push({ type: 'fungo',     count: 3 + Math.floor(wave * 0.4) });
   comp.push({ type: 'clone',     count: 2 + Math.floor(wave * 0.3) });
   comp.push({ type: 'velocista', count: 4 + Math.floor(wave * 0.6) });
 
@@ -468,13 +465,8 @@ function addFlash(amount, color) {
   if (color) screenFlashColor = color;
 }
 
-// Efeito de cura
 function addHealEffect(x, y, amount) {
-  heals.push({
-    x, y, life: 45, maxLife: 45,
-    amount, radius: 12
-  });
-  // Cruz verde subindo
+  heals.push({ x, y, life: 45, maxLife: 45, amount, radius: 12 });
   for (let i = 0; i < 6; i++) {
     addParticle(x + (Math.random() - 0.5) * 20, y, {
       vx: (Math.random() - 0.5) * 0.5,
@@ -483,6 +475,35 @@ function addHealEffect(x, y, amount) {
     });
   }
   addText(x, y - 18, '+' + amount, GREEN_BRIGHT, 50);
+}
+
+// Efeito de inimigo curado (fungo)
+function addEnemyHealEffect(x, y, amount) {
+  addText(x, y - 15, '+' + amount, TOXIC, 35);
+  for (let i = 0; i < 3; i++) {
+    addParticle(x + (Math.random() - 0.5) * 12, y + (Math.random() - 0.5) * 12, {
+      vx: 0, vy: -0.8 - Math.random() * 0.5,
+      life: 30, size: 2, color: TOXIC, friction: 0.97
+    });
+  }
+}
+
+// Efeito de dinheiro do comerciante
+function addMoneyPop(x, y, amount) {
+  moneyPops.push({
+    x, y, amount,
+    life: 60, maxLife: 60,
+    vy: -1.2,
+    text: '+$' + amount
+  });
+  // Partículas douradas
+  for (let i = 0; i < 8; i++) {
+    addParticle(x, y, {
+      vx: (Math.random() - 0.5) * 2,
+      vy: -1 - Math.random() * 1.5,
+      life: 40, size: 2, color: GOLD, friction: 0.95
+    });
+  }
 }
 
 // ===== DANO/CURA =====
@@ -525,7 +546,6 @@ function updateUI() {
   if (pct <= 0.25) { bar.classList.add('low'); lbl.classList.add('low'); }
   else if (pct <= 0.5) { bar.classList.add('mid'); }
 
-  // Indicador de horda
   const hordeInd = document.getElementById('hordeIndicator');
   if (hordeActive) hordeInd.textContent = '⚠ HORDA ATIVA ⚠';
   else if (waveNum > 0 && (waveNum + 1) % 10 === 0) hordeInd.textContent = 'PRÓXIMA: HORDA';
@@ -582,15 +602,16 @@ document.addEventListener('pointerup', e => {
     cost: def.cost, range: def.range, damage: def.damage,
     fireRate: def.fireRate, splash: def.splash || 0,
     heal: def.heal || 0, isHealer: def.isHealer || false,
+    income: def.income || 0, isMerchant: def.isMerchant || false,
     hp: def.hp, maxHp: def.maxHp,
     cooldown: 0, angle: 0,
     spawnAnim: 20, recoil: 0,
-    healPulse: 0 // animação de cura
+    healPulse: 0, incomePulse: 0
   });
   gold -= def.cost;
 
-  addShockwave(d.x, d.y, def.isHealer ? GREEN_BRIGHT : GREEN, 40, 22);
-  burst(d.x, d.y, 16, { speed: 3, life: 25, color: def.isHealer ? GREEN_BRIGHT : GREEN, size: 2 });
+  addShockwave(d.x, d.y, def.isHealer ? GREEN_BRIGHT : def.isMerchant ? GOLD : GREEN, 40, 22);
+  burst(d.x, d.y, 16, { speed: 3, life: 25, color: def.isHealer ? GREEN_BRIGHT : def.isMerchant ? GOLD : GREEN, size: 2 });
   addFlash(0.15);
   updateUI();
 });
@@ -630,20 +651,27 @@ function spawnEnemy(typeKey, x, y, wp) {
   const ex = x !== undefined ? x : path[0].x;
   const ey = y !== undefined ? y : path[0].y;
 
+  // Se wp não fornecido, começa em 1
+  // Se fornecido, valida
+  let startWp = wp !== undefined ? wp : 1;
+  if (startWp < 1) startWp = 1;
+  if (startWp >= path.length) startWp = path.length - 1;
+
   enemies.push({
     type: typeKey,
-    x: ex, y: ey, wp: wp !== undefined ? wp : 1,
+    x: ex, y: ey, wp: startWp,
     hp, maxHp: hp,
     damage: t.damage,
     speed: speedToPixels(t.speed),
     baseSpeed: speedToPixels(t.speed),
     frozen: 0,
-    reward: hordeActive ? t.reward * 2 : t.reward, // ouro em dobro na horda
+    reward: hordeActive ? t.reward * 2 : t.reward,
     size: t.size,
     armor: t.armor || 0,
     drawStyle: t.drawStyle,
     onDeath: t.onDeath || null,
-    spawnAnim: 15, hitFlash: 0, lastTrailTime: 0
+    spawnAnim: 15, hitFlash: 0, lastTrailTime: 0,
+    lastHealTick: 0
   });
   addShockwave(ex, ey, hordeActive ? RED : GREEN, 20, 12);
   burst(ex, ey, 6, { speed: 1.5, life: 15, size: 1.5 });
@@ -677,7 +705,6 @@ function startWave() {
     addShockwave(240, 240, GREEN, 300, 40);
     addFlash(0.2); addShake(3);
   } else {
-    // Aviso dramático de horda
     addShockwave(240, 240, RED, 400, 60);
   }
   updateUI();
@@ -700,7 +727,6 @@ function areaExplosion(x, y, damage, radius) {
       burst(t.x, t.y, 30, { speed: 5, life: 35, size: 3 });
       const idx = towers.indexOf(t);
       if (idx >= 0) towers.splice(idx, 1);
-      // Se era médico: +5 HP pro jogador
       if (t.isHealer) healPlayer(5);
     }
   }
@@ -736,17 +762,59 @@ function bazookaExplosion(x, y, damage, radius) {
   }
 }
 
-function spawnCloneMinions(x, y) {
+// ===== FIX MINIONS =====
+// Acha o índice do segmento mais próximo e retorna o wp correto pra seguir
+function findCorrectWaypointForPosition(x, y) {
+  let bestSegIdx = 0;
+  let bestDist = Infinity;
+  for (let i = 0; i < path.length - 1; i++) {
+    const d = distToSegment({x, y}, path[i], path[i+1]);
+    if (d < bestDist) { bestDist = d; bestSegIdx = i; }
+  }
+  // O próximo waypoint a seguir é o final do segmento mais próximo
+  return Math.min(bestSegIdx + 1, path.length - 1);
+}
+
+function spawnCloneMinions(x, y, parentWp) {
+  // parentWp = waypoint do Clone ao morrer
+  // Cada minion recebe o wp do pai, MAS ajusta pra posição exata dele
+  // (evita pular waypoints por estar perto geograficamente de um errado)
+  const parentAngle = parentWp < path.length
+    ? Math.atan2(path[parentWp].y - path[parentWp - 1].y, path[parentWp].x - path[parentWp - 1].x)
+    : 0;
+
   for (let i = 0; i < 5; i++) {
-    const angle = (Math.PI * 2 / 5) * i;
-    const ox = Math.cos(angle) * 16;
-    const oy = Math.sin(angle) * 16;
-    const wp = findNearestWaypointIndex(x + ox, y + oy);
-    spawnEnemy('minion', x + ox, y + oy, wp);
+    const spreadAngle = (Math.PI * 2 / 5) * i;
+    const offsetAngle = parentAngle + Math.PI / 2; // perpendicular à rota
+    const perpX = Math.cos(offsetAngle) * 18 * Math.cos(spreadAngle);
+    const perpY = Math.sin(offsetAngle) * 18 * Math.cos(spreadAngle);
+    const fwdX = Math.cos(parentAngle) * 18 * Math.sin(spreadAngle);
+    const fwdY = Math.sin(parentAngle) * 18 * Math.sin(spreadAngle);
+
+    const mx = x + perpX + fwdX;
+    const my = y + perpY + fwdY;
+
+    // Calcula o wp correto baseado na posição real do minion
+    const wp = findCorrectWaypointForPosition(mx, my);
+    spawnEnemy('minion', mx, my, wp);
   }
   addShockwave(x, y, CYAN, 40, 22);
   burst(x, y, 20, { speed: 4, life: 30, color: CYAN, size: 2 });
   addFlash(0.2);
+}
+
+// ===== FUNGO: zona de cura =====
+function spawnFungusZone(x, y) {
+  healZones.push({
+    x, y,
+    radius: 8 * PPM, // 8 metros
+    life: 4 * 60,    // 4 segundos @ 60fps
+    maxLife: 4 * 60,
+    pulse: 0
+  });
+  addShockwave(x, y, TOXIC, 8 * PPM, 45);
+  burst(x, y, 25, { speed: 4, life: 40, size: 3, color: TOXIC, gravity: 0.05 });
+  addFlash(0.15, '102,255,51');
 }
 
 function findNearestWaypointIndex(x, y) {
@@ -767,17 +835,15 @@ function loop(time) {
 
   if (paused || gameOver) { draw(); return; }
 
-  // Spawn (mais rápido durante horda)
   if (waveActive && waveQueue.length > 0) {
     spawnCooldown -= dt;
     if (spawnCooldown <= 0) {
       spawnEnemy(waveQueue.shift());
-      spawnCooldown = hordeActive ? 18 : 45; // horda spawna MUITO mais rápido
+      spawnCooldown = hordeActive ? 18 : 45;
     }
   } else if (waveActive && waveQueue.length === 0 && enemies.length === 0) {
     waveActive = false;
     hordeActive = false;
-    waveDelay = hordeActive ? 120 : 90;
     waveDelay = 90;
   }
   if (waveDelay > 0) {
@@ -823,24 +889,55 @@ function loop(time) {
       burst(e.x, e.y, 12, { speed: 3, life: 22, size: 2 });
       addText(e.x, e.y - e.size - 5, '+' + e.reward, YELLOW, 40);
 
-      if (e.onDeath === 'clone') spawnCloneMinions(e.x, e.y);
+      if (e.onDeath === 'clone') spawnCloneMinions(e.x, e.y, e.wp);
       else if (e.onDeath === 'explode') areaExplosion(e.x, e.y, 50, 4 * PPM);
+      else if (e.onDeath === 'fungusZone') spawnFungusZone(e.x, e.y);
+
       enemies.splice(i, 1);
       updateUI();
     }
   }
 
-  // Tropas atiram ou curam
+  // Zonas de cura do fungo (cura inimigos)
+  for (let i = healZones.length - 1; i >= 0; i--) {
+    const z = healZones[i];
+    z.life -= dt;
+    z.pulse += dt * 0.15;
+    if (z.life <= 0) { healZones.splice(i, 1); continue; }
+
+    // Cura 10 HP/s = ~0.166 por tick (60fps). Acumula pra mostrar +10 a cada 1s
+    // Vou curar 10 a cada 60 ticks pra ficar visualmente claro
+    for (const e of enemies) {
+      const d = Math.hypot(e.x - z.x, e.y - z.y);
+      if (d <= z.radius) {
+        // Cura contínua: 10 HP/segundo = 10/60 por frame
+        const healThisFrame = 10 / 60 * dt;
+        const oldHp = e.hp;
+        e.hp = Math.min(e.maxHp, e.hp + healThisFrame);
+        // A cada ~1s mostra o +10
+        e.lastHealTick = (e.lastHealTick || 0) + dt;
+        if (e.lastHealTick >= 60 && e.hp < e.maxHp) {
+          addEnemyHealEffect(e.x, e.y, 10);
+          e.lastHealTick = 0;
+        }
+        if (e.hp >= e.maxHp) e.lastHealTick = 0;
+      } else {
+        e.lastHealTick = 0;
+      }
+    }
+  }
+
+  // Tropas atiram ou curam ou geram dinheiro
   for (const t of towers) {
     if (t.spawnAnim > 0) t.spawnAnim -= dt;
     if (t.recoil > 0) t.recoil -= dt * 3;
     if (t.healPulse > 0) t.healPulse -= dt * 2;
+    if (t.incomePulse > 0) t.incomePulse -= dt * 2;
     t.cooldown -= dt;
 
-    // MÉDICO: cura em área
+    // MÉDICO
     if (t.isHealer) {
       if (t.cooldown <= 0) {
-        // Cura todas as tropas no raio (incluindo a si mesmo)
         const targets = towers.filter(o => Math.hypot(o.x - t.x, o.y - t.y) <= t.range);
         let healedAny = false;
         for (const o of targets) {
@@ -863,7 +960,21 @@ function loop(time) {
       continue;
     }
 
-    // Tropas normais: atiram
+    // COMERCIANTE
+    if (t.isMerchant) {
+      if (t.cooldown <= 0) {
+        gold += t.income;
+        addMoneyPop(t.x, t.y - 15, t.income);
+        addShockwave(t.x, t.y, GOLD, 35, 25);
+        burst(t.x, t.y, 12, { speed: 2, life: 35, color: GOLD, size: 2 });
+        t.incomePulse = 1;
+        updateUI();
+        t.cooldown = t.fireRate;
+      }
+      continue;
+    }
+
+    // Tropas normais
     let target = null, bestDist = Infinity;
     for (const e of enemies) {
       const d = Math.hypot(e.x - t.x, e.y - t.y);
@@ -974,7 +1085,7 @@ function loop(time) {
     }
   }
 
-  // Partículas etc
+  // Partículas
   for (let i = particles.length - 1; i >= 0; i--) {
     const p = particles[i];
     p.x += p.vx * dt; p.y += p.vy * dt;
@@ -1007,6 +1118,13 @@ function loop(time) {
     heals[i].life -= dt;
     if (heals[i].life <= 0) heals.splice(i, 1);
   }
+  for (let i = moneyPops.length - 1; i >= 0; i--) {
+    const mp = moneyPops[i];
+    mp.y += mp.vy * dt;
+    mp.vy *= 0.97;
+    mp.life -= dt;
+    if (mp.life <= 0) moneyPops.splice(i, 1);
+  }
   for (let i = explosions.length - 1; i >= 0; i--) {
     explosions[i].life -= dt;
     if (explosions[i].life <= 0) explosions.splice(i, 1);
@@ -1017,7 +1135,6 @@ function loop(time) {
   screenFlash *= 0.88;
   if (screenFlash < 0.01) screenFlash = 0;
 
-  // Pulso de horda
   if (hordeActive) hordePulse += dt * 0.05;
 
   draw();
@@ -1052,6 +1169,34 @@ function draw() {
     ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
   }
 
+  // Zonas de cura (atrás de tudo)
+  for (const z of healZones) {
+    const p = z.life / z.maxLife;
+    // Área verde tóxica pulsante
+    ctx.globalAlpha = 0.15 * p + Math.sin(z.pulse) * 0.05;
+    ctx.fillStyle = TOXIC;
+    ctx.beginPath();
+    ctx.arc(z.x, z.y, z.radius, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.globalAlpha = 0.6 * p;
+    ctx.strokeStyle = TOXIC;
+    ctx.lineWidth = 2;
+    ctx.setLineDash([6, 4]);
+    ctx.beginPath();
+    ctx.arc(z.x, z.y, z.radius, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Anel pulsante interno
+    ctx.globalAlpha = 0.4 * p;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.arc(z.x, z.y, z.radius * (0.3 + Math.sin(z.pulse) * 0.3 + 0.4), 0, Math.PI * 2);
+    ctx.stroke();
+  }
+  ctx.globalAlpha = 1;
+
   // Caminho
   const pulse = 0.15 + Math.sin(Date.now() / 400) * 0.03;
   ctx.strokeStyle = hordeActive ? RED : GREEN;
@@ -1078,7 +1223,7 @@ function draw() {
 
   // Tropas
   for (const t of towers) {
-    // Médico: aura verde brilhante
+    // Aura do médico
     if (t.isHealer) {
       const healAlpha = t.healPulse > 0 ? 0.4 : 0.15;
       const pulseSize = t.healPulse > 0 ? 1 + t.healPulse * 0.3 : 1;
@@ -1094,7 +1239,26 @@ function draw() {
       ctx.arc(t.x, t.y, t.range, 0, Math.PI * 2);
       ctx.fill();
       ctx.globalAlpha = 1;
-    } else {
+    }
+    // Aura do comerciante
+    else if (t.isMerchant) {
+      const merchantAlpha = t.incomePulse > 0 ? 0.5 : 0.2;
+      const pulseSize = t.incomePulse > 0 ? 1 + t.incomePulse * 0.4 : 1;
+      ctx.strokeStyle = GOLD;
+      ctx.globalAlpha = merchantAlpha;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(t.x, t.y, 25 * pulseSize, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.globalAlpha = 0.08;
+      ctx.fillStyle = GOLD;
+      ctx.beginPath();
+      ctx.arc(t.x, t.y, 30, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.globalAlpha = 1;
+    }
+    // Range normal
+    else {
       ctx.strokeStyle = 'rgba(51,255,51,0.25)';
       ctx.lineWidth = 1; ctx.setLineDash([3, 5]);
       ctx.beginPath();
@@ -1105,7 +1269,8 @@ function draw() {
 
     const hpPct = t.hp / t.maxHp;
     const col = t.isHealer ? (hpPct > 0.5 ? GREEN_BRIGHT : hpPct > 0.25 ? YELLOW : ORANGE)
-                          : (hpPct > 0.5 ? GREEN : hpPct > 0.25 ? YELLOW : ORANGE);
+              : t.isMerchant ? (hpPct > 0.5 ? GOLD : hpPct > 0.25 ? YELLOW : ORANGE)
+              : (hpPct > 0.5 ? GREEN : hpPct > 0.25 ? YELLOW : ORANGE);
 
     let scale = 1;
     if (t.spawnAnim > 0) scale = 0.5 + (1 - t.spawnAnim / 20) * 0.5;
@@ -1127,7 +1292,7 @@ function draw() {
     ctx.moveTo(11, 11); ctx.lineTo(11, 6);
     ctx.stroke();
 
-    if (!t.isHealer) {
+    if (!t.isHealer && !t.isMerchant) {
       const recoilOffset = t.recoil > 0 ? -t.recoil : 0;
       ctx.rotate(t.angle);
       ctx.fillStyle = col;
@@ -1147,11 +1312,17 @@ function draw() {
     ctx.fillStyle = col;
     ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     if (t.isHealer) {
-      // Cruz Vermelha grande
       ctx.shadowColor = GREEN_BRIGHT;
       ctx.shadowBlur = t.healPulse > 0 ? 15 : 6;
       ctx.fillRect(t.x - 2, t.y - 8, 4, 16);
       ctx.fillRect(t.x - 8, t.y - 2, 16, 4);
+      ctx.shadowBlur = 0;
+    } else if (t.isMerchant) {
+      // Símbolo $
+      ctx.font = 'bold 16px VT323, monospace';
+      ctx.shadowColor = GOLD;
+      ctx.shadowBlur = t.incomePulse > 0 ? 15 : 6;
+      ctx.fillText('$', t.x, t.y + 1);
       ctx.shadowBlur = 0;
     } else {
       ctx.font = 'bold 13px VT323, monospace';
@@ -1163,7 +1334,6 @@ function draw() {
       ctx.fillText(sym, t.x, t.y + 1);
     }
 
-    // HP bar
     const bw = 26, bh = 3, bx = t.x - bw/2, by = t.y + 15;
     ctx.fillStyle = GREEN_DARK;
     ctx.fillRect(bx, by, bw, bh);
@@ -1281,7 +1451,7 @@ function draw() {
   // Inimigos
   for (const e of enemies) drawEnemy(e);
 
-  // Textos
+  // Textos flutuantes
   for (const tx of texts) {
     const alpha = tx.life / tx.maxLife;
     ctx.globalAlpha = alpha;
@@ -1297,24 +1467,39 @@ function draw() {
   }
   ctx.globalAlpha = 1;
 
+  // Money pops do comerciante
+  for (const mp of moneyPops) {
+    const alpha = mp.life / mp.maxLife;
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = GOLD;
+    ctx.font = 'bold 18px VT323, monospace';
+    ctx.textAlign = 'center';
+    ctx.shadowColor = GOLD;
+    ctx.shadowBlur = 10;
+    ctx.fillText(mp.text, mp.x, mp.y);
+    ctx.shadowBlur = 0;
+  }
+  ctx.globalAlpha = 1;
+
   // Drag preview
   if (dragging && dragging.overCanvas) {
     const d = dragging;
     const col = d.valid ? WHITE : RED;
     const isHealer = d.type === 'medico';
+    const isMerchant = d.type === 'comerciante';
 
     ctx.strokeStyle = col;
     ctx.globalAlpha = 0.5;
     ctx.lineWidth = 2; ctx.setLineDash([4, 6]);
     ctx.beginPath();
-    ctx.arc(d.x, d.y, d.def.range, 0, Math.PI * 2);
+    ctx.arc(d.x, d.y, d.def.range || 30, 0, Math.PI * 2);
     ctx.stroke();
     ctx.setLineDash([]);
 
     ctx.globalAlpha = 0.08;
     ctx.fillStyle = col;
     ctx.beginPath();
-    ctx.arc(d.x, d.y, d.def.range, 0, Math.PI * 2);
+    ctx.arc(d.x, d.y, d.def.range || 30, 0, Math.PI * 2);
     ctx.fill();
 
     if (d.type === 'bazuca') {
@@ -1346,6 +1531,11 @@ function draw() {
       ctx.fillStyle = col;
       ctx.fillRect(d.x - 2, d.y - 8, 4, 16);
       ctx.fillRect(d.x - 8, d.y - 2, 16, 4);
+    } else if (isMerchant) {
+      ctx.fillStyle = col;
+      ctx.font = 'bold 16px VT323, monospace';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText('$', d.x, d.y + 1);
     } else {
       ctx.save();
       ctx.translate(d.x, d.y);
@@ -1376,7 +1566,7 @@ function draw() {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
   }
 
-  // Aura vermelha de horda (borda pulsante)
+  // Aura de horda
   if (hordeActive) {
     const pulseAmount = 0.15 + Math.sin(hordePulse) * 0.15;
     const grad = ctx.createRadialGradient(240, 240, 180, 240, 240, 300);
@@ -1424,6 +1614,7 @@ function drawEnemy(e) {
   const isFrozen = e.frozen > 0;
   const isHit = e.hitFlash > 0;
   let color = isFrozen ? CYAN : (isHit ? '#ffffff' : (hordeActive ? '#ff5555' : GREEN));
+  if (e.type === 'fungo') color = isHit ? '#ffffff' : (isFrozen ? CYAN : TOXIC);
 
   let scale = 1;
   if (e.spawnAnim > 0) scale = 0.3 + (1 - e.spawnAnim / 15) * 0.7;
@@ -1496,6 +1687,23 @@ function drawEnemy(e) {
       ctx.closePath();
       ctx.fill(); ctx.stroke();
       break;
+    case 'mushroom':
+      // Caule
+      ctx.fillStyle = isHit ? color : BLACK;
+      ctx.fillRect(-3, -s/2 + 4, 6, s/2 + 2);
+      ctx.strokeRect(-3, -s/2 + 4, 6, s/2 + 2);
+      // Chapéu (semicírculo)
+      ctx.beginPath();
+      ctx.arc(0, -s/2 + 4, s/2, Math.PI, 0);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+      // Bolinhas no chapéu
+      ctx.fillStyle = color;
+      ctx.beginPath(); ctx.arc(-4, -s/2 + 1, 1.5, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(3, -s/2 - 1, 1.5, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(5, -s/2 + 3, 1, 0, Math.PI * 2); ctx.fill();
+      break;
   }
   ctx.shadowBlur = 0;
   ctx.restore();
@@ -1506,7 +1714,7 @@ function drawEnemy(e) {
   ctx.fillRect(bx, by, w, h);
   const segs = 5;
   const filled = Math.max(0, Math.ceil((e.hp / e.maxHp) * segs));
-  ctx.fillStyle = isFrozen ? CYAN : (hordeActive ? RED : GREEN);
+  ctx.fillStyle = isFrozen ? CYAN : (e.type === 'fungo' ? TOXIC : (hordeActive ? RED : GREEN));
   for (let i = 0; i < filled; i++) {
     const sw = (w / segs) - 1;
     ctx.fillRect(bx + i * (w/segs), by, sw, h);
