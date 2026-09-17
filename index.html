@@ -2,26 +2,19 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>TOWER DEFENSE 1970 v4</title>
+<title>TOWER DEFENSE 1970 v7</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
-
   @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
 
   html, body {
-    height: 100%;
-    background: #000;
-    color: #33ff33;
+    height: 100%; background: #000; color: #33ff33;
     font-family: 'VT323', 'Courier New', monospace;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
+    display: flex; justify-content: center; align-items: center;
+    overflow: hidden; user-select: none;
   }
-
   body::before {
-    content: "";
-    position: fixed; inset: 0;
+    content: ""; position: fixed; inset: 0;
     background: repeating-linear-gradient(
       to bottom,
       rgba(0,0,0,0) 0px, rgba(0,0,0,0) 2px,
@@ -31,8 +24,7 @@
     animation: flicker 0.15s infinite;
   }
   body::after {
-    content: "";
-    position: fixed; inset: 0;
+    content: ""; position: fixed; inset: 0;
     background: radial-gradient(circle at center, rgba(51,255,51,0.07), rgba(0,0,0,0.65) 100%);
     pointer-events: none; z-index: 998;
   }
@@ -40,15 +32,46 @@
     0% { opacity: 0.94; } 50% { opacity: 1; } 100% { opacity: 0.96; }
   }
 
+  /* Aviso de HORDA */
+  #hordeBanner {
+    position: fixed;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    font-size: 70px;
+    color: #ff3333;
+    text-shadow: 0 0 30px #ff3333, 0 0 60px #ff3333;
+    letter-spacing: 8px;
+    z-index: 1001;
+    pointer-events: none;
+    opacity: 0;
+    transition: none;
+    font-family: 'VT323', monospace;
+  }
+  #hordeBanner.show {
+    animation: hordeIntro 2.5s ease-out forwards;
+  }
+  @keyframes hordeIntro {
+    0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+    15% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+    25% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    80% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(1.1); opacity: 0; }
+  }
+
   #game { display: flex; gap: 20px; z-index: 10; }
 
   #ui {
-    background: #000; padding: 15px; width: 240px;
+    background: #000; padding: 15px; width: 260px;
     border: 2px solid #33ff33;
     box-shadow: 0 0 20px #33ff33, inset 0 0 10px rgba(51,255,51,0.3);
     font-size: 16px; letter-spacing: 1px;
+    max-height: 96vh;
+    overflow-y: auto;
   }
-
+  #ui::-webkit-scrollbar { width: 6px; }
+  #ui::-webkit-scrollbar-track { background: #000; }
+  #ui::-webkit-scrollbar-thumb { background: #33ff33; }
   h2 {
     font-size: 18px; margin-bottom: 10px; color: #33ff33;
     text-shadow: 0 0 8px #33ff33;
@@ -57,14 +80,15 @@
   }
 
   .tower-btn {
-    width: 100%; padding: 6px 8px; margin-bottom: 5px;
+    width: 100%; padding: 5px 8px; margin-bottom: 4px;
     background: #000; border: 2px solid #33ff33; color: #33ff33;
-    cursor: pointer; text-align: left;
+    cursor: grab; text-align: left;
     font-family: 'VT323', monospace; font-size: 14px;
     letter-spacing: 1px; text-shadow: 0 0 4px #33ff33;
-    line-height: 1.3;
+    line-height: 1.25; touch-action: none;
   }
   .tower-btn:hover { background: #33ff33; color: #000; text-shadow: none; }
+  .tower-btn:active { cursor: grabbing; }
   .tower-btn.selected {
     background: #33ff33; color: #000; text-shadow: none;
     animation: blink 0.6s steps(2) infinite;
@@ -74,10 +98,7 @@
     0%, 50% { background: #33ff33; }
     51%, 100% { background: #003300; color: #33ff33; }
   }
-
-  .stat-line {
-    font-size: 12px; color: #22aa22; margin-top: 2px;
-  }
+  .stat-line { font-size: 11px; color: #22aa22; margin-top: 1px; }
 
   #stats {
     margin-top: 10px; padding-top: 8px;
@@ -85,11 +106,50 @@
   }
   #stats div { margin-bottom: 4px; text-shadow: 0 0 4px #33ff33; }
 
+  #playerHpBox {
+    margin-top: 12px; padding: 10px 8px;
+    border: 2px solid #33ff33;
+    background: #000;
+    box-shadow: 0 0 12px #33ff33, inset 0 0 8px rgba(51,255,51,0.2);
+  }
+  #playerHpLabel {
+    font-size: 16px; letter-spacing: 2px;
+    color: #33ff33; text-shadow: 0 0 6px #33ff33;
+    margin-bottom: 5px;
+    display: flex; justify-content: space-between;
+  }
+  #playerHpLabel.low .num { color: #ff3333; text-shadow: 0 0 8px #ff3333; }
+  #playerHpBarOuter {
+    width: 100%; height: 14px;
+    background: #0a3a0a;
+    border: 1px solid #33ff33;
+    position: relative; overflow: hidden;
+  }
+  #playerHpBarInner {
+    height: 100%; width: 100%;
+    background: linear-gradient(90deg, #1a8a1a, #33ff33);
+    box-shadow: 0 0 8px #33ff33;
+    transition: width 0.15s linear, background 0.2s;
+  }
+  #playerHpBarInner.mid {
+    background: linear-gradient(90deg, #8a8a1a, #ffff33);
+    box-shadow: 0 0 8px #ffff33;
+  }
+  #playerHpBarInner.low {
+    background: linear-gradient(90deg, #8a1a1a, #ff3333);
+    box-shadow: 0 0 8px #ff3333;
+    animation: hpBlink 0.4s steps(2) infinite;
+  }
+  @keyframes hpBlink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0.5; }
+  }
+
   canvas {
     background: #000;
     border: 2px solid #33ff33;
     box-shadow: 0 0 25px #33ff33, inset 0 0 15px rgba(51,255,51,0.15);
-    cursor: crosshair; image-rendering: pixelated;
+    image-rendering: pixelated; touch-action: none;
   }
 
   #msg {
@@ -107,17 +167,28 @@
     font-size: 18px; color: #33ff33;
     text-shadow: 0 0 10px #33ff33; letter-spacing: 3px; z-index: 10;
   }
-  .scale-info {
+  .map-info {
     position: fixed; top: 8px; right: 20px;
     font-size: 14px; color: #22aa22;
-    letter-spacing: 1px; z-index: 10;
+    letter-spacing: 1px; z-index: 10; text-align: right;
+    line-height: 1.4;
+  }
+  .map-info .map-name { color: #33ff33; text-shadow: 0 0 6px #33ff33; }
+  .map-info .horde-warn {
+    color: #ff3333; text-shadow: 0 0 6px #ff3333;
+    animation: hpBlink 0.4s steps(2) infinite;
   }
 </style>
 </head>
 <body>
-<div class="title">◄ TOWER DEFENSE · 1970 · v4 ►</div>
-<div class="scale-info">30m × 30m · 1m = 16px</div>
+<div class="title">◄ TOWER DEFENSE · 1970 · v7 ►</div>
+<div class="map-info">
+  MAPA: <span class="map-name" id="mapName">---</span><br>
+  30m × 30m · 1m = 16px<br>
+  <span id="hordeIndicator"></span>
+</div>
 <div id="msg"></div>
+<div id="hordeBanner">⚠ HORDA ⚠</div>
 <div id="game">
   <canvas id="canvas" width="480" height="480"></canvas>
   <div id="ui">
@@ -132,14 +203,36 @@
     </button>
     <button class="tower-btn" data-type="faca">
       ▪ FACA · 75
-      <div class="stat-line">HP 130 · DMG 80 · 0.5s · 1m</div>
+      <div class="stat-line">HP 130 · DMG 80 · 0.5s · 2.5m</div>
     </button>
+    <button class="tower-btn" data-type="metralhadora">
+      ▪ METRALHADORA · 150
+      <div class="stat-line">HP 100 · DMG 20 · 0.2s · 5m</div>
+    </button>
+    <button class="tower-btn" data-type="bazuca">
+      ▪ BAZUCA · 200
+      <div class="stat-line">HP 100 · DMG 80 · 5s · 10m · ÁREA 3m</div>
+    </button>
+    <button class="tower-btn" data-type="medico">
+      ✚ MÉDICO · 300
+      <div class="stat-line">HP 100 · CURA 20 · 5s · 5m</div>
+    </button>
+
+    <div id="playerHpBox">
+      <div id="playerHpLabel">
+        <span>VOCÊ</span>
+        <span class="num"><span id="playerHpNum">300</span> / 300</span>
+      </div>
+      <div id="playerHpBarOuter">
+        <div id="playerHpBarInner"></div>
+      </div>
+    </div>
+
     <div id="stats">
       <div>CRÉDITOS: <span id="gold">200</span></div>
       <div>ONDA: <span id="wave">0</span></div>
       <div style="margin-top:8px;font-size:12px;color:#22aa22;">
-        > SELECIONE TROPA<br>
-        > CLIQUE NO MAPA<br>
+        > ARRASTE A TROPA<br>
         > [ESPAÇO] PAUSAR
       </div>
     </div>
@@ -150,9 +243,7 @@
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 
-const PIXELS_PER_METER = 16;
-const MAP_SIZE_METERS = 30;
-
+const PPM = 16;
 const GREEN = '#33ff33';
 const GREEN_BRIGHT = '#88ff88';
 const GREEN_DIM = '#1a8a1a';
@@ -160,47 +251,97 @@ const GREEN_DARK = '#0a3a0a';
 const BLACK = '#000000';
 const YELLOW = '#ffff33';
 const CYAN = '#33ffff';
+const RED = '#ff3333';
+const WHITE = '#ffffff';
+const ORANGE = '#ffaa33';
+const PINK = '#ff33aa';
 
-const path = [
-  {x: 0, y: 64}, {x: 120, y: 64}, {x: 120, y: 180},
-  {x: 300, y: 180}, {x: 300, y: 90}, {x: 420, y: 90},
-  {x: 420, y: 300}, {x: 150, y: 300}, {x: 150, y: 240},
-  {x: 480, y: 240}
+// ===== MAPAS =====
+const MAPS = [
+  {
+    name: 'MAPA 1 · ZIGUE-ZAGUE',
+    path: [
+      {x: 0, y: 64}, {x: 120, y: 64}, {x: 120, y: 180},
+      {x: 300, y: 180}, {x: 300, y: 90}, {x: 420, y: 90},
+      {x: 420, y: 300}, {x: 150, y: 300}, {x: 150, y: 240},
+      {x: 480, y: 240}
+    ]
+  },
+  {
+    name: 'MAPA 2 · ESPIRAL',
+    path: [
+      {x: 0, y: 48}, {x: 432, y: 48}, {x: 432, y: 432},
+      {x: 48, y: 432}, {x: 48, y: 128}, {x: 336, y: 128},
+      {x: 336, y: 336}, {x: 144, y: 336}, {x: 144, y: 240},
+      {x: 240, y: 240}
+    ]
+  },
+  {
+    name: 'MAPA 3 · SERPENTE',
+    path: [
+      {x: 0, y: 80}, {x: 400, y: 80}, {x: 400, y: 160},
+      {x: 80, y: 160}, {x: 80, y: 240}, {x: 400, y: 240},
+      {x: 400, y: 320}, {x: 80, y: 320}, {x: 80, y: 400},
+      {x: 480, y: 400}
+    ]
+  },
+  {
+    name: 'MAPA 4 · CRUZ',
+    path: [
+      {x: 240, y: 0}, {x: 240, y: 160}, {x: 80, y: 160},
+      {x: 80, y: 320}, {x: 240, y: 320}, {x: 240, y: 480}
+    ]
+  }
 ];
+
+const chosenMap = MAPS[Math.floor(Math.random() * MAPS.length)];
+const path = chosenMap.path;
+document.getElementById('mapName').textContent = chosenMap.name;
 const pathWidth = 32;
 
 let gold = 200;
 let waveNum = 0;
-let selectedTower = null;
 let paused = false;
 let gameOver = false;
+
+const PLAYER_MAX_HP = 300;
+let playerHp = PLAYER_MAX_HP;
 
 const towers = [];
 const enemies = [];
 const bullets = [];
+const missiles = [];
 const explosions = [];
 const particles = [];
 const trails = [];
-const texts = [];        // números flutuantes de dano
-const shockwaves = [];   // ondas de choque
-const sparks = [];       // faíscas rápidas
+const texts = [];
+const shockwaves = [];
+const sparks = [];
+const heals = []; // efeitos de cura
 
-// Screen shake
 let shakeAmount = 0;
-let shakeDecay = 0.9;
-
-// Flash da tela (dano, explosão)
+const shakeDecay = 0.9;
 let screenFlash = 0;
+let screenFlashColor = '51,255,51';
 
+// Estado de horda
+let hordeActive = false;
+let hordePulse = 0;
+
+let dragging = null;
+
+// ===== TROPAS =====
 const TOWER_TYPES = {
-  recruta: { cost: 50,  range: 5 * PIXELS_PER_METER,  damage: 25, fireRate: 60,  hp: 100, maxHp: 100 },
-  sniper:  { cost: 100, range: 15 * PIXELS_PER_METER, damage: 25, fireRate: 120, hp: 70,  maxHp: 70  },
-  faca:    { cost: 75,  range: 1 * PIXELS_PER_METER,  damage: 80, fireRate: 30,  hp: 130, maxHp: 130 }
+  recruta:      { cost: 50,  range: 5 * PPM,   damage: 25, fireRate: 60,  hp: 100, maxHp: 100 },
+  sniper:       { cost: 100, range: 15 * PPM,  damage: 25, fireRate: 120, hp: 70,  maxHp: 70  },
+  faca:         { cost: 75,  range: 2.5 * PPM, damage: 80, fireRate: 30,  hp: 130, maxHp: 130 },
+  metralhadora: { cost: 150, range: 5 * PPM,   damage: 20, fireRate: 12,  hp: 100, maxHp: 100 },
+  bazuca:       { cost: 200, range: 10 * PPM,  damage: 80, fireRate: 300, hp: 100, maxHp: 100, splash: 3 * PPM },
+  medico:       { cost: 300, range: 5 * PPM,   damage: 0,  fireRate: 300, hp: 100, maxHp: 100, heal: 20, isHealer: true }
 };
 
 function speedToPixels(vel) {
-  const mps = vel / 20;
-  return (mps * PIXELS_PER_METER) / 60;
+  return ((vel / 20) * PPM) / 60;
 }
 
 const ENEMY_TYPES = {
@@ -213,6 +354,7 @@ const ENEMY_TYPES = {
   explosivo: { hp: 100, damage: 50,  speed: 100, size: 14, reward: 20, drawStyle: 'star', onDeath: 'explode' }
 };
 
+// Composição de onda normal
 function getWaveComposition(wave) {
   const comp = [];
   comp.push({ type: 'padrao', count: 3 + Math.floor(wave * 0.8) });
@@ -233,87 +375,27 @@ function getWaveComposition(wave) {
   return queue;
 }
 
-// ===== SISTEMA DE PARTÍCULAS =====
-function addParticle(x, y, opts = {}) {
-  particles.push({
-    x, y,
-    vx: opts.vx !== undefined ? opts.vx : (Math.random() - 0.5) * 3,
-    vy: opts.vy !== undefined ? opts.vy : (Math.random() - 0.5) * 3,
-    life: opts.life || 30,
-    maxLife: opts.life || 30,
-    size: opts.size || 2,
-    color: opts.color || GREEN,
-    gravity: opts.gravity !== undefined ? opts.gravity : 0,
-    friction: opts.friction !== undefined ? opts.friction : 0.96,
-    shape: opts.shape || 'square'
-  });
-}
+// Composição de HORDA (3x inimigos, só tipos fortes)
+function getHordeComposition(wave) {
+  const comp = [];
+  // Só inimigos fortes — sem padrão nem minion
+  comp.push({ type: 'blindado',  count: 3 + Math.floor(wave * 0.4) });
+  comp.push({ type: 'ofensivo',  count: 4 + Math.floor(wave * 0.5) });
+  comp.push({ type: 'explosivo', count: 3 + Math.floor(wave * 0.4) });
+  comp.push({ type: 'clone',     count: 2 + Math.floor(wave * 0.3) });
+  comp.push({ type: 'velocista', count: 4 + Math.floor(wave * 0.6) });
 
-function burst(x, y, count, opts = {}) {
-  for (let i = 0; i < count; i++) {
-    const angle = Math.random() * Math.PI * 2;
-    const speed = (opts.speed || 3) * (0.3 + Math.random() * 0.7);
-    addParticle(x, y, {
-      vx: Math.cos(angle) * speed,
-      vy: Math.sin(angle) * speed,
-      life: opts.life || 25,
-      size: opts.size || 2,
-      color: opts.color || GREEN,
-      gravity: opts.gravity || 0,
-      friction: opts.friction || 0.94
-    });
+  const queue = [];
+  for (const { type, count } of comp) {
+    for (let i = 0; i < count; i++) queue.push(type);
   }
+  for (let i = queue.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [queue[i], queue[j]] = [queue[j], queue[i]];
+  }
+  return queue;
 }
 
-function addTrail(x, y, color, size, life) {
-  trails.push({
-    x, y,
-    life: life || 12,
-    maxLife: life || 12,
-    color: color || GREEN,
-    size: size || 3
-  });
-}
-
-function addShockwave(x, y, color, maxRadius, life) {
-  shockwaves.push({
-    x, y,
-    radius: 2,
-    maxRadius: maxRadius || 40,
-    life: life || 20,
-    maxLife: life || 20,
-    color: color || GREEN
-  });
-}
-
-function addText(x, y, text, color, life) {
-  texts.push({
-    x, y, text,
-    color: color || GREEN,
-    life: life || 40,
-    maxLife: life || 40,
-    vy: -0.8
-  });
-}
-
-function addSpark(x1, y1, x2, y2, color) {
-  sparks.push({
-    x1, y1, x2, y2,
-    life: 6,
-    maxLife: 6,
-    color: color || GREEN_BRIGHT
-  });
-}
-
-function addShake(amount) {
-  shakeAmount = Math.min(shakeAmount + amount, 12);
-}
-
-function addFlash(amount) {
-  screenFlash = Math.min(screenFlash + amount, 0.6);
-}
-
-// ===== COLISÃO / UTIL =====
 function distToSegment(p, a, b) {
   const dx = b.x - a.x, dy = b.y - a.y;
   const len2 = dx*dx + dy*dy;
@@ -330,43 +412,198 @@ function isOnPath(x, y) {
   return false;
 }
 
+function isValidPlacement(x, y, type) {
+  if (x < 14 || y < 14 || x > canvas.width - 14 || y > canvas.height - 14) return false;
+  if (isOnPath(x, y)) return false;
+  if (towers.some(t => Math.hypot(t.x-x, t.y-y) < 30)) return false;
+  const def = TOWER_TYPES[type];
+  if (gold < def.cost) return false;
+  return true;
+}
+
+// ===== PARTÍCULAS =====
+function addParticle(x, y, opts = {}) {
+  particles.push({
+    x, y,
+    vx: opts.vx !== undefined ? opts.vx : (Math.random() - 0.5) * 3,
+    vy: opts.vy !== undefined ? opts.vy : (Math.random() - 0.5) * 3,
+    life: opts.life || 30, maxLife: opts.life || 30,
+    size: opts.size || 2, color: opts.color || GREEN,
+    gravity: opts.gravity || 0,
+    friction: opts.friction !== undefined ? opts.friction : 0.96
+  });
+}
+function burst(x, y, count, opts = {}) {
+  for (let i = 0; i < count; i++) {
+    const angle = Math.random() * Math.PI * 2;
+    const speed = (opts.speed || 3) * (0.3 + Math.random() * 0.7);
+    addParticle(x, y, {
+      vx: Math.cos(angle) * speed,
+      vy: Math.sin(angle) * speed,
+      life: opts.life || 25, size: opts.size || 2,
+      color: opts.color || GREEN,
+      gravity: opts.gravity || 0,
+      friction: opts.friction || 0.94
+    });
+  }
+}
+function addTrail(x, y, color, size, life) {
+  trails.push({ x, y, life: life || 12, maxLife: life || 12, color: color || GREEN, size: size || 3 });
+}
+function addShockwave(x, y, color, maxRadius, life) {
+  shockwaves.push({
+    x, y, radius: 2, maxRadius: maxRadius || 40,
+    life: life || 20, maxLife: life || 20, color: color || GREEN
+  });
+}
+function addText(x, y, text, color, life) {
+  texts.push({ x, y, text, color: color || GREEN, life: life || 40, maxLife: life || 40, vy: -0.8 });
+}
+function addSpark(x1, y1, x2, y2, color) {
+  sparks.push({ x1, y1, x2, y2, life: 6, maxLife: 6, color: color || GREEN_BRIGHT });
+}
+function addShake(amount) { shakeAmount = Math.min(shakeAmount + amount, 14); }
+function addFlash(amount, color) {
+  screenFlash = Math.min(screenFlash + amount, 0.6);
+  if (color) screenFlashColor = color;
+}
+
+// Efeito de cura
+function addHealEffect(x, y, amount) {
+  heals.push({
+    x, y, life: 45, maxLife: 45,
+    amount, radius: 12
+  });
+  // Cruz verde subindo
+  for (let i = 0; i < 6; i++) {
+    addParticle(x + (Math.random() - 0.5) * 20, y, {
+      vx: (Math.random() - 0.5) * 0.5,
+      vy: -1 - Math.random(),
+      life: 40, size: 2, color: GREEN_BRIGHT, friction: 0.98
+    });
+  }
+  addText(x, y - 18, '+' + amount, GREEN_BRIGHT, 50);
+}
+
+// ===== DANO/CURA =====
+function damagePlayer(amount) {
+  playerHp -= amount;
+  if (playerHp < 0) playerHp = 0;
+  addFlash(0.45, '255,51,51');
+  addShake(7);
+  addText(canvas.width / 2, 60, '-' + amount, RED, 70);
+  updateUI();
+  if (playerHp <= 0) {
+    gameOver = true;
+    showMsg('> VOCÊ CAIU <');
+  }
+}
+
+function healPlayer(amount) {
+  const old = playerHp;
+  playerHp = Math.min(PLAYER_MAX_HP, playerHp + amount);
+  const healed = playerHp - old;
+  if (healed > 0) {
+    addFlash(0.2, '51,255,51');
+    addText(canvas.width / 2, 60, '+' + healed + ' HP', GREEN_BRIGHT, 60);
+    updateUI();
+  }
+}
+
 // ===== UI =====
+function updateUI() {
+  document.getElementById('gold').textContent = gold;
+  document.getElementById('wave').textContent = waveNum;
+  document.getElementById('playerHpNum').textContent = playerHp;
+
+  const pct = playerHp / PLAYER_MAX_HP;
+  const bar = document.getElementById('playerHpBarInner');
+  const lbl = document.getElementById('playerHpLabel');
+  bar.style.width = (pct * 100) + '%';
+  bar.classList.remove('mid', 'low');
+  lbl.classList.remove('low');
+  if (pct <= 0.25) { bar.classList.add('low'); lbl.classList.add('low'); }
+  else if (pct <= 0.5) { bar.classList.add('mid'); }
+
+  // Indicador de horda
+  const hordeInd = document.getElementById('hordeIndicator');
+  if (hordeActive) hordeInd.textContent = '⚠ HORDA ATIVA ⚠';
+  else if (waveNum > 0 && (waveNum + 1) % 10 === 0) hordeInd.textContent = 'PRÓXIMA: HORDA';
+  else hordeInd.textContent = '';
+
+  document.querySelectorAll('.tower-btn').forEach(btn => {
+    btn.disabled = gold < TOWER_TYPES[btn.dataset.type].cost;
+  });
+}
+
 document.querySelectorAll('.tower-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.tower-btn').forEach(b => b.classList.remove('selected'));
+  btn.addEventListener('pointerdown', e => {
+    e.preventDefault();
     const type = btn.dataset.type;
-    if (selectedTower === type) selectedTower = null;
-    else { selectedTower = type; btn.classList.add('selected'); }
+    const def = TOWER_TYPES[type];
+    if (gold < def.cost) { showMsg('> CRÉDITOS INSUFICIENTES'); addShake(2); return; }
+
+    document.querySelectorAll('.tower-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+
+    dragging = { type, def, x: 0, y: 0, valid: false, overCanvas: false };
+    canvas.style.cursor = 'grabbing';
   });
 });
 
-canvas.addEventListener('click', e => {
-  if (gameOver) return;
+document.addEventListener('pointermove', e => {
+  if (!dragging) return;
   const rect = canvas.getBoundingClientRect();
-  const x = (e.clientX - rect.left) * (canvas.width / rect.width);
-  const y = (e.clientY - rect.top) * (canvas.height / rect.height);
+  const cx = (e.clientX - rect.left) * (canvas.width / rect.width);
+  const cy = (e.clientY - rect.top) * (canvas.height / rect.height);
+  dragging.overCanvas = (cx >= 0 && cx <= canvas.width && cy >= 0 && cy <= canvas.height);
+  dragging.x = cx;
+  dragging.y = cy;
+  dragging.valid = dragging.overCanvas && isValidPlacement(cx, cy, dragging.type);
+});
 
-  if (selectedTower) {
-    const def = TOWER_TYPES[selectedTower];
-    if (gold < def.cost) { showMsg('> CRÉDITOS INSUFICIENTES'); addShake(2); return; }
-    if (isOnPath(x, y)) { showMsg('> ÁREA BLOQUEADA'); addShake(2); return; }
-    if (towers.some(t => Math.hypot(t.x-x, t.y-y) < 30)) { showMsg('> MUITO PRÓXIMO'); addShake(2); return; }
-    towers.push({
-      x, y, type: selectedTower,
-      cost: def.cost, range: def.range, damage: def.damage,
-      fireRate: def.fireRate,
-      hp: def.hp, maxHp: def.hp,
-      cooldown: 0, angle: 0,
-      spawnAnim: 20,
-      recoil: 0
-    });
-    gold -= def.cost;
+document.addEventListener('pointerup', e => {
+  if (!dragging) return;
+  const d = dragging;
+  dragging = null;
+  canvas.style.cursor = 'crosshair';
+  document.querySelectorAll('.tower-btn').forEach(b => b.classList.remove('selected'));
 
-    // Efeito de spawn: anel + partículas
-    addShockwave(x, y, GREEN, 40, 22);
-    burst(x, y, 16, { speed: 3, life: 25, color: GREEN, size: 2 });
-    addFlash(0.15);
-    updateUI();
+  if (!d.overCanvas) return;
+  if (!isValidPlacement(d.x, d.y, d.type)) {
+    if (isOnPath(d.x, d.y)) showMsg('> ÁREA BLOQUEADA');
+    else if (towers.some(t => Math.hypot(t.x-d.x, t.y-d.y) < 30)) showMsg('> MUITO PRÓXIMO');
+    return;
+  }
+
+  const def = d.def;
+  towers.push({
+    x: d.x, y: d.y, type: d.type,
+    cost: def.cost, range: def.range, damage: def.damage,
+    fireRate: def.fireRate, splash: def.splash || 0,
+    heal: def.heal || 0, isHealer: def.isHealer || false,
+    hp: def.hp, maxHp: def.maxHp,
+    cooldown: 0, angle: 0,
+    spawnAnim: 20, recoil: 0,
+    healPulse: 0 // animação de cura
+  });
+  gold -= def.cost;
+
+  addShockwave(d.x, d.y, def.isHealer ? GREEN_BRIGHT : GREEN, 40, 22);
+  burst(d.x, d.y, 16, { speed: 3, life: 25, color: def.isHealer ? GREEN_BRIGHT : GREEN, size: 2 });
+  addFlash(0.15);
+  updateUI();
+});
+
+document.addEventListener('keydown', e => {
+  if (e.code === 'Escape' && dragging) {
+    dragging = null;
+    canvas.style.cursor = 'crosshair';
+    document.querySelectorAll('.tower-btn').forEach(b => b.classList.remove('selected'));
+  }
+  if (e.code === 'Space') {
+    e.preventDefault();
+    if (!gameOver) paused = !paused;
   }
 });
 
@@ -378,12 +615,11 @@ function showMsg(text) {
   m._t = setTimeout(() => m.style.display = 'none', 1300);
 }
 
-function updateUI() {
-  document.getElementById('gold').textContent = gold;
-  document.getElementById('wave').textContent = waveNum;
-  document.querySelectorAll('.tower-btn').forEach(btn => {
-    btn.disabled = gold < TOWER_TYPES[btn.dataset.type].cost;
-  });
+function showHordeBanner() {
+  const b = document.getElementById('hordeBanner');
+  b.classList.remove('show');
+  void b.offsetWidth;
+  b.classList.add('show');
 }
 
 // ===== SPAWN =====
@@ -396,25 +632,20 @@ function spawnEnemy(typeKey, x, y, wp) {
 
   enemies.push({
     type: typeKey,
-    x: ex, y: ey,
-    wp: wp !== undefined ? wp : 1,
+    x: ex, y: ey, wp: wp !== undefined ? wp : 1,
     hp, maxHp: hp,
     damage: t.damage,
     speed: speedToPixels(t.speed),
     baseSpeed: speedToPixels(t.speed),
     frozen: 0,
-    reward: t.reward,
+    reward: hordeActive ? t.reward * 2 : t.reward, // ouro em dobro na horda
     size: t.size,
     armor: t.armor || 0,
     drawStyle: t.drawStyle,
     onDeath: t.onDeath || null,
-    spawnAnim: 15,
-    hitFlash: 0,
-    lastTrailTime: 0
+    spawnAnim: 15, hitFlash: 0, lastTrailTime: 0
   });
-
-  // Efeito de spawn
-  addShockwave(ex, ey, GREEN, 20, 12);
+  addShockwave(ex, ey, hordeActive ? RED : GREEN, 20, 12);
   burst(ex, ey, 6, { speed: 1.5, life: 15, size: 1.5 });
 }
 
@@ -425,59 +656,40 @@ let waveActive = false;
 
 function startWave() {
   waveNum++;
-  waveQueue = getWaveComposition(waveNum);
+  const isHorde = (waveNum % 10 === 0);
+
+  if (isHorde) {
+    hordeActive = true;
+    waveQueue = getHordeComposition(waveNum);
+    showHordeBanner();
+    addFlash(0.5, '255,51,51');
+    addShake(10);
+    setTimeout(showHordeBanner, 100);
+  } else {
+    hordeActive = false;
+    waveQueue = getWaveComposition(waveNum);
+  }
+
   spawnCooldown = 0;
   waveActive = true;
-  // Aviso visual de nova onda
-  addShockwave(240, 240, GREEN, 300, 40);
-  addFlash(0.2);
-  addShake(3);
-  updateUI();
-}
 
-function findNearestTower(x, y) {
-  let best = null, bestDist = Infinity;
-  for (const t of towers) {
-    const d = Math.hypot(t.x - x, t.y - y);
-    if (d < bestDist) { bestDist = d; best = t; }
-  }
-  return best;
-}
-
-function damageTowerAt(x, y, amount) {
-  const t = findNearestTower(x, y);
-  if (!t) return;
-  t.hp -= amount;
-
-  // Efeito de dano
-  addShockwave(t.x, t.y, YELLOW, 30, 18);
-  burst(t.x, t.y, 10, { speed: 2.5, life: 20, color: YELLOW, size: 2 });
-  addText(t.x, t.y - 15, '-' + amount, YELLOW, 45);
-  addFlash(0.25);
-  addShake(3);
-
-  if (t.hp <= 0) {
-    // Tropa cai: explosão GRANDE
-    addShockwave(t.x, t.y, GREEN, 60, 30);
-    burst(t.x, t.y, 30, { speed: 5, life: 35, size: 3, gravity: 0.15, friction: 0.93 });
-    addFlash(0.4);
-    addShake(6);
-    const idx = towers.indexOf(t);
-    if (idx >= 0) towers.splice(idx, 1);
-    showMsg('> TROPA ABATIDA');
+  if (!isHorde) {
+    addShockwave(240, 240, GREEN, 300, 40);
+    addFlash(0.2); addShake(3);
+  } else {
+    // Aviso dramático de horda
+    addShockwave(240, 240, RED, 400, 60);
   }
   updateUI();
 }
 
 function areaExplosion(x, y, damage, radius) {
-  // Anel + múltiplas ondas de choque + MUITAS partículas
   addShockwave(x, y, GREEN, radius, 25);
   addShockwave(x, y, YELLOW, radius * 0.6, 18);
   addShockwave(x, y, GREEN, radius * 1.3, 35);
   burst(x, y, 40, { speed: 6, life: 40, size: 3, gravity: 0.2, friction: 0.92 });
   burst(x, y, 20, { speed: 9, life: 25, size: 2, color: YELLOW, friction: 0.9 });
-  addFlash(0.5);
-  addShake(8);
+  addFlash(0.5); addShake(8);
 
   const inRange = towers.filter(t => Math.hypot(t.x - x, t.y - y) <= radius);
   for (const t of inRange) {
@@ -488,11 +700,39 @@ function areaExplosion(x, y, damage, radius) {
       burst(t.x, t.y, 30, { speed: 5, life: 35, size: 3 });
       const idx = towers.indexOf(t);
       if (idx >= 0) towers.splice(idx, 1);
+      // Se era médico: +5 HP pro jogador
+      if (t.isHealer) healPlayer(5);
     }
   }
-  if (inRange.length > 0) {
-    showMsg('> EXPLOSÃO 4m');
-    updateUI();
+  if (inRange.length > 0) { updateUI(); }
+}
+
+function damageEnemy(e, amount, fromX, fromY) {
+  const real = Math.max(1, amount - (e.armor || 0));
+  e.hp -= real;
+  e.hitFlash = 6;
+  burst(e.x, e.y, 5, { speed: 2, life: 12, size: 1.5, color: GREEN_BRIGHT });
+  addText(e.x, e.y - e.size - 5, '-' + real, GREEN_BRIGHT, 30);
+  if (fromX !== undefined && fromY !== undefined) {
+    addSpark(fromX, fromY, e.x, e.y, GREEN_BRIGHT);
+  }
+}
+
+function bazookaExplosion(x, y, damage, radius) {
+  addShockwave(x, y, ORANGE, radius, 22);
+  addShockwave(x, y, YELLOW, radius * 0.7, 16);
+  addShockwave(x, y, GREEN, radius * 1.3, 30);
+  burst(x, y, 50, { speed: 7, life: 40, size: 3, gravity: 0.15, friction: 0.9 });
+  burst(x, y, 25, { speed: 11, life: 25, size: 2, color: YELLOW, friction: 0.88 });
+  burst(x, y, 15, { speed: 4, life: 45, size: 4, color: ORANGE, gravity: 0.08 });
+  addFlash(0.55); addShake(9);
+
+  const inRange = enemies.filter(e => Math.hypot(e.x - x, e.y - y) <= radius);
+  for (const e of inRange) {
+    const dist = Math.hypot(e.x - x, e.y - y);
+    const falloff = 1 - (dist / radius) * 0.6;
+    const dmg = Math.floor(damage * falloff);
+    damageEnemy(e, dmg);
   }
 }
 
@@ -518,21 +758,6 @@ function findNearestWaypointIndex(x, y) {
   return Math.min(best + 1, path.length - 1);
 }
 
-function damageEnemy(e, amount, fromX, fromY) {
-  const real = Math.max(1, amount - (e.armor || 0));
-  e.hp -= real;
-  e.hitFlash = 6;
-
-  // Efeito de impacto
-  burst(e.x, e.y, 5, { speed: 2, life: 12, size: 1.5, color: GREEN_BRIGHT });
-  addText(e.x, e.y - e.size - 5, '-' + real, GREEN_BRIGHT, 30);
-
-  // Faísca da origem até o alvo
-  if (fromX !== undefined && fromY !== undefined) {
-    addSpark(fromX, fromY, e.x, e.y, GREEN_BRIGHT);
-  }
-}
-
 // ===== LOOP =====
 let lastTime = 0;
 function loop(time) {
@@ -542,17 +767,19 @@ function loop(time) {
 
   if (paused || gameOver) { draw(); return; }
 
+  // Spawn (mais rápido durante horda)
   if (waveActive && waveQueue.length > 0) {
     spawnCooldown -= dt;
     if (spawnCooldown <= 0) {
       spawnEnemy(waveQueue.shift());
-      spawnCooldown = 45;
+      spawnCooldown = hordeActive ? 18 : 45; // horda spawna MUITO mais rápido
     }
   } else if (waveActive && waveQueue.length === 0 && enemies.length === 0) {
     waveActive = false;
+    hordeActive = false;
+    waveDelay = hordeActive ? 120 : 90;
     waveDelay = 90;
   }
-
   if (waveDelay > 0) {
     waveDelay -= dt;
     if (waveDelay <= 0) startWave();
@@ -566,17 +793,17 @@ function loop(time) {
     if (e.frozen > 0) { e.frozen -= dt; e.speed = e.baseSpeed * 0.3; }
     else e.speed = e.baseSpeed;
 
-    // Rastro de movimento (a cada N frames)
     e.lastTrailTime -= dt;
     if (e.lastTrailTime <= 0 && e.speed > 0.5) {
-      addTrail(e.x, e.y, GREEN, e.size * 0.5, 10);
+      addTrail(e.x, e.y, hordeActive ? RED : GREEN, e.size * 0.5, 10);
       e.lastTrailTime = 4;
     }
 
     const target = path[e.wp];
     if (!target) {
-      damageTowerAt(e.x, e.y, e.damage);
-      burst(e.x, e.y, 12, { speed: 3, life: 20, size: 2 });
+      damagePlayer(e.damage);
+      burst(e.x, e.y, 14, { speed: 4, life: 22, size: 2, color: RED });
+      addShockwave(e.x, e.y, RED, 30, 18);
       enemies.splice(i, 1);
       continue;
     }
@@ -584,8 +811,7 @@ function loop(time) {
     const dx = target.x - e.x, dy = target.y - e.y;
     const dist = Math.hypot(dx, dy);
     if (dist < e.speed * dt) {
-      e.x = target.x; e.y = target.y;
-      e.wp++;
+      e.x = target.x; e.y = target.y; e.wp++;
     } else {
       e.x += (dx/dist) * e.speed * dt;
       e.y += (dy/dist) * e.speed * dt;
@@ -593,26 +819,51 @@ function loop(time) {
 
     if (e.hp <= 0) {
       gold += e.reward;
-
-      // Efeito de morte
       addShockwave(e.x, e.y, GREEN, 25, 15);
       burst(e.x, e.y, 12, { speed: 3, life: 22, size: 2 });
       addText(e.x, e.y - e.size - 5, '+' + e.reward, YELLOW, 40);
 
       if (e.onDeath === 'clone') spawnCloneMinions(e.x, e.y);
-      else if (e.onDeath === 'explode') areaExplosion(e.x, e.y, 50, 4 * PIXELS_PER_METER);
-
+      else if (e.onDeath === 'explode') areaExplosion(e.x, e.y, 50, 4 * PPM);
       enemies.splice(i, 1);
       updateUI();
     }
   }
 
-  // Tropas atiram
+  // Tropas atiram ou curam
   for (const t of towers) {
     if (t.spawnAnim > 0) t.spawnAnim -= dt;
     if (t.recoil > 0) t.recoil -= dt * 3;
+    if (t.healPulse > 0) t.healPulse -= dt * 2;
     t.cooldown -= dt;
 
+    // MÉDICO: cura em área
+    if (t.isHealer) {
+      if (t.cooldown <= 0) {
+        // Cura todas as tropas no raio (incluindo a si mesmo)
+        const targets = towers.filter(o => Math.hypot(o.x - t.x, o.y - t.y) <= t.range);
+        let healedAny = false;
+        for (const o of targets) {
+          if (o.hp < o.maxHp) {
+            const healed = Math.min(t.heal, o.maxHp - o.hp);
+            o.hp += healed;
+            if (healed > 0) {
+              addHealEffect(o.x, o.y, t.heal);
+              healedAny = true;
+            }
+          }
+        }
+        if (healedAny) {
+          addShockwave(t.x, t.y, GREEN_BRIGHT, t.range, 30);
+          t.healPulse = 1;
+          updateUI();
+        }
+        t.cooldown = t.fireRate;
+      }
+      continue;
+    }
+
+    // Tropas normais: atiram
     let target = null, bestDist = Infinity;
     for (const e of enemies) {
       const d = Math.hypot(e.x - t.x, e.y - t.y);
@@ -621,31 +872,76 @@ function loop(time) {
     if (target) {
       t.angle = Math.atan2(target.y - t.y, target.x - t.x);
       if (t.cooldown <= 0) {
-        // Muzzle flash
-        const muzzleX = t.x + Math.cos(t.angle) * 14;
-        const muzzleY = t.y + Math.sin(t.angle) * 14;
-        burst(muzzleX, muzzleY, 5, { speed: 2, life: 10, size: 1.5, color: GREEN_BRIGHT });
-        addShockwave(muzzleX, muzzleY, GREEN, 8, 8);
+        const mx = t.x + Math.cos(t.angle) * 14;
+        const my = t.y + Math.sin(t.angle) * 14;
 
-        t.recoil = 4;
-
-        bullets.push({
-          x: t.x, y: t.y, target,
-          damage: t.damage, speed: 8,
-          type: t.type,
-          angle: t.angle,
-          trailTimer: 0
-        });
+        if (t.type === 'bazuca') {
+          burst(mx, my, 8, { speed: 3, life: 14, size: 2, color: ORANGE });
+          addShockwave(mx, my, ORANGE, 12, 12);
+          missiles.push({
+            x: t.x, y: t.y, target,
+            damage: t.damage, splash: t.splash,
+            speed: 6, angle: t.angle, life: 300
+          });
+          t.recoil = 6;
+        } else {
+          burst(mx, my, 5, { speed: 2, life: 10, size: 1.5, color: GREEN_BRIGHT });
+          addShockwave(mx, my, GREEN, 8, 8);
+          t.recoil = 4;
+          bullets.push({
+            x: t.x, y: t.y, target,
+            damage: t.damage, speed: 8,
+            type: t.type, angle: t.angle
+          });
+        }
         t.cooldown = t.fireRate;
       }
     }
   }
 
+  // Mísseis
+  for (let i = missiles.length - 1; i >= 0; i--) {
+    const m = missiles[i];
+    m.life -= dt;
+    addTrail(m.x, m.y, ORANGE, 4, 14);
+    addTrail(m.x + (Math.random()-0.5)*4, m.y + (Math.random()-0.5)*4, YELLOW, 2, 8);
+
+    if (Math.random() < 0.5) {
+      addParticle(m.x, m.y, {
+        vx: (Math.random() - 0.5) * 0.5,
+        vy: (Math.random() - 0.5) * 0.5,
+        life: 20, size: 2, color: ORANGE, friction: 0.95
+      });
+    }
+
+    if (!m.target || m.target.hp <= 0 || enemies.indexOf(m.target) === -1) {
+      bazookaExplosion(m.x, m.y, m.damage, m.splash);
+      missiles.splice(i, 1);
+      continue;
+    }
+
+    const desiredAngle = Math.atan2(m.target.y - m.y, m.target.x - m.x);
+    let diff = desiredAngle - m.angle;
+    while (diff > Math.PI) diff -= Math.PI * 2;
+    while (diff < -Math.PI) diff += Math.PI * 2;
+    m.angle += Math.max(-0.12, Math.min(0.12, diff)) * dt;
+
+    const dx = m.target.x - m.x, dy = m.target.y - m.y;
+    const dist = Math.hypot(dx, dy);
+
+    if (dist < 12 || m.life <= 0) {
+      bazookaExplosion(m.x, m.y, m.damage, m.splash);
+      missiles.splice(i, 1);
+      continue;
+    }
+
+    m.x += Math.cos(m.angle) * m.speed * dt;
+    m.y += Math.sin(m.angle) * m.speed * dt;
+  }
+
   // Projéteis
   for (let i = bullets.length - 1; i >= 0; i--) {
     const b = bullets[i];
-
-    // Rastro dos projéteis
     addTrail(b.x, b.y, b.type === 'sniper' ? CYAN : GREEN, b.type === 'faca' ? 3 : 2, 10);
 
     if (!b.target || b.target.hp <= 0 || enemies.indexOf(b.target) === -1) {
@@ -653,9 +949,7 @@ function loop(time) {
       bullets.splice(i, 1); continue;
     }
     if (b.type === 'sniper') {
-      // Sniper: hitscan com feixe visual
       damageEnemy(b.target, b.damage, b.x, b.y);
-      // Linha de impacto
       addShockwave(b.target.x, b.target.y, CYAN, 15, 10);
       burst(b.target.x, b.target.y, 8, { speed: 3, life: 15, size: 2, color: CYAN });
       addFlash(0.08);
@@ -667,10 +961,11 @@ function loop(time) {
     if (dist < b.speed * dt) {
       damageEnemy(b.target, b.damage, b.x, b.y);
       if (b.type === 'faca') {
-        // Faca: impacto mais brutal
         burst(b.target.x, b.target.y, 12, { speed: 4, life: 18, size: 2.5 });
         addShockwave(b.target.x, b.target.y, GREEN, 18, 12);
         addShake(1.5);
+      } else if (b.type === 'metralhadora') {
+        burst(b.target.x, b.target.y, 4, { speed: 2.5, life: 10, size: 1.5 });
       }
       bullets.splice(i, 1);
     } else {
@@ -679,25 +974,19 @@ function loop(time) {
     }
   }
 
-  // Atualiza partículas
+  // Partículas etc
   for (let i = particles.length - 1; i >= 0; i--) {
     const p = particles[i];
-    p.x += p.vx * dt;
-    p.y += p.vy * dt;
-    p.vx *= p.friction;
-    p.vy *= p.friction;
+    p.x += p.vx * dt; p.y += p.vy * dt;
+    p.vx *= p.friction; p.vy *= p.friction;
     p.vy += p.gravity * dt;
     p.life -= dt;
     if (p.life <= 0) particles.splice(i, 1);
   }
-
-  // Trails
   for (let i = trails.length - 1; i >= 0; i--) {
     trails[i].life -= dt;
     if (trails[i].life <= 0) trails.splice(i, 1);
   }
-
-  // Shockwaves
   for (let i = shockwaves.length - 1; i >= 0; i--) {
     const s = shockwaves[i];
     s.life -= dt;
@@ -705,51 +994,37 @@ function loop(time) {
     s.radius = s.maxRadius * p;
     if (s.life <= 0) shockwaves.splice(i, 1);
   }
-
-  // Sparks
   for (let i = sparks.length - 1; i >= 0; i--) {
     sparks[i].life -= dt;
     if (sparks[i].life <= 0) sparks.splice(i, 1);
   }
-
-  // Textos flutuantes
   for (let i = texts.length - 1; i >= 0; i--) {
     const tx = texts[i];
-    tx.y += tx.vy * dt;
-    tx.vy *= 0.97;
-    tx.life -= dt;
+    tx.y += tx.vy * dt; tx.vy *= 0.97; tx.life -= dt;
     if (tx.life <= 0) texts.splice(i, 1);
   }
-
-  // Explosões antigas (mantidas para compatibilidade)
+  for (let i = heals.length - 1; i >= 0; i--) {
+    heals[i].life -= dt;
+    if (heals[i].life <= 0) heals.splice(i, 1);
+  }
   for (let i = explosions.length - 1; i >= 0; i--) {
     explosions[i].life -= dt;
     if (explosions[i].life <= 0) explosions.splice(i, 1);
   }
 
-  // Screen shake
   shakeAmount *= shakeDecay;
   if (shakeAmount < 0.1) shakeAmount = 0;
-
-  // Flash
   screenFlash *= 0.88;
   if (screenFlash < 0.01) screenFlash = 0;
 
-  if (towers.length === 0 && enemies.length > 0 && gold < TOWER_TYPES.recruta.cost) {
-    gameOver = true;
-    showMsg('> TODAS AS TROPAS CAÍRAM <');
-  }
+  // Pulso de horda
+  if (hordeActive) hordePulse += dt * 0.05;
 
   draw();
 }
 
-function addExplosion(x, y, radius) {
-  explosions.push({ x, y, life: 20, maxLife: 20, radius: radius || 20 });
-}
-
 // ===== DESENHO =====
 function draw() {
-  // Screen shake
   ctx.save();
   if (shakeAmount > 0.1) {
     const sx = (Math.random() - 0.5) * shakeAmount;
@@ -760,44 +1035,39 @@ function draw() {
   ctx.fillStyle = BLACK;
   ctx.fillRect(-20, -20, canvas.width + 40, canvas.height + 40);
 
-  // Grade 1m
+  // Grade
   ctx.strokeStyle = 'rgba(51,255,51,0.06)';
   ctx.lineWidth = 1;
-  for (let x = 0; x <= canvas.width; x += PIXELS_PER_METER) {
+  for (let x = 0; x <= canvas.width; x += PPM) {
     ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
   }
-  for (let y = 0; y <= canvas.height; y += PIXELS_PER_METER) {
+  for (let y = 0; y <= canvas.height; y += PPM) {
     ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
   }
-
-  // Grade 5m
   ctx.strokeStyle = 'rgba(51,255,51,0.15)';
-  for (let x = 0; x <= canvas.width; x += PIXELS_PER_METER * 5) {
+  for (let x = 0; x <= canvas.width; x += PPM * 5) {
     ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
   }
-  for (let y = 0; y <= canvas.height; y += PIXELS_PER_METER * 5) {
+  for (let y = 0; y <= canvas.height; y += PPM * 5) {
     ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
   }
 
-  // ===== CAMINHO (com pulsação) =====
+  // Caminho
   const pulse = 0.15 + Math.sin(Date.now() / 400) * 0.03;
-
-  ctx.strokeStyle = GREEN;
+  ctx.strokeStyle = hordeActive ? RED : GREEN;
   ctx.lineWidth = pathWidth;
   ctx.lineCap = 'square'; ctx.lineJoin = 'miter';
-  ctx.globalAlpha = pulse;
+  ctx.globalAlpha = hordeActive ? (pulse + 0.1) : pulse;
   ctx.beginPath();
   ctx.moveTo(path[0].x, path[0].y);
   for (let i = 1; i < path.length; i++) ctx.lineTo(path[i].x, path[i].y);
   ctx.stroke();
   ctx.globalAlpha = 1;
-
-  ctx.lineWidth = 2;
-  ctx.setLineDash([6, 5]);
+  ctx.lineWidth = 2; ctx.setLineDash([6, 5]);
   ctx.stroke();
   ctx.setLineDash([]);
 
-  // ===== TRAILS (atrás de tudo) =====
+  // Trails
   for (const tr of trails) {
     const p = tr.life / tr.maxLife;
     ctx.globalAlpha = p * 0.7;
@@ -806,33 +1076,46 @@ function draw() {
   }
   ctx.globalAlpha = 1;
 
-  // ===== TROPAS =====
+  // Tropas
   for (const t of towers) {
-    // Range
-    ctx.strokeStyle = 'rgba(51,255,51,0.25)';
-    ctx.lineWidth = 1; ctx.setLineDash([3, 5]);
-    ctx.beginPath();
-    ctx.arc(t.x, t.y, t.range, 0, Math.PI * 2);
-    ctx.stroke();
-    ctx.setLineDash([]);
+    // Médico: aura verde brilhante
+    if (t.isHealer) {
+      const healAlpha = t.healPulse > 0 ? 0.4 : 0.15;
+      const pulseSize = t.healPulse > 0 ? 1 + t.healPulse * 0.3 : 1;
+      ctx.strokeStyle = GREEN_BRIGHT;
+      ctx.globalAlpha = healAlpha;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(t.x, t.y, t.range * pulseSize, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.globalAlpha = 0.05 * pulseSize;
+      ctx.fillStyle = GREEN_BRIGHT;
+      ctx.beginPath();
+      ctx.arc(t.x, t.y, t.range, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.globalAlpha = 1;
+    } else {
+      ctx.strokeStyle = 'rgba(51,255,51,0.25)';
+      ctx.lineWidth = 1; ctx.setLineDash([3, 5]);
+      ctx.beginPath();
+      ctx.arc(t.x, t.y, t.range, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
 
     const hpPct = t.hp / t.maxHp;
-    const col = hpPct > 0.5 ? GREEN : hpPct > 0.25 ? YELLOW : '#ffaa33';
+    const col = t.isHealer ? (hpPct > 0.5 ? GREEN_BRIGHT : hpPct > 0.25 ? YELLOW : ORANGE)
+                          : (hpPct > 0.5 ? GREEN : hpPct > 0.25 ? YELLOW : ORANGE);
 
-    // Spawn anim (crescendo)
     let scale = 1;
     if (t.spawnAnim > 0) scale = 0.5 + (1 - t.spawnAnim / 20) * 0.5;
 
     ctx.save();
     ctx.translate(t.x, t.y);
     ctx.scale(scale, scale);
-
-    // Base quadrada
     ctx.strokeStyle = col;
     ctx.lineWidth = 2;
     ctx.strokeRect(-11, -11, 22, 22);
-
-    // Cantos destacados
     ctx.beginPath();
     ctx.moveTo(-11, -11); ctx.lineTo(-6, -11);
     ctx.moveTo(-11, -11); ctx.lineTo(-11, -6);
@@ -844,28 +1127,49 @@ function draw() {
     ctx.moveTo(11, 11); ctx.lineTo(11, 6);
     ctx.stroke();
 
-    // Cano com recuo
-    const recoilOffset = t.recoil > 0 ? -t.recoil : 0;
-    ctx.rotate(t.angle);
-    ctx.fillStyle = col;
-    ctx.fillRect(11 + recoilOffset, -2, 12, 4);
+    if (!t.isHealer) {
+      const recoilOffset = t.recoil > 0 ? -t.recoil : 0;
+      ctx.rotate(t.angle);
+      ctx.fillStyle = col;
+      if (t.type === 'bazuca') {
+        ctx.fillRect(11 + recoilOffset, -3, 14, 6);
+        ctx.fillRect(22 + recoilOffset, -4, 4, 8);
+      } else if (t.type === 'metralhadora') {
+        ctx.fillRect(11 + recoilOffset, -2, 14, 2);
+        ctx.fillRect(11 + recoilOffset, 0, 14, 2);
+      } else {
+        ctx.fillRect(11 + recoilOffset, -2, 12, 4);
+      }
+    }
     ctx.restore();
 
     // Símbolo
     ctx.fillStyle = col;
-    ctx.font = 'bold 13px VT323, monospace';
     ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    const sym = t.type === 'recruta' ? 'R' : t.type === 'sniper' ? 'S' : 'F';
-    ctx.fillText(sym, t.x, t.y + 1);
+    if (t.isHealer) {
+      // Cruz Vermelha grande
+      ctx.shadowColor = GREEN_BRIGHT;
+      ctx.shadowBlur = t.healPulse > 0 ? 15 : 6;
+      ctx.fillRect(t.x - 2, t.y - 8, 4, 16);
+      ctx.fillRect(t.x - 8, t.y - 2, 16, 4);
+      ctx.shadowBlur = 0;
+    } else {
+      ctx.font = 'bold 13px VT323, monospace';
+      const sym = t.type === 'recruta' ? 'R'
+                : t.type === 'sniper' ? 'S'
+                : t.type === 'faca' ? 'F'
+                : t.type === 'metralhadora' ? 'M'
+                : 'B';
+      ctx.fillText(sym, t.x, t.y + 1);
+    }
 
-    // HP bar com cor dinâmica
+    // HP bar
     const bw = 26, bh = 3, bx = t.x - bw/2, by = t.y + 15;
     ctx.fillStyle = GREEN_DARK;
     ctx.fillRect(bx, by, bw, bh);
     ctx.fillStyle = col;
     ctx.fillRect(bx, by, bw * hpPct, bh);
 
-    // Piscar quando HP baixo
     if (hpPct < 0.3 && Math.floor(Date.now() / 200) % 2 === 0) {
       ctx.strokeStyle = YELLOW;
       ctx.lineWidth = 1;
@@ -873,7 +1177,7 @@ function draw() {
     }
   }
 
-  // ===== SPARKS (faíscas rápidas) =====
+  // Sparks
   for (const sp of sparks) {
     const p = sp.life / sp.maxLife;
     ctx.strokeStyle = sp.color;
@@ -885,7 +1189,7 @@ function draw() {
   }
   ctx.globalAlpha = 1;
 
-  // ===== SHOCKWAVES =====
+  // Shockwaves
   for (const s of shockwaves) {
     const p = s.life / s.maxLife;
     ctx.strokeStyle = s.color;
@@ -897,10 +1201,9 @@ function draw() {
   }
   ctx.globalAlpha = 1;
 
-  // ===== PROJÉTEIS =====
+  // Projéteis
   for (const b of bullets) {
     if (b.type === 'sniper') {
-      // Feixe do sniper
       if (b.target) {
         const grad = ctx.createLinearGradient(b.x, b.y, b.target.x, b.target.y);
         grad.addColorStop(0, 'rgba(51,255,255,0.9)');
@@ -911,19 +1214,48 @@ function draw() {
         ctx.moveTo(b.x, b.y); ctx.lineTo(b.target.x, b.target.y);
         ctx.stroke();
       }
+    } else if (b.type === 'metralhadora') {
+      ctx.fillStyle = YELLOW;
+      ctx.shadowColor = YELLOW;
+      ctx.shadowBlur = 6;
+      ctx.fillRect(b.x - 2, b.y - 2, 4, 4);
+      ctx.shadowBlur = 0;
     } else {
-      // Projétil com brilho pulsante
-      const pulse = 0.7 + Math.sin(Date.now() / 60) * 0.3;
+      const p = 0.7 + Math.sin(Date.now() / 60) * 0.3;
       ctx.fillStyle = GREEN_BRIGHT;
       ctx.shadowColor = GREEN;
-      ctx.shadowBlur = 8 * pulse;
+      ctx.shadowBlur = 8 * p;
       const s = b.type === 'faca' ? 5 : 3;
       ctx.fillRect(b.x - s/2, b.y - s/2, s, s);
       ctx.shadowBlur = 0;
     }
   }
 
-  // ===== PARTÍCULAS =====
+  // Mísseis
+  for (const m of missiles) {
+    ctx.save();
+    ctx.translate(m.x, m.y);
+    ctx.rotate(m.angle);
+    ctx.fillStyle = ORANGE;
+    ctx.shadowColor = ORANGE;
+    ctx.shadowBlur = 12;
+    ctx.fillRect(-8, -3, 16, 6);
+    ctx.fillStyle = YELLOW;
+    ctx.beginPath();
+    ctx.moveTo(8, -3); ctx.lineTo(14, 0); ctx.lineTo(8, 3);
+    ctx.closePath();
+    ctx.fill();
+    const flameLen = 6 + Math.random() * 4;
+    ctx.fillStyle = YELLOW;
+    ctx.beginPath();
+    ctx.moveTo(-8, -3); ctx.lineTo(-8 - flameLen, 0); ctx.lineTo(-8, 3);
+    ctx.closePath();
+    ctx.fill();
+    ctx.shadowBlur = 0;
+    ctx.restore();
+  }
+
+  // Partículas
   for (const p of particles) {
     const alpha = p.life / p.maxLife;
     ctx.globalAlpha = alpha;
@@ -932,54 +1264,135 @@ function draw() {
   }
   ctx.globalAlpha = 1;
 
-  // ===== EXPLOSÕES (legado) =====
-  for (const ex of explosions) {
-    const p = 1 - (ex.life / ex.maxLife);
-    const r = (ex.radius || 20) * (0.3 + p * 0.7);
-    ctx.strokeStyle = GREEN;
-    ctx.globalAlpha = ex.life / ex.maxLife;
-    ctx.lineWidth = 2;
-    ctx.beginPath(); ctx.arc(ex.x, ex.y, r, 0, Math.PI * 2); ctx.stroke();
-    ctx.beginPath();
-    ctx.moveTo(ex.x - r, ex.y); ctx.lineTo(ex.x + r, ex.y);
-    ctx.moveTo(ex.x, ex.y - r); ctx.lineTo(ex.x, ex.y + r);
-    ctx.stroke();
-    ctx.globalAlpha = 1;
+  // Efeitos de cura (cruz verde)
+  for (const h of heals) {
+    const p = h.life / h.maxLife;
+    const size = 6 + (1 - p) * 4;
+    ctx.globalAlpha = p;
+    ctx.fillStyle = GREEN_BRIGHT;
+    ctx.shadowColor = GREEN_BRIGHT;
+    ctx.shadowBlur = 10;
+    ctx.fillRect(h.x - size/4, h.y - size, size/2, size * 2);
+    ctx.fillRect(h.x - size, h.y - size/4, size * 2, size/2);
+    ctx.shadowBlur = 0;
   }
+  ctx.globalAlpha = 1;
 
-  // ===== INIMIGOS =====
+  // Inimigos
   for (const e of enemies) drawEnemy(e);
 
-  // ===== TEXTOS FLUTUANTES =====
+  // Textos
   for (const tx of texts) {
     const alpha = tx.life / tx.maxLife;
     ctx.globalAlpha = alpha;
     ctx.fillStyle = tx.color;
-    ctx.font = 'bold 14px VT323, monospace';
+    ctx.font = tx.text.length > 4 && tx.text.startsWith('-') && parseInt(tx.text.slice(1)) > 100
+      ? 'bold 22px VT323, monospace'
+      : 'bold 14px VT323, monospace';
     ctx.textAlign = 'center';
     ctx.shadowColor = tx.color;
-    ctx.shadowBlur = 4;
+    ctx.shadowBlur = 6;
     ctx.fillText(tx.text, tx.x, tx.y);
     ctx.shadowBlur = 0;
   }
   ctx.globalAlpha = 1;
 
+  // Drag preview
+  if (dragging && dragging.overCanvas) {
+    const d = dragging;
+    const col = d.valid ? WHITE : RED;
+    const isHealer = d.type === 'medico';
+
+    ctx.strokeStyle = col;
+    ctx.globalAlpha = 0.5;
+    ctx.lineWidth = 2; ctx.setLineDash([4, 6]);
+    ctx.beginPath();
+    ctx.arc(d.x, d.y, d.def.range, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    ctx.globalAlpha = 0.08;
+    ctx.fillStyle = col;
+    ctx.beginPath();
+    ctx.arc(d.x, d.y, d.def.range, 0, Math.PI * 2);
+    ctx.fill();
+
+    if (d.type === 'bazuca') {
+      ctx.globalAlpha = 0.15;
+      ctx.strokeStyle = ORANGE;
+      ctx.setLineDash([2, 4]);
+      ctx.beginPath();
+      ctx.arc(d.x, d.y, d.def.splash, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    ctx.globalAlpha = 0.9;
+    ctx.strokeStyle = col;
+    ctx.lineWidth = 2;
+    ctx.strokeRect(d.x - 11, d.y - 11, 22, 22);
+    ctx.beginPath();
+    ctx.moveTo(d.x - 11, d.y - 11); ctx.lineTo(d.x - 6, d.y - 11);
+    ctx.moveTo(d.x - 11, d.y - 11); ctx.lineTo(d.x - 11, d.y - 6);
+    ctx.moveTo(d.x + 11, d.y - 11); ctx.lineTo(d.x + 6, d.y - 11);
+    ctx.moveTo(d.x + 11, d.y - 11); ctx.lineTo(d.x + 11, d.y - 6);
+    ctx.moveTo(d.x - 11, d.y + 11); ctx.lineTo(d.x - 6, d.y + 11);
+    ctx.moveTo(d.x - 11, d.y + 11); ctx.lineTo(d.x - 11, d.y + 6);
+    ctx.moveTo(d.x + 11, d.y + 11); ctx.lineTo(d.x + 6, d.y + 11);
+    ctx.moveTo(d.x + 11, d.y + 11); ctx.lineTo(d.x + 11, d.y + 6);
+    ctx.stroke();
+
+    if (isHealer) {
+      ctx.fillStyle = col;
+      ctx.fillRect(d.x - 2, d.y - 8, 4, 16);
+      ctx.fillRect(d.x - 8, d.y - 2, 16, 4);
+    } else {
+      ctx.save();
+      ctx.translate(d.x, d.y);
+      ctx.rotate(-Math.PI / 4);
+      ctx.fillStyle = col;
+      ctx.fillRect(11, -2, 12, 4);
+      ctx.restore();
+
+      ctx.fillStyle = col;
+      ctx.font = 'bold 13px VT323, monospace';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      const sym = d.type === 'recruta' ? 'R'
+                : d.type === 'sniper' ? 'S'
+                : d.type === 'faca' ? 'F'
+                : d.type === 'metralhadora' ? 'M'
+                : 'B';
+      ctx.fillText(sym, d.x, d.y + 1);
+    }
+
+    ctx.globalAlpha = 1;
+  }
+
   ctx.restore();
 
-  // ===== FLASH DE TELA =====
+  // Flash
   if (screenFlash > 0.01) {
-    ctx.fillStyle = `rgba(51,255,51,${screenFlash})`;
+    ctx.fillStyle = `rgba(${screenFlashColor},${screenFlash})`;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
   }
 
-  // ===== VIGNETTE =====
+  // Aura vermelha de horda (borda pulsante)
+  if (hordeActive) {
+    const pulseAmount = 0.15 + Math.sin(hordePulse) * 0.15;
+    const grad = ctx.createRadialGradient(240, 240, 180, 240, 240, 300);
+    grad.addColorStop(0, 'rgba(255,51,51,0)');
+    grad.addColorStop(1, `rgba(255,51,51,${pulseAmount})`);
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  }
+
+  // Vinheta
   const vg = ctx.createRadialGradient(240, 240, 150, 240, 240, 340);
   vg.addColorStop(0, 'rgba(0,0,0,0)');
   vg.addColorStop(1, 'rgba(0,0,0,0.5)');
   ctx.fillStyle = vg;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  // Pausa
   if (paused) {
     ctx.fillStyle = 'rgba(0,0,0,0.7)';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -993,12 +1406,14 @@ function draw() {
   if (gameOver) {
     ctx.fillStyle = 'rgba(0,0,0,0.85)';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = GREEN;
+    ctx.fillStyle = RED;
     ctx.font = 'bold 48px VT323, monospace';
     ctx.textAlign = 'center';
-    ctx.shadowColor = GREEN; ctx.shadowBlur = 25;
-    ctx.fillText('GAME OVER', canvas.width/2, canvas.height/2 - 20);
+    ctx.shadowColor = RED; ctx.shadowBlur = 25;
+    ctx.fillText('VOCÊ CAIU', canvas.width/2, canvas.height/2 - 20);
+    ctx.fillStyle = GREEN;
     ctx.font = '28px VT323, monospace';
+    ctx.shadowColor = GREEN; ctx.shadowBlur = 15;
     ctx.fillText('ONDA ' + waveNum, canvas.width/2, canvas.height/2 + 30);
     ctx.shadowBlur = 0;
   }
@@ -1008,9 +1423,8 @@ function drawEnemy(e) {
   const s = e.size;
   const isFrozen = e.frozen > 0;
   const isHit = e.hitFlash > 0;
-  let color = isFrozen ? CYAN : (isHit ? '#ffffff' : GREEN);
+  let color = isFrozen ? CYAN : (isHit ? '#ffffff' : (hordeActive ? '#ff5555' : GREEN));
 
-  // Spawn anim (escala crescendo)
   let scale = 1;
   if (e.spawnAnim > 0) scale = 0.3 + (1 - e.spawnAnim / 15) * 0.7;
 
@@ -1021,12 +1435,7 @@ function drawEnemy(e) {
   ctx.strokeStyle = color;
   ctx.fillStyle = isHit ? color : BLACK;
   ctx.lineWidth = 2;
-
-  // Glow suave
-  if (isHit) {
-    ctx.shadowColor = '#ffffff';
-    ctx.shadowBlur = 8;
-  }
+  if (isHit) { ctx.shadowColor = '#ffffff'; ctx.shadowBlur = 8; }
 
   switch (e.drawStyle) {
     case 'square':
@@ -1038,7 +1447,6 @@ function drawEnemy(e) {
         ctx.fillRect(1, -3, 2, 2);
       }
       break;
-
     case 'tank':
       ctx.fillRect(-s/2, -s/2 + 2, s, s - 4);
       ctx.strokeRect(-s/2, -s/2 + 2, s, s - 4);
@@ -1046,49 +1454,35 @@ function drawEnemy(e) {
       ctx.fillStyle = color;
       ctx.fillRect(-s/2 + 2, -1, 2, 2);
       ctx.fillRect(s/2 - 4, -1, 2, 2);
-      // Blindagem extra: linhas
       ctx.strokeStyle = color;
       ctx.beginPath();
       ctx.moveTo(-s/2, 0); ctx.lineTo(s/2, 0);
       ctx.stroke();
       break;
-
     case 'triangle':
       ctx.beginPath();
-      ctx.moveTo(s/2, 0);
-      ctx.lineTo(-s/2, -s/2);
-      ctx.lineTo(-s/2, s/2);
+      ctx.moveTo(s/2, 0); ctx.lineTo(-s/2, -s/2); ctx.lineTo(-s/2, s/2);
       ctx.closePath();
       ctx.fill(); ctx.stroke();
       break;
-
     case 'arrow':
       ctx.beginPath();
-      ctx.moveTo(s/2, 0);
-      ctx.lineTo(-s/2, -s/2);
-      ctx.lineTo(-s/4, 0);
-      ctx.lineTo(-s/2, s/2);
+      ctx.moveTo(s/2, 0); ctx.lineTo(-s/2, -s/2);
+      ctx.lineTo(-s/4, 0); ctx.lineTo(-s/2, s/2);
       ctx.closePath();
       ctx.fill(); ctx.stroke();
       break;
-
     case 'diamond':
       ctx.beginPath();
-      ctx.moveTo(0, -s/2);
-      ctx.lineTo(s/2, 0);
-      ctx.lineTo(0, s/2);
-      ctx.lineTo(-s/2, 0);
+      ctx.moveTo(0, -s/2); ctx.lineTo(s/2, 0);
+      ctx.lineTo(0, s/2); ctx.lineTo(-s/2, 0);
       ctx.closePath();
       ctx.fill(); ctx.stroke();
       break;
-
     case 'dot':
       ctx.fillStyle = color;
-      ctx.beginPath();
-      ctx.arc(0, 0, s/2, 0, Math.PI * 2);
-      ctx.fill();
+      ctx.beginPath(); ctx.arc(0, 0, s/2, 0, Math.PI * 2); ctx.fill();
       break;
-
     case 'star':
       ctx.beginPath();
       for (let i = 0; i < 8; i++) {
@@ -1106,27 +1500,20 @@ function drawEnemy(e) {
   ctx.shadowBlur = 0;
   ctx.restore();
 
-  // HP bar (fora da transformação pra ficar nítida)
   const w = 20, h = 3;
   const bx = e.x - w/2, by = e.y - s/2 - 7;
   ctx.fillStyle = GREEN_DARK;
   ctx.fillRect(bx, by, w, h);
   const segs = 5;
   const filled = Math.max(0, Math.ceil((e.hp / e.maxHp) * segs));
-  ctx.fillStyle = isFrozen ? CYAN : GREEN;
+  ctx.fillStyle = isFrozen ? CYAN : (hordeActive ? RED : GREEN);
   for (let i = 0; i < filled; i++) {
     const sw = (w / segs) - 1;
     ctx.fillRect(bx + i * (w/segs), by, sw, h);
   }
 }
 
-document.addEventListener('keydown', e => {
-  if (e.code === 'Space') {
-    e.preventDefault();
-    if (!gameOver) paused = !paused;
-  }
-});
-
+canvas.style.cursor = 'crosshair';
 startWave();
 requestAnimationFrame(loop);
 updateUI();
