@@ -3,16 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>TOWER DEFENSE 1970 v11</title>
+<title>TOWER DEFENSE 1970 v12</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
-
   html, body {
     height: 100%; background: #000; color: #33ff33;
     font-family: 'VT323', 'Courier New', monospace;
-    overflow: hidden; user-select: none;
-    touch-action: manipulation;
+    overflow: hidden; user-select: none; touch-action: manipulation;
   }
   body { display: flex; justify-content: center; align-items: center; }
   body::before {
@@ -22,8 +20,7 @@
       rgba(0,0,0,0) 0px, rgba(0,0,0,0) 2px,
       rgba(0,0,0,0.28) 3px, rgba(0,0,0,0.28) 4px
     );
-    pointer-events: none; z-index: 9999;
-    animation: flicker 0.15s infinite;
+    pointer-events: none; z-index: 9999; animation: flicker 0.15s infinite;
   }
   body::after {
     content: ""; position: fixed; inset: 0;
@@ -33,7 +30,6 @@
   @keyframes flicker {
     0% { opacity: 0.94; } 50% { opacity: 1; } 100% { opacity: 0.96; }
   }
-
   #menu {
     position: fixed; inset: 0; background: #000;
     display: flex; flex-direction: column; justify-content: center; align-items: center;
@@ -60,8 +56,7 @@
   }
   .mode-btn:active, .mode-btn:hover {
     background: #33ff33; color: #000;
-    box-shadow: 0 0 40px #33ff33, 0 0 80px #33ff33;
-    transform: scale(1.05);
+    box-shadow: 0 0 40px #33ff33, 0 0 80px #33ff33; transform: scale(1.05);
   }
   .mode-btn:hover .mode-icon, .mode-btn:hover .mode-name, .mode-btn:hover .mode-desc,
   .mode-btn:active .mode-icon, .mode-btn:active .mode-name, .mode-btn:active .mode-desc {
@@ -70,7 +65,6 @@
   .mode-icon { font-size: 60px; margin-bottom: 10px; line-height: 1; }
   .mode-name { font-size: 34px; letter-spacing: 6px; margin-bottom: 8px; text-shadow: 0 0 10px #33ff33; }
   .mode-desc { font-size: 15px; letter-spacing: 3px; color: #22aa22; }
-
   #hordeBanner {
     position: fixed; top: 40%; left: 50%;
     transform: translate(-50%, -50%) scale(0);
@@ -88,9 +82,7 @@
     80% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
     100% { transform: translate(-50%, -50%) scale(1.1); opacity: 0; }
   }
-
   #game { display: flex; gap: 20px; z-index: 10; align-items: flex-start; }
-
   #ui {
     background: #000; padding: 15px; width: 260px;
     border: 2px solid #33ff33;
@@ -101,16 +93,13 @@
   #ui::-webkit-scrollbar { width: 6px; }
   #ui::-webkit-scrollbar-track { background: #000; }
   #ui::-webkit-scrollbar-thumb { background: #33ff33; }
-
   h2 {
     font-size: 18px; margin-bottom: 10px; color: #33ff33;
     text-shadow: 0 0 8px #33ff33;
     border-bottom: 1px dashed #33ff33;
     padding-bottom: 5px; letter-spacing: 2px;
   }
-
   .troops-grid { display: flex; flex-direction: column; gap: 4px; }
-
   .tower-btn {
     width: 100%; padding: 5px 8px;
     background: #000; border: 2px solid #33ff33; color: #33ff33;
@@ -133,13 +122,11 @@
   .stat-line { font-size: 11px; color: #22aa22; margin-top: 1px; }
   .cost-line { color: #ffd700; font-weight: bold; }
   .cost-line.expensive { color: #ff3333; }
-
   #stats {
     margin-top: 10px; padding-top: 8px;
     border-top: 1px dashed #33ff33; font-size: 16px;
   }
   #stats div { margin-bottom: 4px; text-shadow: 0 0 4px #33ff33; }
-
   #playerHpBox {
     margin-top: 12px; padding: 10px 8px;
     border: 2px solid #33ff33; background: #000;
@@ -168,13 +155,11 @@
     animation: hpBlink 0.4s steps(2) infinite;
   }
   @keyframes hpBlink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0.5; } }
-
   canvas {
     background: #000; border: 2px solid #33ff33;
     box-shadow: 0 0 25px #33ff33, inset 0 0 15px rgba(51,255,51,0.15);
     image-rendering: pixelated; touch-action: none; display: block;
   }
-
   #msg {
     position: fixed; top: 30px; left: 50%; transform: translateX(-50%);
     background: #000; border: 2px solid #33ff33; color: #33ff33;
@@ -183,7 +168,6 @@
     display: none; z-index: 1500;
     box-shadow: 0 0 20px #33ff33; white-space: nowrap;
   }
-
   .title {
     position: fixed; top: 8px; left: 20px;
     font-size: 18px; color: #33ff33;
@@ -195,11 +179,6 @@
     letter-spacing: 1px; z-index: 10; text-align: right; line-height: 1.4;
   }
   .map-info .map-name { color: #33ff33; text-shadow: 0 0 6px #33ff33; }
-  .map-info .horde-warn {
-    color: #ff3333; text-shadow: 0 0 6px #ff3333;
-    animation: hpBlink 0.4s steps(2) infinite;
-  }
-
   #btnMenu {
     position: fixed; bottom: 10px; left: 10px;
     background: #000; border: 2px solid #33ff33; color: #33ff33;
@@ -209,8 +188,6 @@
     touch-action: manipulation;
   }
   #btnMenu:hover { background: #33ff33; color: #000; }
-
-  /* MOBILE */
   body.mode-mobile {
     flex-direction: column; justify-content: flex-start;
     align-items: center; padding: 4px; gap: 4px;
@@ -266,7 +243,7 @@
   </div>
 </div>
 
-<div class="title" id="titleBar" style="display:none;">◄ TOWER DEFENSE · v11 ►</div>
+<div class="title" id="titleBar" style="display:none;">◄ TOWER DEFENSE · v12 ►</div>
 <div class="map-info" id="mapInfoBar" style="display:none;">
   MAPA: <span class="map-name" id="mapName">---</span><br>
   30m × 30m · 1m = 16px<br>
@@ -294,7 +271,11 @@
       </button>
       <button class="tower-btn" data-type="metralhadora">
         ▪ METRALHADORA · <span class="cost-line" data-cost="metralhadora">150</span>
-        <div class="stat-line">HP 100 · DMG 20 · 0.2s · 7m</div>
+        <div class="stat-line">HP 100 · DMG 25 · 0.2s · 7m</div>
+      </button>
+      <button class="tower-btn" data-type="lancachamas">
+        🔥 LANÇA-CHAMAS · <span class="cost-line" data-cost="lancachamas">180</span>
+        <div class="stat-line">HP 100 · DMG 15 · 0.1s · 4m · FOGO</div>
       </button>
       <button class="tower-btn" data-type="bazuca">
         ▪ BAZUCA · <span class="cost-line" data-cost="bazuca">200</span>
@@ -346,12 +327,13 @@ const YELLOW = '#ffff33';
 const CYAN = '#33ffff';
 const ICE = '#88ddff';
 const RED = '#ff3333';
+const FIRE = '#ff6600';
+const FIRE_BRIGHT = '#ffaa33';
 const WHITE = '#ffffff';
 const ORANGE = '#ffaa33';
 const GOLD = '#ffd700';
 const TOXIC = '#66ff33';
 
-// ================= MAPA ÚNICO: ZIGUE-ZAGUE =================
 const MAPS = [
   { name: 'ZIGUE-ZAGUE', path: [
     {x: 0, y: 64}, {x: 120, y: 64}, {x: 120, y: 180},
@@ -363,7 +345,6 @@ const MAPS = [
 
 let chosenMap, path, pathWidth = 32;
 
-// ================= ESTADO =================
 let gold = 100;
 let waveNum = 0;
 let paused = false;
@@ -386,6 +367,7 @@ const sparks = [];
 const heals = [];
 const moneyPops = [];
 const healZones = [];
+const flames = []; // cones de fogo visual
 
 let shakeAmount = 0;
 const shakeDecay = 0.9;
@@ -397,12 +379,12 @@ let dragging = null;
 let selectedTowerType = null;
 let pointerDownInfo = null;
 
-// ================= TROPAS =================
 const TOWER_TYPES = {
   recruta:      { cost: 50,  range: 5 * PPM,   damage: 25, fireRate: 60,  hp: 100, maxHp: 100 },
   sniper:       { cost: 150, range: 15 * PPM,  damage: 50, fireRate: 120, hp: 70,  maxHp: 70  },
   faca:         { cost: 100, range: 2.5 * PPM, damage: 80, fireRate: 30,  hp: 150, maxHp: 150 },
-  metralhadora: { cost: 150, range: 7 * PPM,   damage: 20, fireRate: 12,  hp: 100, maxHp: 100 },
+  metralhadora: { cost: 150, range: 7 * PPM,   damage: 25, fireRate: 12,  hp: 100, maxHp: 100 },
+  lancachamas:  { cost: 180, range: 4 * PPM,   damage: 15, fireRate: 6,   hp: 100, maxHp: 100, isFlamethrower: true },
   bazuca:       { cost: 200, range: 10 * PPM,  damage: 150, fireRate: 300, hp: 100, maxHp: 100, splash: 3 * PPM },
   medico:       { cost: 250, range: 5 * PPM,   damage: 0,  fireRate: 300, hp: 100, maxHp: 100, heal: 20, isHealer: true },
   comerciante:  { baseCost: 400, cost: 400, range: 0, damage: 0, fireRate: 300, hp: 100, maxHp: 100, income: 50, isMerchant: true }
@@ -430,7 +412,7 @@ const ENEMY_TYPES = {
   minion:    { hp: 50,  damage: 10,  speed: 80,  size: 9,  reward: 4,  drawStyle: 'dot' },
   explosivo: { hp: 100, damage: 50,  speed: 100, size: 14, reward: 20, drawStyle: 'star', onDeath: 'explode' },
   fungo:     { hp: 100, damage: 50,  speed: 100, size: 15, reward: 15, drawStyle: 'mushroom', onDeath: 'fungusZone' },
-  yeti:      { hp: 500, damage: 50,  speed: 70,  size: 20, reward: 35, armor: 5, drawStyle: 'yeti', aura: 4 * PPM }
+  yeti:      { hp: 500, damage: 50,  speed: 40,  size: 20, reward: 35, armor: 5, drawStyle: 'yeti', aura: 4 * PPM }
 };
 
 function getWaveComposition(wave) {
@@ -478,14 +460,12 @@ function distToSegment(p, a, b) {
   const px = a.x + t*dx, py = a.y + t*dy;
   return Math.hypot(p.x-px, p.y-py);
 }
-
 function isOnPath(x, y) {
   for (let i = 0; i < path.length - 1; i++) {
     if (distToSegment({x,y}, path[i], path[i+1]) < pathWidth/2 + 12) return true;
   }
   return false;
 }
-
 function isValidPlacement(x, y, type) {
   if (x < 14 || y < 14 || x > canvas.width - 14 || y > canvas.height - 14) return false;
   if (isOnPath(x, y)) return false;
@@ -494,7 +474,6 @@ function isValidPlacement(x, y, type) {
   return true;
 }
 
-// ================= PARTÍCULAS =================
 function addParticle(x, y, opts = {}) {
   particles.push({
     x, y,
@@ -564,8 +543,25 @@ function addMoneyPop(x, y, amount) {
     });
   }
 }
+function addFlameCone(x, y, angle, range) {
+  flames.push({ x, y, angle, range, life: 6, maxLife: 6 });
+}
+function addFireParticle(enemy) {
+  if (Math.random() < 0.6) {
+    addParticle(
+      enemy.x + (Math.random() - 0.5) * enemy.size,
+      enemy.y + (Math.random() - 0.5) * enemy.size,
+      {
+        vx: (Math.random() - 0.5) * 0.5,
+        vy: -0.8 - Math.random() * 1,
+        life: 25, size: 2,
+        color: Math.random() < 0.5 ? FIRE : FIRE_BRIGHT,
+        friction: 0.97
+      }
+    );
+  }
+}
 
-// ================= DANO/CURA =================
 function damagePlayer(amount) {
   playerHp -= amount;
   if (playerHp < 0) playerHp = 0;
@@ -585,7 +581,6 @@ function healPlayer(amount) {
   }
 }
 
-// ================= UI =================
 function updateUI() {
   document.getElementById('gold').textContent = gold;
   document.getElementById('wave').textContent = waveNum;
@@ -629,7 +624,6 @@ function selectTowerType(type) {
   if (btn) btn.classList.add('selected');
 }
 
-// ================= PLACEMENT =================
 function tryPlace(x, y, type) {
   if (!isValidPlacement(x, y, type)) {
     if (isOnPath(x, y)) showMsg('> ÁREA BLOQUEADA');
@@ -645,19 +639,19 @@ function tryPlace(x, y, type) {
     fireRate: def.fireRate, splash: def.splash || 0,
     heal: def.heal || 0, isHealer: def.isHealer || false,
     income: def.income || 0, isMerchant: def.isMerchant || false,
+    isFlamethrower: def.isFlamethrower || false,
     hp: def.hp, maxHp: def.maxHp,
     cooldown: 0, angle: 0,
     spawnAnim: 20, recoil: 0, healPulse: 0, incomePulse: 0
   });
   gold -= actualCost;
-  addShockwave(x, y, def.isHealer ? GREEN_BRIGHT : def.isMerchant ? GOLD : GREEN, 40, 22);
-  burst(x, y, 16, { speed: 3, life: 25, color: def.isHealer ? GREEN_BRIGHT : def.isMerchant ? GOLD : GREEN, size: 2 });
+  addShockwave(x, y, def.isHealer ? GREEN_BRIGHT : def.isMerchant ? GOLD : def.isFlamethrower ? FIRE : GREEN, 40, 22);
+  burst(x, y, 16, { speed: 3, life: 25, color: def.isHealer ? GREEN_BRIGHT : def.isMerchant ? GOLD : def.isFlamethrower ? FIRE : GREEN, size: 2 });
   addFlash(0.15);
   updateUI();
   return true;
 }
 
-// ================= INTERAÇÃO =================
 document.querySelectorAll('.tower-btn').forEach(btn => {
   btn.addEventListener('pointerdown', e => {
     e.preventDefault();
@@ -746,7 +740,6 @@ function showHordeBanner() {
   b.classList.add('show');
 }
 
-// ================= SPAWN =================
 function spawnEnemy(typeKey, x, y, wp) {
   const t = ENEMY_TYPES[typeKey];
   const hpScale = 1 + (waveNum - 1) * 0.15;
@@ -765,6 +758,7 @@ function spawnEnemy(typeKey, x, y, wp) {
     size: t.size, armor: t.armor || 0,
     drawStyle: t.drawStyle, onDeath: t.onDeath || null,
     aura: t.aura || 0,
+    fireTimer: 0, fireTickTimer: 0, // efeito de queimadura
     spawnAnim: 15, hitFlash: 0, lastTrailTime: 0, lastHealTick: 0
   });
   addShockwave(ex, ey, hordeActive ? RED : GREEN, 20, 12);
@@ -822,12 +816,20 @@ function areaExplosion(x, y, damage, radius) {
   updateUI();
 }
 
-function damageEnemy(e, amount, fromX, fromY) {
+function damageEnemy(e, amount, fromX, fromY, isFire) {
   const real = Math.max(1, amount - (e.armor || 0));
   e.hp -= real; e.hitFlash = 6;
-  burst(e.x, e.y, 5, { speed: 2, life: 12, size: 1.5, color: GREEN_BRIGHT });
-  addText(e.x, e.y - e.size - 5, '-' + real, GREEN_BRIGHT, 30);
+  if (!isFire) {
+    burst(e.x, e.y, 5, { speed: 2, life: 12, size: 1.5, color: GREEN_BRIGHT });
+  }
+  addText(e.x, e.y - e.size - 5, '-' + real, isFire ? FIRE_BRIGHT : GREEN_BRIGHT, 30);
   if (fromX !== undefined && fromY !== undefined) addSpark(fromX, fromY, e.x, e.y, GREEN_BRIGHT);
+}
+
+function applyFire(e) {
+  // Renova o tempo de queimadura
+  e.fireTimer = 5 * 60; // 5 segundos
+  e.fireTickTimer = 0;
 }
 
 function bazookaExplosion(x, y, damage, radius) {
@@ -883,7 +885,6 @@ function spawnFungusZone(x, y) {
   addFlash(0.15, '102,255,51');
 }
 
-// ================= LOOP =================
 let lastTime = 0;
 function loop(time) {
   requestAnimationFrame(loop);
@@ -907,10 +908,8 @@ function loop(time) {
     if (waveDelay <= 0) startWave();
   }
 
-  // ===== RESETAR FLAG DE CONGELAMENTO DAS TROPAS =====
   for (const t of towers) t.frozenByYeti = false;
 
-  // ===== INIMIGOS =====
   for (let i = enemies.length - 1; i >= 0; i--) {
     const e = enemies[i];
     if (e.spawnAnim > 0) e.spawnAnim -= dt;
@@ -922,20 +921,28 @@ function loop(time) {
       e.lastTrailTime = 4;
     }
 
-    // YETI: aplicar congelamento nas tropas dentro do raio
+    // QUEIMADURA
+    if (e.fireTimer > 0) {
+      e.fireTimer -= dt;
+      e.fireTickTimer += dt;
+      addFireParticle(e);
+      // 10 dano por segundo (60 ticks)
+      if (e.fireTickTimer >= 60) {
+        e.fireTickTimer -= 60;
+        damageEnemy(e, 10, undefined, undefined, true);
+      }
+      if (e.fireTimer <= 0) e.fireTimer = 0;
+    }
+
     if (e.aura > 0) {
       for (const t of towers) {
-        if (Math.hypot(t.x - e.x, t.y - e.y) <= e.aura) {
-          t.frozenByYeti = true;
-        }
+        if (Math.hypot(t.x - e.x, t.y - e.y) <= e.aura) t.frozenByYeti = true;
       }
-      // Partículas de gelo esporádicas
       if (Math.random() < 0.15) {
         const angle = Math.random() * Math.PI * 2;
         const r = e.aura * (0.5 + Math.random() * 0.5);
         addParticle(e.x + Math.cos(angle) * r, e.y + Math.sin(angle) * r, {
-          vx: (Math.random() - 0.5) * 0.5,
-          vy: -0.5 - Math.random() * 0.5,
+          vx: (Math.random() - 0.5) * 0.5, vy: -0.5 - Math.random() * 0.5,
           life: 30, size: 2, color: ICE, friction: 0.97
         });
       }
@@ -984,14 +991,12 @@ function loop(time) {
     }
   }
 
-  // ===== TROPAS =====
   for (const t of towers) {
     if (t.spawnAnim > 0) t.spawnAnim -= dt;
     if (t.recoil > 0) t.recoil -= dt * 3;
     if (t.healPulse > 0) t.healPulse -= dt * 2;
     if (t.incomePulse > 0) t.incomePulse -= dt * 2;
 
-    // Congelamento do Yeti: cooldown roda 3x mais lento (ou seja, decresce 1/3 do normal)
     const cooldownSpeed = t.frozenByYeti ? (1/3) : 1;
     t.cooldown -= dt * cooldownSpeed;
 
@@ -1024,6 +1029,7 @@ function loop(time) {
       continue;
     }
 
+    // Encontra alvo
     let target = null, bestDist = Infinity;
     for (const e of enemies) {
       const d = Math.hypot(e.x - t.x, e.y - t.y);
@@ -1034,7 +1040,18 @@ function loop(time) {
       if (t.cooldown <= 0) {
         const mx = t.x + Math.cos(t.angle) * 14;
         const my = t.y + Math.sin(t.angle) * 14;
-        if (t.type === 'bazuca') {
+
+        if (t.isFlamethrower) {
+          // Lança-chamas: cone visual + dano imediato + aplica fogo
+          addFlameCone(t.x, t.y, t.angle, t.range);
+          // Dano imediato no alvo
+          damageEnemy(target, t.damage, t.x, t.y);
+          // Aplica/renova queimadura
+          applyFire(target);
+          // Pequeno burst de fogo na boca
+          burst(mx, my, 6, { speed: 2.5, life: 15, size: 2, color: FIRE });
+          t.recoil = 2;
+        } else if (t.type === 'bazuca') {
           burst(mx, my, 8, { speed: 3, life: 14, size: 2, color: ORANGE });
           addShockwave(mx, my, ORANGE, 12, 12);
           missiles.push({ x: t.x, y: t.y, target, damage: t.damage, splash: t.splash, speed: 6, angle: t.angle, life: 300 });
@@ -1050,6 +1067,7 @@ function loop(time) {
     }
   }
 
+  // Mísseis
   for (let i = missiles.length - 1; i >= 0; i--) {
     const m = missiles[i];
     m.life -= dt;
@@ -1074,6 +1092,7 @@ function loop(time) {
     m.y += Math.sin(m.angle) * m.speed * dt;
   }
 
+  // Projéteis
   for (let i = bullets.length - 1; i >= 0; i--) {
     const b = bullets[i];
     addTrail(b.x, b.y, b.type === 'sniper' ? CYAN : GREEN, b.type === 'faca' ? 3 : 2, 10);
@@ -1100,6 +1119,7 @@ function loop(time) {
     } else { b.x += (dx/dist) * b.speed * dt; b.y += (dy/dist) * b.speed * dt; }
   }
 
+  // Partículas, trails, shockwaves, sparks, texts, heals, moneyPops, flames
   for (let i = particles.length - 1; i >= 0; i--) {
     const p = particles[i];
     p.x += p.vx * dt; p.y += p.vy * dt;
@@ -1122,6 +1142,10 @@ function loop(time) {
     const mp = moneyPops[i]; mp.y += mp.vy * dt; mp.vy *= 0.97; mp.life -= dt;
     if (mp.life <= 0) moneyPops.splice(i, 1);
   }
+  for (let i = flames.length - 1; i >= 0; i--) {
+    flames[i].life -= dt;
+    if (flames[i].life <= 0) flames.splice(i, 1);
+  }
   for (let i = explosions.length - 1; i >= 0; i--) { explosions[i].life -= dt; if (explosions[i].life <= 0) explosions.splice(i, 1); }
 
   shakeAmount *= shakeDecay; if (shakeAmount < 0.1) shakeAmount = 0;
@@ -1131,7 +1155,6 @@ function loop(time) {
   draw();
 }
 
-// ================= DESENHO =================
 function draw() {
   ctx.save();
   if (shakeAmount > 0.1) {
@@ -1150,7 +1173,6 @@ function draw() {
   for (let x = 0; x <= canvas.width; x += PPM * 5) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke(); }
   for (let y = 0; y <= canvas.height; y += PPM * 5) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke(); }
 
-  // Zonas de cura do fungo
   for (const z of healZones) {
     const p = z.life / z.maxLife;
     ctx.globalAlpha = 0.15 * p + Math.sin(z.pulse) * 0.05;
@@ -1163,7 +1185,6 @@ function draw() {
   }
   ctx.globalAlpha = 1;
 
-  // Aura do Yeti (círculo ciano no chão)
   for (const e of enemies) {
     if (e.aura > 0) {
       const pulse = 0.6 + Math.sin(Date.now() / 300) * 0.2;
@@ -1197,6 +1218,32 @@ function draw() {
   }
   ctx.globalAlpha = 1;
 
+  // Cones de fogo
+  for (const f of flames) {
+    const p = f.life / f.maxLife;
+    ctx.save();
+    ctx.translate(f.x, f.y);
+    ctx.rotate(f.angle);
+    ctx.globalAlpha = p * 0.75;
+    // Gradiente laranja → amarelo → transparente
+    const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, f.range);
+    grad.addColorStop(0, 'rgba(255,255,150,1)');
+    grad.addColorStop(0.3, 'rgba(255,170,50,0.9)');
+    grad.addColorStop(0.7, 'rgba(255,100,0,0.6)');
+    grad.addColorStop(1, 'rgba(255,50,0,0)');
+    ctx.fillStyle = grad;
+    // Cone (semicírculo aberto)
+    const spread = Math.PI / 6; // 30°
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.arc(0, 0, f.range, -spread, spread);
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+  }
+  ctx.globalAlpha = 1;
+
+  // Tropas
   for (const t of towers) {
     const isFrozenByYeti = t.frozenByYeti;
 
@@ -1220,7 +1267,7 @@ function draw() {
       ctx.beginPath(); ctx.arc(t.x, t.y, 30, 0, Math.PI * 2); ctx.fill();
       ctx.globalAlpha = 1;
     } else {
-      ctx.strokeStyle = isFrozenByYeti ? 'rgba(136,221,255,0.4)' : 'rgba(51,255,51,0.25)';
+      ctx.strokeStyle = isFrozenByYeti ? 'rgba(136,221,255,0.4)' : (t.isFlamethrower ? 'rgba(255,100,0,0.3)' : 'rgba(51,255,51,0.25)');
       ctx.lineWidth = 1; ctx.setLineDash([3, 5]);
       ctx.beginPath(); ctx.arc(t.x, t.y, t.range, 0, Math.PI * 2); ctx.stroke();
       ctx.setLineDash([]);
@@ -1228,15 +1275,11 @@ function draw() {
 
     const hpPct = t.hp / t.maxHp;
     let col;
-    if (isFrozenByYeti) {
-      col = ICE;
-    } else if (t.isHealer) {
-      col = hpPct > 0.5 ? GREEN_BRIGHT : hpPct > 0.25 ? YELLOW : ORANGE;
-    } else if (t.isMerchant) {
-      col = hpPct > 0.5 ? GOLD : hpPct > 0.25 ? YELLOW : ORANGE;
-    } else {
-      col = hpPct > 0.5 ? GREEN : hpPct > 0.25 ? YELLOW : ORANGE;
-    }
+    if (isFrozenByYeti) col = ICE;
+    else if (t.isHealer) col = hpPct > 0.5 ? GREEN_BRIGHT : hpPct > 0.25 ? YELLOW : ORANGE;
+    else if (t.isMerchant) col = hpPct > 0.5 ? GOLD : hpPct > 0.25 ? YELLOW : ORANGE;
+    else if (t.isFlamethrower) col = hpPct > 0.5 ? FIRE : hpPct > 0.25 ? YELLOW : ORANGE;
+    else col = hpPct > 0.5 ? GREEN : hpPct > 0.25 ? YELLOW : ORANGE;
 
     let scale = 1;
     if (t.spawnAnim > 0) scale = 0.5 + (1 - t.spawnAnim / 20) * 0.5;
@@ -1265,6 +1308,10 @@ function draw() {
       } else if (t.type === 'metralhadora') {
         ctx.fillRect(11 + recoilOffset, -2, 14, 2);
         ctx.fillRect(11 + recoilOffset, 0, 14, 2);
+      } else if (t.isFlamethrower) {
+        ctx.fillRect(11 + recoilOffset, -3, 14, 6);
+        // Bico do lança-chamas
+        ctx.fillRect(23 + recoilOffset, -5, 4, 10);
       } else {
         ctx.fillRect(11 + recoilOffset, -2, 12, 4);
       }
@@ -1284,20 +1331,34 @@ function draw() {
       ctx.shadowColor = isFrozenByYeti ? ICE : GOLD;
       ctx.shadowBlur = t.incomePulse > 0 ? 15 : 6;
       ctx.fillText('$', t.x, t.y + 1); ctx.shadowBlur = 0;
+    } else if (t.isFlamethrower) {
+      // Chama desenhada no centro
+      ctx.shadowColor = FIRE;
+      ctx.shadowBlur = 10;
+      ctx.fillStyle = FIRE_BRIGHT;
+      ctx.beginPath();
+      ctx.moveTo(t.x, t.y - 7);
+      ctx.lineTo(t.x - 5, t.y + 3);
+      ctx.lineTo(t.x - 2, t.y + 3);
+      ctx.lineTo(t.x - 2, t.y + 7);
+      ctx.lineTo(t.x + 2, t.y + 7);
+      ctx.lineTo(t.x + 2, t.y + 3);
+      ctx.lineTo(t.x + 5, t.y + 3);
+      ctx.closePath();
+      ctx.fill();
+      ctx.shadowBlur = 0;
     } else {
       ctx.font = 'bold 13px VT323, monospace';
       const sym = t.type === 'recruta' ? 'R' : t.type === 'sniper' ? 'S' : t.type === 'faca' ? 'F' : t.type === 'metralhadora' ? 'M' : 'B';
       ctx.fillText(sym, t.x, t.y + 1);
     }
 
-    // Indicador de congelamento: flocos em volta
     if (isFrozenByYeti) {
       ctx.strokeStyle = ICE;
       ctx.globalAlpha = 0.7 + Math.sin(Date.now() / 200) * 0.3;
       ctx.lineWidth = 1;
       ctx.beginPath(); ctx.arc(t.x, t.y, 17, 0, Math.PI * 2); ctx.stroke();
       ctx.globalAlpha = 1;
-      // 4 pontinhos em cruz
       for (let k = 0; k < 4; k++) {
         const ang = (Math.PI / 2) * k + Date.now() / 800;
         const px = t.x + Math.cos(ang) * 15;
@@ -1407,6 +1468,7 @@ function draw() {
     const col = d.valid ? WHITE : RED;
     const isHealer = d.type === 'medico';
     const isMerchant = d.type === 'comerciante';
+    const isFlame = d.type === 'lancachamas';
 
     ctx.strokeStyle = col; ctx.globalAlpha = 0.5; ctx.lineWidth = 2;
     ctx.setLineDash([4, 6]);
@@ -1442,6 +1504,18 @@ function draw() {
       ctx.fillStyle = col; ctx.font = 'bold 16px VT323, monospace';
       ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
       ctx.fillText('$', d.x, d.y + 1);
+    } else if (isFlame) {
+      ctx.fillStyle = col;
+      ctx.beginPath();
+      ctx.moveTo(d.x, d.y - 7);
+      ctx.lineTo(d.x - 5, d.y + 3);
+      ctx.lineTo(d.x - 2, d.y + 3);
+      ctx.lineTo(d.x - 2, d.y + 7);
+      ctx.lineTo(d.x + 2, d.y + 7);
+      ctx.lineTo(d.x + 2, d.y + 3);
+      ctx.lineTo(d.x + 5, d.y + 3);
+      ctx.closePath();
+      ctx.fill();
     } else {
       ctx.save(); ctx.translate(d.x, d.y); ctx.rotate(-Math.PI / 4);
       ctx.fillStyle = col; ctx.fillRect(11, -2, 12, 4); ctx.restore();
@@ -1501,18 +1575,24 @@ function drawEnemy(e) {
   const isFrozen = e.frozen > 0;
   const isHit = e.hitFlash > 0;
   const isYeti = e.type === 'yeti';
+  const isBurning = e.fireTimer > 0;
 
   let color;
-  if (isYeti) {
-    color = isHit ? '#ffffff' : (isFrozen ? CYAN : ICE);
-  } else if (e.type === 'fungo') {
-    color = isHit ? '#ffffff' : (isFrozen ? CYAN : TOXIC);
-  } else {
-    color = isFrozen ? CYAN : (isHit ? '#ffffff' : (hordeActive ? '#ff5555' : GREEN));
-  }
+  if (isHit) color = '#ffffff';
+  else if (isFrozen) color = CYAN;
+  else if (isBurning) color = FIRE_BRIGHT;
+  else if (isYeti) color = ICE;
+  else if (e.type === 'fungo') color = TOXIC;
+  else color = hordeActive ? '#ff5555' : GREEN;
 
   let scale = 1;
   if (e.spawnAnim > 0) scale = 0.3 + (1 - e.spawnAnim / 15) * 0.7;
+
+  // Glow laranja se queimando
+  if (isBurning && !isHit) {
+    ctx.shadowColor = FIRE;
+    ctx.shadowBlur = 12;
+  }
 
   ctx.save();
   ctx.translate(e.x, e.y); ctx.scale(scale, scale);
@@ -1569,14 +1649,10 @@ function drawEnemy(e) {
       ctx.beginPath(); ctx.arc(5, -s/2 + 3, 1, 0, Math.PI * 2); ctx.fill();
       break;
     case 'yeti':
-      // Cubo de gelo grande com detalhes
       ctx.fillStyle = isHit ? color : BLACK;
-      // Corpo
       ctx.fillRect(-s/2, -s/2, s, s);
       ctx.strokeRect(-s/2, -s/2, s, s);
-      // Face interna (cubo menor)
       ctx.strokeRect(-s/4, -s/4, s/2, s/2);
-      // Cruz (floco de neve)
       ctx.strokeStyle = color;
       ctx.beginPath();
       ctx.moveTo(-s/2, 0); ctx.lineTo(s/2, 0);
@@ -1584,7 +1660,6 @@ function drawEnemy(e) {
       ctx.moveTo(-s/3, -s/3); ctx.lineTo(s/3, s/3);
       ctx.moveTo(-s/3, s/3); ctx.lineTo(s/3, -s/3);
       ctx.stroke();
-      // Olhos
       ctx.fillStyle = color;
       ctx.fillRect(-4, -4, 2, 2);
       ctx.fillRect(2, -4, 2, 2);
@@ -1597,17 +1672,31 @@ function drawEnemy(e) {
   ctx.fillStyle = GREEN_DARK; ctx.fillRect(bx, by, w, h);
   const segs = 5;
   const filled = Math.max(0, Math.ceil((e.hp / e.maxHp) * segs));
-  ctx.fillStyle = isYeti ? ICE : (isFrozen ? CYAN : (e.type === 'fungo' ? TOXIC : (hordeActive ? RED : GREEN)));
+  ctx.fillStyle = isYeti ? ICE : (isBurning ? FIRE : (isFrozen ? CYAN : (e.type === 'fungo' ? TOXIC : (hordeActive ? RED : GREEN))));
   for (let i = 0; i < filled; i++) {
     const sw = (w / segs) - 1;
     ctx.fillRect(bx + i * (w/segs), by, sw, h);
   }
+
+  // Indicador de queimadura (chama pequena acima)
+  if (isBurning) {
+    const fy = by - 6 + Math.sin(Date.now() / 100) * 1;
+    ctx.fillStyle = FIRE_BRIGHT;
+    ctx.shadowColor = FIRE;
+    ctx.shadowBlur = 8;
+    ctx.beginPath();
+    ctx.moveTo(e.x, fy - 4);
+    ctx.lineTo(e.x - 3, fy + 2);
+    ctx.lineTo(e.x + 3, fy + 2);
+    ctx.closePath();
+    ctx.fill();
+    ctx.shadowBlur = 0;
+  }
 }
 
-// ================= INICIALIZAÇÃO =================
 function startGame(mode) {
   gameMode = mode;
-  chosenMap = MAPS[0]; // Único mapa: Zigue-Zague
+  chosenMap = MAPS[0];
   path = chosenMap.path;
   document.getElementById('mapName').textContent = chosenMap.name;
 
@@ -1625,7 +1714,7 @@ function startGame(mode) {
   missiles.length = 0; explosions.length = 0; particles.length = 0;
   trails.length = 0; texts.length = 0; shockwaves.length = 0;
   sparks.length = 0; heals.length = 0; moneyPops.length = 0;
-  healZones.length = 0;
+  healZones.length = 0; flames.length = 0;
   waveQueue = []; waveActive = false; waveDelay = 0; hordeActive = false;
   dragging = null; selectedTowerType = null; pointerDownInfo = null;
 
@@ -1635,8 +1724,7 @@ function startGame(mode) {
 
 document.querySelectorAll('.mode-btn').forEach(btn => {
   btn.addEventListener('click', () => {
-    const mode = btn.dataset.mode;
-    startGame(mode);
+    startGame(btn.dataset.mode);
   });
 });
 
