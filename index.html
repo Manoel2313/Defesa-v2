@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>TOWER DEFENSE 1970 v13</title>
+<title>TOWER DEFENSE 1970 v15</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
@@ -27,9 +27,7 @@
     background: radial-gradient(circle at center, rgba(51,255,51,0.07), rgba(0,0,0,0.65) 100%);
     pointer-events: none; z-index: 9998;
   }
-  @keyframes flicker {
-    0% { opacity: 0.94; } 50% { opacity: 1; } 100% { opacity: 0.96; }
-  }
+  @keyframes flicker { 0% { opacity: 0.94; } 50% { opacity: 1; } 100% { opacity: 0.96; } }
   #menu {
     position: fixed; inset: 0; background: #000;
     display: flex; flex-direction: column; justify-content: center; align-items: center;
@@ -66,7 +64,6 @@
   .mode-name { font-size: 34px; letter-spacing: 6px; margin-bottom: 8px; text-shadow: 0 0 10px #33ff33; }
   .mode-desc { font-size: 15px; letter-spacing: 3px; color: #22aa22; }
 
-  /* ========== DECK SELECTION ========== */
   #deckScreen {
     position: fixed; inset: 0; background: #000;
     display: none; flex-direction: column;
@@ -89,34 +86,23 @@
   #deckGrid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 8px;
-    max-width: 1100px; margin: 0 auto;
-    width: 100%;
+    gap: 8px; max-width: 1100px; margin: 0 auto; width: 100%;
   }
   .deck-card {
-    background: #000;
-    border: 2px solid #33ff33;
-    color: #33ff33;
-    padding: 8px;
-    cursor: pointer;
-    font-family: 'VT323', monospace;
-    text-align: left;
-    line-height: 1.2;
-    transition: all 0.1s;
-    user-select: none;
-    position: relative;
+    background: #000; border: 2px solid #33ff33; color: #33ff33;
+    padding: 8px; cursor: pointer;
+    font-family: 'VT323', monospace; text-align: left;
+    line-height: 1.2; transition: all 0.1s;
+    user-select: none; position: relative;
   }
   .deck-card:hover { background: #062a06; }
   .deck-card.selected {
-    background: #1a4a1a;
-    border-color: #ffd700;
+    background: #1a4a1a; border-color: #ffd700;
     box-shadow: 0 0 15px #ffd700, inset 0 0 10px rgba(255,215,0,0.3);
   }
   .deck-card.selected::after {
-    content: "✓";
-    position: absolute; top: 4px; right: 8px;
-    color: #ffd700; font-size: 22px;
-    text-shadow: 0 0 8px #ffd700;
+    content: "✓"; position: absolute; top: 4px; right: 8px;
+    color: #ffd700; font-size: 22px; text-shadow: 0 0 8px #ffd700;
   }
   .deck-card .card-name { font-size: 16px; font-weight: bold; margin-bottom: 3px; text-shadow: 0 0 4px #33ff33; }
   .deck-card.selected .card-name { color: #ffd700; text-shadow: 0 0 6px #ffd700; }
@@ -126,30 +112,18 @@
 
   #deckActions {
     display: flex; gap: 15px; justify-content: center;
-    margin-top: 15px; flex-wrap: wrap;
-    padding-bottom: 20px;
+    margin-top: 15px; flex-wrap: wrap; padding-bottom: 20px;
   }
   .deck-action-btn {
     background: #000; border: 2px solid #33ff33; color: #33ff33;
     padding: 10px 22px; font-family: 'VT323', monospace;
     font-size: 20px; cursor: pointer; letter-spacing: 2px;
-    box-shadow: 0 0 10px #33ff33;
-    transition: all 0.15s;
-    user-select: none;
+    box-shadow: 0 0 10px #33ff33; transition: all 0.15s; user-select: none;
   }
-  .deck-action-btn:hover:not(:disabled) {
-    background: #33ff33; color: #000; box-shadow: 0 0 25px #33ff33;
-  }
-  .deck-action-btn:disabled {
-    opacity: 0.3; cursor: not-allowed;
-  }
-  .deck-action-btn.primary {
-    border-color: #ffd700; color: #ffd700;
-    box-shadow: 0 0 10px #ffd700;
-  }
-  .deck-action-btn.primary:hover:not(:disabled) {
-    background: #ffd700; color: #000; box-shadow: 0 0 25px #ffd700;
-  }
+  .deck-action-btn:hover:not(:disabled) { background: #33ff33; color: #000; box-shadow: 0 0 25px #33ff33; }
+  .deck-action-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+  .deck-action-btn.primary { border-color: #ffd700; color: #ffd700; box-shadow: 0 0 10px #ffd700; }
+  .deck-action-btn.primary:hover:not(:disabled) { background: #ffd700; color: #000; box-shadow: 0 0 25px #ffd700; }
 
   #hordeBanner {
     position: fixed; top: 40%; left: 50%;
@@ -161,13 +135,40 @@
     font-family: 'VT323', monospace; white-space: nowrap;
   }
   #hordeBanner.show { animation: hordeIntro 2.5s ease-out forwards; }
+  #hordeBanner.boss { color: #ff2200; text-shadow: 0 0 40px #ff2200, 0 0 80px #ff2200, 0 0 120px #ff2200; }
   @keyframes hordeIntro {
     0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
-    15% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+    15% { transform: translate(-50%, -50%) scale(1.3); opacity: 1; }
     25% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
     80% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
     100% { transform: translate(-50%, -50%) scale(1.1); opacity: 0; }
   }
+
+  #bossHpBar {
+    position: fixed; top: 12px; left: 50%;
+    transform: translateX(-50%);
+    width: min(85vw, 520px);
+    background: #000; border: 3px solid #ff2200;
+    box-shadow: 0 0 25px #ff2200, inset 0 0 15px rgba(255,34,0,0.3);
+    padding: 6px 10px; display: none; z-index: 1400;
+    font-family: 'VT323', monospace;
+  }
+  #bossHpBar .boss-label {
+    font-size: 16px; color: #ff2200;
+    text-shadow: 0 0 10px #ff2200;
+    letter-spacing: 4px; text-align: center; margin-bottom: 3px;
+  }
+  #bossHpBar .boss-bar-outer {
+    width: 100%; height: 16px; background: #1a0000;
+    border: 1px solid #ff2200; position: relative; overflow: hidden;
+  }
+  #bossHpBar .boss-bar-inner {
+    height: 100%; width: 100%;
+    background: linear-gradient(90deg, #8a0000, #ff2200, #ff6600);
+    box-shadow: 0 0 12px #ff2200; transition: width 0.2s linear;
+  }
+  #bossHpBar .boss-bar-inner.low { animation: hpBlink 0.3s steps(2) infinite; }
+
   #game { display: flex; gap: 20px; z-index: 10; align-items: flex-start; }
   #ui {
     background: #000; padding: 15px; width: 260px;
@@ -270,8 +271,7 @@
     background: #000; border: 2px solid #33ff33; color: #33ff33;
     font-family: 'VT323', monospace; font-size: 16px;
     padding: 6px 12px; cursor: pointer; letter-spacing: 2px;
-    box-shadow: 0 0 10px #33ff33; z-index: 100;
-    touch-action: manipulation;
+    box-shadow: 0 0 10px #33ff33; z-index: 100; touch-action: manipulation;
   }
   #btnMenu:hover { background: #33ff33; color: #000; }
   body.mode-mobile {
@@ -289,9 +289,7 @@
     padding: 8px; font-size: 14px; overflow-y: auto;
   }
   body.mode-mobile h2 { font-size: 15px; margin-bottom: 5px; padding-bottom: 3px; }
-  body.mode-mobile .troops-grid {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 3px;
-  }
+  body.mode-mobile .troops-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; }
   body.mode-mobile .tower-btn { font-size: 12px; padding: 6px 5px; line-height: 1.15; }
   body.mode-mobile .stat-line { font-size: 9px; }
   body.mode-mobile #playerHpBox { margin-top: 6px; padding: 6px; }
@@ -308,10 +306,7 @@
   }
   body.mode-mobile #hordeBanner { font-size: 44px; }
   body.mode-mobile #msg { font-size: 16px; padding: 8px 16px; }
-  body.mode-mobile #deckGrid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 4px;
-  }
+  body.mode-mobile #deckGrid { grid-template-columns: repeat(2, 1fr); gap: 4px; }
   body.mode-mobile .deck-card { padding: 5px; }
   body.mode-mobile .deck-card .card-name { font-size: 12px; }
   body.mode-mobile .deck-card .card-cost { font-size: 10px; }
@@ -319,11 +314,13 @@
   body.mode-mobile #deckScreen h2 { font-size: 22px; }
   body.mode-mobile #deckScreen .deck-info { font-size: 14px; }
   body.mode-mobile .deck-action-btn { font-size: 14px; padding: 8px 14px; }
+  body.mode-mobile #bossHpBar { width: min(96vw, 480px); top: 6px; padding: 4px 6px; }
+  body.mode-mobile #bossHpBar .boss-label { font-size: 13px; }
+  body.mode-mobile #bossHpBar .boss-bar-outer { height: 12px; }
 </style>
 </head>
 <body>
 
-<!-- MENU -->
 <div id="menu">
   <h1>◄ TOWER DEFENSE ►</h1>
   <div class="subtitle">1 9 7 0</div>
@@ -341,7 +338,6 @@
   </div>
 </div>
 
-<!-- DECK SELECTION -->
 <div id="deckScreen">
   <h2>◄ ESCOLHA SEU DECK ►</h2>
   <div class="deck-info" id="deckInfo">
@@ -356,7 +352,7 @@
   </div>
 </div>
 
-<div class="title" id="titleBar" style="display:none;">◄ TOWER DEFENSE · v13 ►</div>
+<div class="title" id="titleBar" style="display:none;">◄ TOWER DEFENSE · v15 ►</div>
 <div class="map-info" id="mapInfoBar" style="display:none;">
   MAPA: <span class="map-name" id="mapName">---</span><br>
   30m × 30m · 1m = 16px<br>
@@ -365,12 +361,18 @@
 <div id="msg"></div>
 <div id="hordeBanner">⚠ HORDA ⚠</div>
 
+<div id="bossHpBar">
+  <div class="boss-label">👹 COLOSSO</div>
+  <div class="boss-bar-outer">
+    <div class="boss-bar-inner" id="bossBarInner"></div>
+  </div>
+</div>
+
 <div id="game" style="display:none;">
   <canvas id="canvas" width="480" height="480"></canvas>
   <div id="ui">
     <h2>[ TROPAS ]</h2>
     <div class="troops-grid" id="troopsGrid"></div>
-
     <div id="playerHpBox">
       <div id="playerHpLabel">
         <span>VOCÊ</span>
@@ -380,7 +382,6 @@
         <div id="playerHpBarInner"></div>
       </div>
     </div>
-
     <div id="stats">
       <div>CRÉDITOS: <span id="gold">100</span></div>
       <div>ONDA: <span id="wave">0</span></div>
@@ -396,11 +397,9 @@
 <script>
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
-
 const PPM = 16;
 const GREEN = '#33ff33';
 const GREEN_BRIGHT = '#88ff88';
-const GREEN_DIM = '#1a8a1a';
 const GREEN_DARK = '#0a3a0a';
 const BLACK = '#000000';
 const YELLOW = '#ffff33';
@@ -417,25 +416,27 @@ const TOXIC = '#66ff33';
 const PURPLE = '#aa66ff';
 const SHIELD = '#66ddff';
 const TESLA = '#ffff66';
+const BOXER = '#ff6644';
+const AIR = '#88ffee';
+const BOSS_RED = '#ff2200';
+const BOSS_DARK = '#8a0000';
 
-const MAPS = [
-  { name: 'ZIGUE-ZAGUE', path: [
+const MAPS = [{
+  name: 'ZIGUE-ZAGUE', path: [
     {x: 0, y: 64}, {x: 120, y: 64}, {x: 120, y: 180},
     {x: 300, y: 180}, {x: 300, y: 90}, {x: 420, y: 90},
     {x: 420, y: 300}, {x: 150, y: 300}, {x: 150, y: 240},
     {x: 480, y: 240}
-  ]}
-];
+  ]
+}];
 
 let chosenMap, path, pathWidth = 32;
-
 let gold = 100;
 let waveNum = 0;
 let paused = false;
 let gameOver = false;
 let gameMode = null;
-let selectedDeck = []; // nomes das 6 tropas
-
+let selectedDeck = [];
 const PLAYER_MAX_HP = 300;
 let playerHp = PLAYER_MAX_HP;
 
@@ -453,36 +454,39 @@ const heals = [];
 const moneyPops = [];
 const healZones = [];
 const flames = [];
-const teslaBolts = []; // raios da Tesla
-const paradoxZones = []; // zonas do Paradoxo
+const teslaBolts = [];
+const paradoxZones = [];
+const airTrails = []; // rastro de propulsão do aéreo
 
 let shakeAmount = 0;
 const shakeDecay = 0.9;
 let screenFlash = 0;
 let screenFlashColor = '51,255,51';
-let hordeActive = false;
+let bossActive = false;
+let bossRef = null;
 let hordePulse = 0;
 let dragging = null;
 let selectedTowerType = null;
 let pointerDownInfo = null;
 
-// ===== 12 TROPAS =====
+// ===== TROPAS =====
 const TOWER_TYPES = {
-  recruta:      { cost: 50,  range: 5 * PPM,   damage: 25, fireRate: 60,  hp: 100, maxHp: 100, name: 'RECRUTA',       desc: 'HP 100 · DMG 25 · 1s · 5m' },
+  recruta:      { cost: 50,  range: 6 * PPM,   damage: 25, fireRate: 60,  hp: 100, maxHp: 100, name: 'RECRUTA',       desc: 'HP 100 · DMG 25 · 1s · 6m' },
+  boxeador:     { cost: 50,  range: 3 * PPM,   damage: 35, fireRate: 48,  hp: 120, maxHp: 120, name: 'BOXEADOR',      desc: 'HP 120 · DMG 35 · 0.8s · 3m', isBoxer: true },
   faca:         { cost: 100, range: 2.5 * PPM, damage: 80, fireRate: 30,  hp: 150, maxHp: 150, name: 'FACA',          desc: 'HP 150 · DMG 80 · 0.5s · 2.5m' },
-  sniper:       { cost: 150, range: 15 * PPM,  damage: 50, fireRate: 120, hp: 70,  maxHp: 70,  name: 'SNIPER',        desc: 'HP 70 · DMG 50 · 2s · 15m' },
+  sniper:       { cost: 150, range: 15 * PPM,  damage: 50, fireRate: 120, hp: 70,  maxHp: 70,  name: 'SNIPER',        desc: 'HP 70 · DMG 50 · 2s · 15m', hitsAir: true },
   metralhadora: { cost: 150, range: 7 * PPM,   damage: 25, fireRate: 12,  hp: 100, maxHp: 100, name: 'METRALHADORA',  desc: 'HP 100 · DMG 25 · 0.2s · 7m' },
   lancachamas:  { cost: 180, range: 4 * PPM,   damage: 15, fireRate: 6,   hp: 100, maxHp: 100, name: 'LANÇA-CHAMAS',  desc: 'HP 100 · DMG 15 · 0.1s · 4m · FOGO', isFlamethrower: true },
   glacial:      { cost: 200, range: 5 * PPM,   damage: 15, fireRate: 36,  hp: 100, maxHp: 100, name: 'GLACIAL',       desc: 'HP 100 · DMG 15 · 0.6s · 5m · CONGELA', isGlacial: true },
-  bazuca:       { cost: 200, range: 10 * PPM,  damage: 150, fireRate: 300, hp: 100, maxHp: 100, name: 'BAZUCA',        desc: 'HP 100 · DMG 150 · 5s · 10m · ÁREA 3m', splash: 3 * PPM },
-  tesla:        { cost: 230, range: 6 * PPM,   damage: 30, fireRate: 120, hp: 80,  maxHp: 80,  name: 'TESLA',         desc: 'HP 80 · DMG 30→15 · 2s · 6m · RICOCHETE', isTesla: true, chainRange: 3 * PPM, maxChains: 3 },
+  bazuca:       { cost: 200, range: 10 * PPM,  damage: 150, fireRate: 300, hp: 100, maxHp: 100, name: 'BAZUCA',        desc: 'HP 100 · DMG 150 · 5s · 10m · ÁREA', splash: 3 * PPM, hitsAir: true },
+  tesla:        { cost: 230, range: 6 * PPM,   damage: 30, fireRate: 120, hp: 80,  maxHp: 80,  name: 'TESLA',         desc: 'HP 80 · DMG 30 · 2s · 6m · RICOCHETE', isTesla: true, chainRange: 3 * PPM, maxChains: 3 },
   medico:       { cost: 250, range: 5 * PPM,   damage: 0,  fireRate: 300, hp: 100, maxHp: 100, name: 'MÉDICO',        desc: 'HP 100 · CURA 20 · 5s · 5m', heal: 20, isHealer: true },
   defensor:     { cost: 270, range: 5 * PPM,   damage: 0,  fireRate: 60,  hp: 200, maxHp: 200, name: 'DEFENSOR',      desc: 'HP 200 · AURA -50% DANO · 5m', isDefensor: true },
   comerciante:  { baseCost: 400, cost: 400, range: 0, damage: 0, fireRate: 300, hp: 100, maxHp: 100, name: 'COMERCIANTE', desc: 'HP 100 · +50 OURO · 5s', income: 50, isMerchant: true },
-  paradoxo:     { cost: 400, range: 5 * PPM,   damage: 0, fireRate: 900, hp: 100, maxHp: 100, name: 'PARADOXO',      desc: 'HP 100 · PARA TEMPO 3s · 15s · 5m', isParadox: true }
+  paradoxo:     { cost: 400, range: 5 * PPM,   damage: 0,  fireRate: 900, hp: 100, maxHp: 100, name: 'PARADOXO',      desc: 'HP 100 · PARA TEMPO 3s · 15s', isParadox: true }
 };
 
-const TOWER_ORDER = ['recruta','faca','sniper','metralhadora','lancachamas','glacial','bazuca','tesla','medico','defensor','comerciante','paradoxo'];
+const TOWER_ORDER = ['recruta','boxeador','faca','sniper','metralhadora','lancachamas','glacial','bazuca','tesla','medico','defensor','comerciante','paradoxo'];
 
 function getMerchantCost() {
   const aliveMerchants = towers.filter(t => t.isMerchant).length;
@@ -492,31 +496,47 @@ function getCostForType(type) {
   if (type === 'comerciante') return getMerchantCost();
   return TOWER_TYPES[type].cost;
 }
-
 function speedToPixels(vel) { return ((vel / 20) * PPM) / 60; }
 
+// ===== INIMIGOS =====
 const ENEMY_TYPES = {
   padrao:    { hp: 100, damage: 50,  speed: 100, size: 14, reward: 12, drawStyle: 'square' },
-  blindado:  { hp: 500, damage: 50,  speed: 70,  size: 18, reward: 30, armor: 5, drawStyle: 'tank' },
   ofensivo:  { hp: 90,  damage: 150, speed: 90,  size: 14, reward: 20, drawStyle: 'triangle' },
   velocista: { hp: 70,  damage: 30,  speed: 200, size: 11, reward: 15, drawStyle: 'arrow' },
-  clone:     { hp: 120, damage: 60,  speed: 120, size: 14, reward: 18, drawStyle: 'diamond', onDeath: 'clone' },
-  minion:    { hp: 50,  damage: 10,  speed: 80,  size: 9,  reward: 4,  drawStyle: 'dot' },
+  aereo:     { hp: 40,  damage: 20,  speed: 80,  size: 14, reward: 18, drawStyle: 'air', isAir: true, airHeight: 14 },
+  blindado:  { hp: 500, damage: 50,  speed: 70,  size: 18, reward: 30, armor: 5, drawStyle: 'tank' },
   explosivo: { hp: 100, damage: 50,  speed: 100, size: 14, reward: 20, drawStyle: 'star', onDeath: 'explode' },
   fungo:     { hp: 100, damage: 50,  speed: 100, size: 15, reward: 15, drawStyle: 'mushroom', onDeath: 'fungusZone' },
-  yeti:      { hp: 500, damage: 50,  speed: 40,  size: 20, reward: 35, armor: 5, drawStyle: 'yeti', aura: 4 * PPM }
+  clone:     { hp: 120, damage: 60,  speed: 120, size: 14, reward: 18, drawStyle: 'diamond', onDeath: 'clone' },
+  minion:    { hp: 50,  damage: 10,  speed: 80,  size: 9,  reward: 4,  drawStyle: 'dot' },
+  yeti:      { hp: 500, damage: 50,  speed: 40,  size: 20, reward: 35, armor: 5, drawStyle: 'yeti', aura: 4 * PPM },
+  colosso:   { hp: 5000, damage: 200, speed: 25, size: 50, reward: 300, armor: 10, drawStyle: 'colosso', aura: 6 * PPM, isBoss: true }
+};
+
+// Progressão: aéreo entra na onda 7
+const UNLOCK_WAVE = {
+  padrao: 1, ofensivo: 3, velocista: 5, aereo: 7,
+  blindado: 8, explosivo: 12, fungo: 15, clone: 20, yeti: 22
 };
 
 function getWaveComposition(wave) {
   const comp = [];
-  comp.push({ type: 'padrao', count: 3 + Math.floor(wave * 0.8) });
-  if (wave >= 2) comp.push({ type: 'velocista', count: 2 + Math.floor(wave * 0.5) });
-  if (wave >= 3) comp.push({ type: 'ofensivo', count: 1 + Math.floor(wave * 0.4) });
-  if (wave >= 4) comp.push({ type: 'explosivo', count: 1 + Math.floor(wave * 0.3) });
-  if (wave >= 4) comp.push({ type: 'fungo', count: 1 + Math.floor(wave * 0.25) });
-  if (wave >= 5) comp.push({ type: 'blindado', count: 1 + Math.floor(wave * 0.3) });
-  if (wave >= 5) comp.push({ type: 'yeti', count: 1 + Math.floor(wave * 0.2) });
-  if (wave >= 6) comp.push({ type: 'clone', count: 1 + Math.floor(wave * 0.25) });
+  for (const type of Object.keys(UNLOCK_WAVE)) {
+    if (wave < UNLOCK_WAVE[type]) continue;
+    let count = 0;
+    switch (type) {
+      case 'padrao':    count = 3 + Math.floor(wave * 0.7); break;
+      case 'ofensivo':  count = 1 + Math.floor(wave * 0.3); break;
+      case 'velocista': count = 2 + Math.floor(wave * 0.4); break;
+      case 'aereo':     count = 1 + Math.floor(wave * 0.35); break;
+      case 'blindado':  count = 1 + Math.floor(wave * 0.25); break;
+      case 'explosivo': count = 1 + Math.floor(wave * 0.25); break;
+      case 'fungo':     count = 1 + Math.floor(wave * 0.2); break;
+      case 'clone':     count = 1 + Math.floor(wave * 0.2); break;
+      case 'yeti':      count = 1 + Math.floor(wave * 0.15); break;
+    }
+    comp.push({ type, count });
+  }
   const queue = [];
   for (const { type, count } of comp) for (let i = 0; i < count; i++) queue.push(type);
   for (let i = queue.length - 1; i > 0; i--) {
@@ -526,23 +546,8 @@ function getWaveComposition(wave) {
   return queue;
 }
 
-function getHordeComposition(wave) {
-  const comp = [];
-  comp.push({ type: 'blindado',  count: 3 + Math.floor(wave * 0.4) });
-  comp.push({ type: 'ofensivo',  count: 4 + Math.floor(wave * 0.5) });
-  comp.push({ type: 'explosivo', count: 3 + Math.floor(wave * 0.4) });
-  comp.push({ type: 'fungo',     count: 3 + Math.floor(wave * 0.4) });
-  comp.push({ type: 'yeti',      count: 2 + Math.floor(wave * 0.3) });
-  comp.push({ type: 'clone',     count: 2 + Math.floor(wave * 0.3) });
-  comp.push({ type: 'velocista', count: 4 + Math.floor(wave * 0.6) });
-  const queue = [];
-  for (const { type, count } of comp) for (let i = 0; i < count; i++) queue.push(type);
-  for (let i = queue.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [queue[i], queue[j]] = [queue[j], queue[i]];
-  }
-  return queue;
-}
+function isBossWave(wave) { return wave > 0 && wave % 10 === 0; }
+function getBossCount(wave) { return Math.floor(wave / 10); }
 
 function distToSegment(p, a, b) {
   const dx = b.x - a.x, dy = b.y - a.y;
@@ -596,15 +601,15 @@ function addShockwave(x, y, color, maxRadius, life) {
   shockwaves.push({ x, y, radius: 2, maxRadius: maxRadius || 40,
     life: life || 20, maxLife: life || 20, color: color || GREEN });
 }
-function addText(x, y, text, color, life) {
-  texts.push({ x, y, text, color: color || GREEN, life: life || 40, maxLife: life || 40, vy: -0.8 });
+function addText(x, y, text, color, life, size) {
+  texts.push({ x, y, text, color: color || GREEN, life: life || 40, maxLife: life || 40, vy: -0.8, size: size || 14 });
 }
 function addSpark(x1, y1, x2, y2, color) {
   sparks.push({ x1, y1, x2, y2, life: 6, maxLife: 6, color: color || GREEN_BRIGHT });
 }
-function addShake(amount) { shakeAmount = Math.min(shakeAmount + amount, 14); }
+function addShake(amount) { shakeAmount = Math.min(shakeAmount + amount, 20); }
 function addFlash(amount, color) {
-  screenFlash = Math.min(screenFlash + amount, 0.6);
+  screenFlash = Math.min(screenFlash + amount, 0.7);
   if (color) screenFlashColor = color;
 }
 function addHealEffect(x, y, amount) {
@@ -644,24 +649,28 @@ function addFireParticle(enemy) {
       enemy.x + (Math.random() - 0.5) * enemy.size,
       enemy.y + (Math.random() - 0.5) * enemy.size,
       {
-        vx: (Math.random() - 0.5) * 0.5,
-        vy: -0.8 - Math.random() * 1,
+        vx: (Math.random() - 0.5) * 0.5, vy: -0.8 - Math.random() * 1,
         life: 25, size: 2,
-        color: Math.random() < 0.5 ? FIRE : FIRE_BRIGHT,
-        friction: 0.97
+        color: Math.random() < 0.5 ? FIRE : FIRE_BRIGHT, friction: 0.97
       }
     );
   }
 }
-function addTeslaBolt(points) {
-  teslaBolts.push({ points, life: 12, maxLife: 12 });
+function addTeslaBolt(points) { teslaBolts.push({ points, life: 12, maxLife: 12 }); }
+function addAirTrail(x, y) {
+  airTrails.push({
+    x, y,
+    life: 20, maxLife: 20,
+    vx: (Math.random() - 0.5) * 0.3,
+    vy: 0.3 + Math.random() * 0.5
+  });
 }
 
 function damagePlayer(amount) {
   playerHp -= amount;
   if (playerHp < 0) playerHp = 0;
   addFlash(0.45, '255,51,51'); addShake(7);
-  addText(canvas.width / 2, 60, '-' + amount, RED, 70);
+  addText(canvas.width / 2, 60, '-' + amount, RED, 70, 22);
   updateUI();
   if (playerHp <= 0) { gameOver = true; showMsg('> VOCÊ CAIU <'); }
 }
@@ -671,12 +680,11 @@ function healPlayer(amount) {
   const healed = playerHp - old;
   if (healed > 0) {
     addFlash(0.2, '51,255,51');
-    addText(canvas.width / 2, 60, '+' + healed + ' HP', GREEN_BRIGHT, 60);
+    addText(canvas.width / 2, 60, '+' + healed + ' HP', GREEN_BRIGHT, 60, 22);
     updateUI();
   }
 }
 
-// ===== UI =====
 function updateUI() {
   document.getElementById('gold').textContent = gold;
   document.getElementById('wave').textContent = waveNum;
@@ -691,8 +699,8 @@ function updateUI() {
   else if (pct <= 0.5) { bar.classList.add('mid'); }
 
   const hordeInd = document.getElementById('hordeIndicator');
-  if (hordeActive) hordeInd.textContent = '⚠ HORDA ATIVA ⚠';
-  else if (waveNum > 0 && (waveNum + 1) % 10 === 0) hordeInd.textContent = 'PRÓXIMA: HORDA';
+  if (bossActive) hordeInd.textContent = '👹 COLOSSO ATIVO';
+  else if (waveNum > 0 && (waveNum + 1) % 10 === 0) hordeInd.textContent = 'PRÓXIMA: COLOSSO';
   else hordeInd.textContent = '';
 
   document.querySelectorAll('.tower-btn').forEach(btn => {
@@ -705,6 +713,17 @@ function updateUI() {
     }
     btn.disabled = gold < cost;
   });
+
+  const bossBar = document.getElementById('bossHpBar');
+  if (bossRef && bossActive && enemies.indexOf(bossRef) !== -1) {
+    bossBar.style.display = 'block';
+    const bp = Math.max(0, bossRef.hp / bossRef.maxHp);
+    const inner = document.getElementById('bossBarInner');
+    inner.style.width = (bp * 100) + '%';
+    inner.classList.toggle('low', bp < 0.3);
+  } else {
+    bossBar.style.display = 'none';
+  }
 }
 function clearSelection() {
   selectedTowerType = null;
@@ -739,15 +758,17 @@ function tryPlace(x, y, type) {
     isTesla: def.isTesla || false,
     isDefensor: def.isDefensor || false,
     isParadox: def.isParadox || false,
+    isBoxer: def.isBoxer || false,
+    hitsAir: def.hitsAir || false,
     chainRange: def.chainRange || 0,
     maxChains: def.maxChains || 0,
     hp: def.hp, maxHp: def.maxHp,
     cooldown: 0, angle: 0,
     spawnAnim: 20, recoil: 0, healPulse: 0, incomePulse: 0,
-    defensorPulse: 0
+    defensorPulse: 0, punchAnim: 0
   });
   gold -= actualCost;
-  const col = def.isHealer ? GREEN_BRIGHT : def.isMerchant ? GOLD : def.isGlacial ? ICE : def.isTesla ? TESLA : def.isDefensor ? SHIELD : def.isParadox ? PURPLE : def.isFlamethrower ? FIRE : GREEN;
+  const col = def.isHealer ? GREEN_BRIGHT : def.isMerchant ? GOLD : def.isGlacial ? ICE : def.isTesla ? TESLA : def.isDefensor ? SHIELD : def.isParadox ? PURPLE : def.isFlamethrower ? FIRE : def.isBoxer ? BOXER : GREEN;
   addShockwave(x, y, col, 40, 22);
   burst(x, y, 16, { speed: 3, life: 25, color: col, size: 2 });
   addFlash(0.15);
@@ -771,8 +792,7 @@ document.addEventListener('pointermove', e => {
     const cx = (e.clientX - rect.left) * (canvas.width / rect.width);
     const cy = (e.clientY - rect.top) * (canvas.height / rect.height);
     dragging.overCanvas = (cx >= 0 && cx <= canvas.width && cy >= 0 && cy <= canvas.height);
-    dragging.x = cx;
-    dragging.y = cy;
+    dragging.x = cx; dragging.y = cy;
     dragging.valid = dragging.overCanvas && isValidPlacement(cx, cy, dragging.type);
   }
 });
@@ -787,8 +807,7 @@ document.addEventListener('pointerup', e => {
       if (ok) clearSelection();
       else selectTowerType(d.type);
     } else selectTowerType(d.type);
-    pointerDownInfo = null;
-    return;
+    pointerDownInfo = null; return;
   }
   if (pointerDownInfo && pointerDownInfo.source === 'button') {
     const moved = Math.hypot(e.clientX - pointerDownInfo.x, e.clientY - pointerDownInfo.y);
@@ -826,78 +845,99 @@ function showMsg(text) {
   clearTimeout(m._t);
   m._t = setTimeout(() => m.style.display = 'none', 1300);
 }
-function showHordeBanner() {
+function showBanner(text, isBoss) {
   const b = document.getElementById('hordeBanner');
+  b.textContent = text;
   b.classList.remove('show');
+  b.classList.toggle('boss', !!isBoss);
   void b.offsetWidth;
   b.classList.add('show');
 }
 
-function spawnEnemy(typeKey, x, y, wp) {
+function spawnEnemy(typeKey, x, y, wp, bossHpMult) {
   const t = ENEMY_TYPES[typeKey];
   const hpScale = 1 + (waveNum - 1) * 0.15;
-  const hp = Math.floor(t.hp * hpScale);
+  const extra = bossHpMult || 1;
+  const hp = Math.floor(t.hp * (t.isBoss ? extra : hpScale));
   const ex = x !== undefined ? x : path[0].x;
   const ey = y !== undefined ? y : path[0].y;
   let startWp = wp !== undefined ? wp : 1;
   if (startWp < 1) startWp = 1;
   if (startWp >= path.length) startWp = path.length - 1;
 
-  enemies.push({
+  const enemy = {
     type: typeKey, x: ex, y: ey, wp: startWp,
     hp, maxHp: hp, damage: t.damage,
     speed: speedToPixels(t.speed), baseSpeed: speedToPixels(t.speed),
-    frozen: 0, iceFrozen: 0, // frozen = do yeti (não usado mais), iceFrozen = do glacial
-    reward: hordeActive ? t.reward * 2 : t.reward,
+    frozen: 0, iceFrozen: 0,
+    reward: t.reward,
     size: t.size, armor: t.armor || 0,
     drawStyle: t.drawStyle, onDeath: t.onDeath || null,
     aura: t.aura || 0,
+    isAir: t.isAir || false,
+    airHeight: t.airHeight || 0,
+    airBob: Math.random() * Math.PI * 2,
+    airPropTimer: 0,
     fireTimer: 0, fireTickTimer: 0,
-    spawnAnim: 15, hitFlash: 0, lastTrailTime: 0, lastHealTick: 0
-  });
-  addShockwave(ex, ey, hordeActive ? RED : GREEN, 20, 12);
-  burst(ex, ey, 6, { speed: 1.5, life: 15, size: 1.5 });
+    spawnAnim: t.isBoss ? 40 : 15, hitFlash: 0, lastTrailTime: 0, lastHealTick: 0,
+    isBoss: t.isBoss || false,
+    stepTimer: 0, crackLevel: 0
+  };
+  enemies.push(enemy);
+  if (t.isBoss) {
+    bossActive = true;
+    bossRef = enemy;
+    addShockwave(ex, ey, BOSS_RED, 120, 45);
+    addShockwave(ex, ey, BOSS_DARK, 180, 60);
+    burst(ex, ey, 50, { speed: 6, life: 40, size: 4, color: BOSS_RED });
+    addFlash(0.5, '255,34,0');
+    addShake(12);
+  } else if (t.isAir) {
+    addShockwave(ex, ey - t.airHeight, AIR, 25, 15);
+    burst(ex, ey - t.airHeight, 10, { speed: 2.5, life: 20, size: 2, color: AIR });
+  } else {
+    addShockwave(ex, ey, GREEN, 20, 12);
+    burst(ex, ey, 6, { speed: 1.5, life: 15, size: 1.5 });
+  }
 }
 
 let waveQueue = [];
 let spawnCooldown = 0;
 let waveDelay = 0;
 let waveActive = false;
+let bossPendingSpawn = 0;
+let bossSpawnTimer = 0;
 
 function startWave() {
   waveNum++;
-  const isHorde = (waveNum % 10 === 0);
-  if (isHorde) {
-    hordeActive = true;
-    waveQueue = getHordeComposition(waveNum);
-    showHordeBanner();
-    addFlash(0.5, '255,51,51'); addShake(10);
-    setTimeout(showHordeBanner, 100);
-  } else {
-    hordeActive = false;
-    waveQueue = getWaveComposition(waveNum);
+  bossActive = false; bossRef = null; bossPendingSpawn = 0;
+
+  if (isBossWave(waveNum)) {
+    bossPendingSpawn = getBossCount(waveNum);
+    waveQueue = []; waveActive = true;
+    showBanner('👹 COLOSSO 👹', true);
+    addFlash(0.6, '255,34,0'); addShake(15);
+    setTimeout(() => showBanner('👹 COLOSSO 👹', true), 150);
+    bossSpawnTimer = 180;
+    spawnCooldown = 0;
+    updateUI();
+    return;
   }
-  spawnCooldown = 0;
-  waveActive = true;
-  if (!isHorde) {
-    addShockwave(240, 240, GREEN, 300, 40);
-    addFlash(0.2); addShake(3);
-  } else {
-    addShockwave(240, 240, RED, 400, 60);
-  }
+  waveQueue = getWaveComposition(waveNum);
+  spawnCooldown = 0; waveActive = true;
+  addShockwave(240, 240, GREEN, 300, 40);
+  addFlash(0.2); addShake(3);
   updateUI();
 }
 
 function areaExplosion(x, y, damage, radius) {
   addShockwave(x, y, GREEN, radius, 25);
   addShockwave(x, y, YELLOW, radius * 0.6, 18);
-  addShockwave(x, y, GREEN, radius * 1.3, 35);
   burst(x, y, 40, { speed: 6, life: 40, size: 3, gravity: 0.2, friction: 0.92 });
   burst(x, y, 20, { speed: 9, life: 25, size: 2, color: YELLOW, friction: 0.9 });
   addFlash(0.5); addShake(8);
   const inRange = towers.filter(t => Math.hypot(t.x - x, t.y - y) <= radius);
   for (const t of inRange) {
-    // Defensor reduz dano?
     let dmg = damage;
     if (t.isProtected) dmg = Math.floor(dmg * 0.5);
     t.hp -= dmg;
@@ -913,33 +953,73 @@ function areaExplosion(x, y, damage, radius) {
   updateUI();
 }
 
-function damageEnemy(e, amount, fromX, fromY, isFire) {
-  const real = Math.max(1, amount - (e.armor || 0));
-  e.hp -= real; e.hitFlash = 6;
-  if (!isFire) {
-    burst(e.x, e.y, 5, { speed: 2, life: 12, size: 1.5, color: GREEN_BRIGHT });
+function bossFinalExplosion(x, y) {
+  addShockwave(x, y, BOSS_RED, 128, 35);
+  addShockwave(x, y, ORANGE, 96, 25);
+  addShockwave(x, y, YELLOW, 160, 45);
+  burst(x, y, 80, { speed: 8, life: 50, size: 4, gravity: 0.2, friction: 0.9 });
+  burst(x, y, 40, { speed: 12, life: 35, size: 3, color: YELLOW, friction: 0.88 });
+  addFlash(0.7, '255,100,0'); addShake(18);
+  const radius = 8 * PPM;
+  const inRange = towers.filter(t => Math.hypot(t.x - x, t.y - y) <= radius);
+  for (const t of inRange) {
+    let dmg = 100;
+    if (t.isProtected) dmg = 50;
+    t.hp -= dmg;
+    addText(t.x, t.y - 15, '-' + dmg, BOSS_RED, 55, 22);
+    if (t.hp <= 0) {
+      addShockwave(t.x, t.y, BOSS_RED, 70, 35);
+      burst(t.x, t.y, 30, { speed: 5, life: 35, size: 3, color: BOSS_RED });
+      const idx = towers.indexOf(t);
+      if (idx >= 0) towers.splice(idx, 1);
+      if (t.isHealer) healPlayer(5);
+    }
   }
-  addText(e.x, e.y - e.size - 5, '-' + real, isFire ? FIRE_BRIGHT : GREEN_BRIGHT, 30);
-  if (fromX !== undefined && fromY !== undefined) addSpark(fromX, fromY, e.x, e.y, GREEN_BRIGHT);
+  updateUI();
 }
 
-function applyFire(e) { e.fireTimer = 5 * 60; e.fireTickTimer = 0; }
+function damageEnemy(e, amount, fromX, fromY, isFire) {
+  let dmg = amount;
+  if (isFire && e.isBoss) dmg = Math.floor(dmg * 0.5);
+  const real = Math.max(1, dmg - (e.armor || 0));
+  e.hp -= real; e.hitFlash = 6;
+  if (!isFire) burst(e.x, e.y - (e.airHeight || 0), 5, { speed: 2, life: 12, size: 1.5, color: e.isAir ? AIR : GREEN_BRIGHT });
+  addText(e.x, e.y - (e.airHeight || 0) - e.size - 5, '-' + real, isFire ? FIRE_BRIGHT : (e.isAir ? AIR : GREEN_BRIGHT), 30, e.isBoss ? 18 : 14);
+  if (fromX !== undefined && fromY !== undefined) addSpark(fromX, fromY, e.x, e.y - (e.airHeight || 0), e.isAir ? AIR : GREEN_BRIGHT);
+  if (e.isBoss) {
+    const pct = e.hp / e.maxHp;
+    if (pct < 0.3) e.crackLevel = 3;
+    else if (pct < 0.6) e.crackLevel = 2;
+    else if (pct < 0.85) e.crackLevel = 1;
+    else e.crackLevel = 0;
+  }
+}
+
+function applyFire(e) {
+  if (e.isAir) return; // Aéreo não pega fogo (não é atingido por lança-chamas mesmo)
+  if (e.isBoss && e.fireTimer > 0) return;
+  e.fireTimer = 5 * 60; e.fireTickTimer = 0;
+}
 function applyIce(e) {
-  const isBoss = e.type === 'blindado' || e.type === 'yeti';
-  e.iceFrozen = isBoss ? 1.5 * 30 : 1.5 * 60; // meio tempo pra bosses
+  if (e.isAir) return; // Aéreo não congela
+  if (e.isBoss || e.type === 'yeti' || e.type === 'blindado') {
+    const isVeryResistant = e.isBoss || e.type === 'yeti';
+    e.iceFrozen = isVeryResistant ? 0 : 1.5 * 30;
+    if (e.type === 'blindado') e.iceFrozen = 0.75 * 60;
+  } else {
+    e.iceFrozen = 1.5 * 60;
+  }
 }
 
 function bazookaExplosion(x, y, damage, radius) {
   addShockwave(x, y, ORANGE, radius, 22);
   addShockwave(x, y, YELLOW, radius * 0.7, 16);
-  addShockwave(x, y, GREEN, radius * 1.3, 30);
   burst(x, y, 50, { speed: 7, life: 40, size: 3, gravity: 0.15, friction: 0.9 });
   burst(x, y, 25, { speed: 11, life: 25, size: 2, color: YELLOW, friction: 0.88 });
-  burst(x, y, 15, { speed: 4, life: 45, size: 4, color: ORANGE, gravity: 0.08 });
   addFlash(0.55); addShake(9);
-  const inRange = enemies.filter(e => Math.hypot(e.x - x, e.y - y) <= radius);
+  const inRange = enemies.filter(e => Math.hypot(e.x - x, (e.y - (e.airHeight || 0)) - y) <= radius);
   for (const e of inRange) {
-    const dist = Math.hypot(e.x - x, e.y - y);
+    const dist = Math.hypot(e.x - x, (e.y - (e.airHeight || 0)) - y);
     const falloff = 1 - (dist / radius) * 0.6;
     damageEnemy(e, Math.floor(damage * falloff));
   }
@@ -956,8 +1036,7 @@ function findCorrectWaypointForPosition(x, y) {
 
 function spawnCloneMinions(x, y, parentWp) {
   const parentAngle = parentWp < path.length
-    ? Math.atan2(path[parentWp].y - path[parentWp - 1].y, path[parentWp].x - path[parentWp - 1].x)
-    : 0;
+    ? Math.atan2(path[parentWp].y - path[parentWp - 1].y, path[parentWp].x - path[parentWp - 1].x) : 0;
   for (let i = 0; i < 5; i++) {
     const spreadAngle = (Math.PI * 2 / 5) * i;
     const offsetAngle = parentAngle + Math.PI / 2;
@@ -965,8 +1044,7 @@ function spawnCloneMinions(x, y, parentWp) {
     const perpY = Math.sin(offsetAngle) * 18 * Math.cos(spreadAngle);
     const fwdX = Math.cos(parentAngle) * 18 * Math.sin(spreadAngle);
     const fwdY = Math.sin(parentAngle) * 18 * Math.sin(spreadAngle);
-    const mx = x + perpX + fwdX;
-    const my = y + perpY + fwdY;
+    const mx = x + perpX + fwdX, my = y + perpY + fwdY;
     const wp = findCorrectWaypointForPosition(mx, my);
     spawnEnemy('minion', mx, my, wp);
   }
@@ -992,14 +1070,24 @@ function loop(time) {
 
   if (paused || gameOver) { draw(); return; }
 
-  if (waveActive && waveQueue.length > 0) {
+  if (isBossWave(waveNum) && bossPendingSpawn > 0) {
+    bossSpawnTimer -= dt;
+    if (bossSpawnTimer <= 0) {
+      const hpMult = 1 + Math.floor((waveNum - 10) / 10) * 0.5;
+      spawnEnemy('colosso', undefined, undefined, undefined, hpMult);
+      bossPendingSpawn--;
+      bossSpawnTimer = 180;
+    }
+  } else if (waveActive && waveQueue.length > 0) {
     spawnCooldown -= dt;
     if (spawnCooldown <= 0) {
       spawnEnemy(waveQueue.shift());
-      spawnCooldown = hordeActive ? 18 : 45;
+      spawnCooldown = 45;
     }
-  } else if (waveActive && waveQueue.length === 0 && enemies.length === 0) {
-    waveActive = false; hordeActive = false; waveDelay = 90;
+  } else if (waveActive && waveQueue.length === 0 && enemies.length === 0 && !isBossWave(waveNum)) {
+    waveActive = false; waveDelay = 90;
+  } else if (waveActive && isBossWave(waveNum) && enemies.length === 0 && bossPendingSpawn === 0) {
+    waveActive = false; bossActive = false; bossRef = null; waveDelay = 120;
   }
   if (waveDelay > 0) {
     waveDelay -= dt;
@@ -1007,44 +1095,89 @@ function loop(time) {
   }
 
   for (const t of towers) {
-    t.frozenByYeti = false;
-    t.isProtected = false; // reset defensor protection
+    t.frozenByYeti = false; t.isProtected = false;
+    if (t.punchAnim > 0) t.punchAnim -= dt * 2;
   }
 
-  // Aplica proteção do Defensor
   for (const t of towers) {
     if (t.isDefensor) {
       t.defensorPulse = (t.defensorPulse || 0) + dt * 0.08;
       for (const o of towers) {
-        if (Math.hypot(o.x - t.x, o.y - t.y) <= t.range) {
-          o.isProtected = true;
-        }
+        if (Math.hypot(o.x - t.x, o.y - t.y) <= t.range) o.isProtected = true;
       }
     }
   }
 
+  // Inimigos
   for (let i = enemies.length - 1; i >= 0; i--) {
     const e = enemies[i];
     if (e.spawnAnim > 0) e.spawnAnim -= dt;
     if (e.hitFlash > 0) e.hitFlash -= dt;
 
-    // Congelamento do Glacial (para completamente)
     if (e.iceFrozen > 0) {
       e.iceFrozen -= dt;
-      // Partículas de gelo
       if (Math.random() < 0.3) {
         addParticle(e.x + (Math.random() - 0.5) * e.size, e.y + (Math.random() - 0.5) * e.size, {
           vx: 0, vy: -0.4, life: 20, size: 2, color: FROZEN, friction: 0.97
         });
       }
-      // Não anda, não processa mais nada
       continue;
     }
 
-    // Yeti aura: só afeta se não for Glacial (imune)
+    // Paradoxo: parar tempo
+    let frozenByParadox = false;
+    for (const z of paradoxZones) {
+      if (Math.hypot(e.x - z.x, e.y - z.y) <= z.radius) { frozenByParadox = true; break; }
+    }
+    if (frozenByParadox) {
+      // Não anda, mas pode ser atingido
+      // Ainda deixa ele ser acertado pelos projéteis (não faz continue)
+      // Apenas não processa movimento nem step
+    } else {
+      // Movimento normal
+    }
+
+    if (e.isBoss) {
+      e.stepTimer -= dt;
+      if (e.stepTimer <= 0) {
+        e.stepTimer = 120;
+        addShake(0.8);
+        for (let k = 0; k < 6; k++) {
+          addParticle(e.x + (Math.random() - 0.5) * e.size, e.y + e.size/2 + Math.random() * 6, {
+            vx: (Math.random() - 0.5) * 1, vy: -0.5 - Math.random() * 0.5,
+            life: 60, size: 3, color: Math.random() < 0.5 ? BOSS_RED : ORANGE, friction: 0.95
+          });
+        }
+      }
+      if (Math.random() < 0.3) {
+        addParticle(e.x + (Math.random() - 0.5) * e.size, e.y - e.size/2, {
+          vx: (Math.random() - 0.5) * 0.5, vy: -0.8 - Math.random() * 0.5,
+          life: 40, size: 3, color: '#333333', friction: 0.97
+        });
+      }
+    }
+
+    // Aéreo: propulsão
+    if (e.isAir) {
+      e.airBob += dt * 0.1;
+      e.airPropTimer -= dt;
+      if (e.airPropTimer <= 0 && !frozenByParadox) {
+        e.airPropTimer = 4;
+        addAirTrail(e.x, e.y - 2);
+        if (Math.random() < 0.5) {
+          addParticle(e.x + (Math.random() - 0.5) * 8, e.y - 2, {
+            vx: (Math.random() - 0.5) * 0.3,
+            vy: 1 + Math.random() * 0.5,
+            life: 15, size: 2, color: AIR, friction: 0.97
+          });
+        }
+      }
+    }
+
+    // Aura do Yeti
     if (e.aura > 0) {
       for (const t of towers) {
-        if (t.isGlacial) continue; // Glacial é imune
+        if (t.isGlacial) continue;
         if (Math.hypot(t.x - e.x, t.y - e.y) <= e.aura) t.frozenByYeti = true;
       }
       if (Math.random() < 0.15) {
@@ -1052,7 +1185,7 @@ function loop(time) {
         const r = e.aura * (0.5 + Math.random() * 0.5);
         addParticle(e.x + Math.cos(angle) * r, e.y + Math.sin(angle) * r, {
           vx: (Math.random() - 0.5) * 0.5, vy: -0.5 - Math.random() * 0.5,
-          life: 30, size: 2, color: ICE, friction: 0.97
+          life: 30, size: 2, color: e.isBoss ? BOSS_RED : ICE, friction: 0.97
         });
       }
     }
@@ -1070,58 +1203,67 @@ function loop(time) {
     }
 
     // Movimento
-    const effectiveSpeed = e.speed;
-    e.lastTrailTime -= dt;
-    if (e.lastTrailTime <= 0 && effectiveSpeed > 0.5) {
-      addTrail(e.x, e.y, hordeActive ? RED : GREEN, e.size * 0.5, 10);
-      e.lastTrailTime = 4;
+    if (!frozenByParadox) {
+      const target = path[e.wp];
+      if (!target) {
+        damagePlayer(e.damage);
+        burst(e.x, e.y - (e.airHeight || 0), 14, { speed: 4, life: 22, size: 2, color: RED });
+        addShockwave(e.x, e.y - (e.airHeight || 0), RED, 30, 18);
+        if (e.isBoss) { addShake(10); addFlash(0.5, '255,34,0'); }
+        enemies.splice(i, 1); continue;
+      }
+      e.lastTrailTime -= dt;
+      if (e.lastTrailTime <= 0 && e.baseSpeed > 0.5 && !e.isAir) {
+        const trailCol = e.isBoss ? BOSS_RED : GREEN;
+        addTrail(e.x, e.y, trailCol, e.size * 0.5, 10);
+        e.lastTrailTime = 4;
+      }
+      const dx = target.x - e.x, dy = target.y - e.y;
+      const dist = Math.hypot(dx, dy);
+      if (dist < e.speed * dt) { e.x = target.x; e.y = target.y; e.wp++; }
+      else { e.x += (dx/dist) * e.speed * dt; e.y += (dy/dist) * e.speed * dt; }
     }
-
-    const target = path[e.wp];
-    if (!target) {
-      damagePlayer(e.damage);
-      burst(e.x, e.y, 14, { speed: 4, life: 22, size: 2, color: RED });
-      addShockwave(e.x, e.y, RED, 30, 18);
-      enemies.splice(i, 1); continue;
-    }
-    const dx = target.x - e.x, dy = target.y - e.y;
-    const dist = Math.hypot(dx, dy);
-    if (dist < effectiveSpeed * dt) { e.x = target.x; e.y = target.y; e.wp++; }
-    else { e.x += (dx/dist) * effectiveSpeed * dt; e.y += (dy/dist) * effectiveSpeed * dt; }
 
     if (e.hp <= 0) {
       gold += e.reward;
-      addShockwave(e.x, e.y, e.type === 'yeti' ? ICE : GREEN, 25, 15);
-      burst(e.x, e.y, e.type === 'yeti' ? 20 : 12, {
-        speed: 3, life: 22, size: 2,
-        color: e.type === 'yeti' ? ICE : GREEN
+      const deathCol = e.isBoss ? BOSS_RED : (e.type === 'yeti' ? ICE : (e.isAir ? AIR : GREEN));
+      addShockwave(e.x, e.y - (e.airHeight || 0), deathCol, 25, 15);
+      burst(e.x, e.y - (e.airHeight || 0), e.isBoss ? 40 : 12, {
+        speed: 3, life: 22, size: e.isBoss ? 4 : 2, color: deathCol
       });
-      addText(e.x, e.y - e.size - 5, '+' + e.reward, YELLOW, 40);
+      addText(e.x, e.y - (e.airHeight || 0) - e.size - 5, '+' + e.reward, YELLOW, 40, e.isBoss ? 26 : 14);
       if (e.onDeath === 'clone') spawnCloneMinions(e.x, e.y, e.wp);
       else if (e.onDeath === 'explode') areaExplosion(e.x, e.y, 50, 4 * PPM);
       else if (e.onDeath === 'fungusZone') spawnFungusZone(e.x, e.y);
-      enemies.splice(i, 1); updateUI();
+      if (e.isBoss) {
+        bossFinalExplosion(e.x, e.y);
+        bossRef = null;
+        healPlayer(50);
+        showMsg('> COLOSSO DERROTADO! +50 HP');
+      }
+      enemies.splice(i, 1);
+      updateUI();
     }
   }
 
-  // Zonas de cura do fungo
+  // Fungo
   for (let i = healZones.length - 1; i >= 0; i--) {
     const z = healZones[i];
     z.life -= dt; z.pulse += dt * 0.15;
     if (z.life <= 0) { healZones.splice(i, 1); continue; }
     for (const e of enemies) {
-      const d = Math.hypot(e.x - z.x, e.y - z.y);
+      const d = Math.hypot(e.x - z.x, (e.y - (e.airHeight || 0)) - z.y);
       if (d <= z.radius) {
         const healThisFrame = 10 / 60 * dt;
         e.hp = Math.min(e.maxHp, e.hp + healThisFrame);
         e.lastHealTick = (e.lastHealTick || 0) + dt;
-        if (e.lastHealTick >= 60 && e.hp < e.maxHp) { addEnemyHealEffect(e.x, e.y, 10); e.lastHealTick = 0; }
+        if (e.lastHealTick >= 60 && e.hp < e.maxHp) { addEnemyHealEffect(e.x, e.y - (e.airHeight || 0), 10); e.lastHealTick = 0; }
         if (e.hp >= e.maxHp) e.lastHealTick = 0;
       } else e.lastHealTick = 0;
     }
   }
 
-  // Paradoxo: spawn de zonas
+  // Paradoxo
   for (let i = paradoxZones.length - 1; i >= 0; i--) {
     const z = paradoxZones[i];
     z.life -= dt;
@@ -1136,13 +1278,18 @@ function loop(time) {
     if (t.healPulse > 0) t.healPulse -= dt * 2;
     if (t.incomePulse > 0) t.incomePulse -= dt * 2;
 
-    // Paradoxo dentro de zona parada? Não.
-    // Mas outras tropas paradas? Não — só inimigos.
-
-    const cooldownSpeed = t.frozenByYeti ? (1/3) : 1;
+    let cooldownSpeed = 1;
+    if (t.frozenByYeti) {
+      let mult = 3;
+      for (const e of enemies) {
+        if (e.aura > 0 && Math.hypot(t.x - e.x, t.y - e.y) <= e.aura) {
+          if (e.isBoss) mult = Math.min(mult, 2);
+        }
+      }
+      cooldownSpeed = 1 / mult;
+    }
     t.cooldown -= dt * cooldownSpeed;
 
-    // MÉDICO
     if (t.isHealer) {
       if (t.cooldown <= 0) {
         const targets = towers.filter(o => Math.hypot(o.x - t.x, o.y - t.y) <= t.range);
@@ -1160,7 +1307,6 @@ function loop(time) {
       continue;
     }
 
-    // COMERCIANTE
     if (t.isMerchant) {
       if (t.cooldown <= 0) {
         gold += t.income;
@@ -1173,13 +1319,8 @@ function loop(time) {
       continue;
     }
 
-    // DEFENSOR (não ataca, só pulsa)
-    if (t.isDefensor) {
-      t.cooldown = t.fireRate;
-      continue;
-    }
+    if (t.isDefensor) { t.cooldown = t.fireRate; continue; }
 
-    // PARADOXO
     if (t.isParadox) {
       if (t.cooldown <= 0) {
         paradoxZones.push({ x: t.x, y: t.y, radius: t.range, life: 3 * 60, maxLife: 3 * 60, pulse: 0 });
@@ -1193,14 +1334,18 @@ function loop(time) {
       continue;
     }
 
-    // Encontra alvo (para todas as outras)
+    // Encontra alvo — só considera aéreos se a tropa pode acertá-los
     let target = null, bestDist = Infinity;
     for (const e of enemies) {
-      const d = Math.hypot(e.x - t.x, e.y - t.y);
-      if (d < t.range && d < bestDist) { bestDist = d; target = e; }
+      const d = Math.hypot(e.x - t.x, (e.y - (e.airHeight || 0)) - t.y);
+      if (d < t.range && d < bestDist) {
+        if (e.isAir && !t.hitsAir) continue; // pula aéreo
+        bestDist = d; target = e;
+      }
     }
     if (target) {
-      t.angle = Math.atan2(target.y - t.y, target.x - t.x);
+      const targetY = target.y - (target.airHeight || 0);
+      t.angle = Math.atan2(targetY - t.y, target.x - t.x);
       if (t.cooldown <= 0) {
         const mx = t.x + Math.cos(t.angle) * 14;
         const my = t.y + Math.sin(t.angle) * 14;
@@ -1211,41 +1356,47 @@ function loop(time) {
           applyFire(target);
           burst(mx, my, 6, { speed: 2.5, life: 15, size: 2, color: FIRE });
           t.recoil = 2;
+        } else if (t.isBoxer) {
+          t.punchAnim = 1;
+          damageEnemy(target, t.damage, t.x, t.y);
+          burst(target.x, targetY, 8, { speed: 3, life: 15, size: 2, color: BOXER });
+          addShockwave(target.x, targetY, BOXER, 18, 12);
+          t.recoil = 4;
         } else if (t.isGlacial) {
-          // Glacial: projétil ciano + congela
           burst(mx, my, 5, { speed: 2, life: 12, size: 2, color: ICE });
           addShockwave(mx, my, ICE, 10, 10);
           bullets.push({ x: t.x, y: t.y, target, damage: t.damage, speed: 8, type: 'glacial', angle: t.angle });
           t.recoil = 3;
         } else if (t.isTesla) {
-          // Tesla: efeito imediato de raio em cadeia
-          const chainPoints = [{ x: t.x, y: t.y }, { x: target.x, y: target.y }];
+          const chainPoints = [{ x: t.x, y: t.y }, { x: target.x, y: targetY }];
           const hitEnemies = [target];
           let current = target;
+          let currentY = targetY;
           let currentDmg = t.damage;
           damageEnemy(current, currentDmg);
           currentDmg -= 5;
           let chainsLeft = t.maxChains;
-
           while (chainsLeft > 0) {
-            let next = null, nextDist = Infinity;
+            let next = null, nextDist = Infinity, nextY = 0;
             for (const e of enemies) {
               if (hitEnemies.indexOf(e) !== -1) continue;
               if (e.hp <= 0) continue;
-              const d = Math.hypot(e.x - current.x, e.y - current.y);
-              if (d <= t.chainRange && d < nextDist) { nextDist = d; next = e; }
+              if (e.isAir && !t.hitsAir) continue; // tesla não acerta aéreo
+              const ey = e.y - (e.airHeight || 0);
+              const d = Math.hypot(e.x - current.x, ey - currentY);
+              if (d <= t.chainRange && d < nextDist) { nextDist = d; next = e; nextY = ey; }
             }
             if (!next) break;
-            chainPoints.push({ x: next.x, y: next.y });
+            chainPoints.push({ x: next.x, y: nextY });
             damageEnemy(next, Math.max(15, currentDmg));
             hitEnemies.push(next);
-            current = next;
+            current = next; currentY = nextY;
             currentDmg -= 5;
             chainsLeft--;
           }
           addTeslaBolt(chainPoints);
-          addShockwave(target.x, target.y, TESLA, 15, 12);
-          burst(target.x, target.y, 8, { speed: 3, life: 15, size: 2, color: TESLA });
+          addShockwave(target.x, targetY, TESLA, 15, 12);
+          burst(target.x, targetY, 8, { speed: 3, life: 15, size: 2, color: TESLA });
           addFlash(0.08, '255,255,102');
           t.recoil = 3;
         } else if (t.type === 'bazuca') {
@@ -1264,7 +1415,7 @@ function loop(time) {
     }
   }
 
-  // Mísseis da Bazuca
+  // Mísseis
   for (let i = missiles.length - 1; i >= 0; i--) {
     const m = missiles[i];
     m.life -= dt;
@@ -1276,12 +1427,13 @@ function loop(time) {
     if (!m.target || m.target.hp <= 0 || enemies.indexOf(m.target) === -1) {
       bazookaExplosion(m.x, m.y, m.damage, m.splash); missiles.splice(i, 1); continue;
     }
-    const desiredAngle = Math.atan2(m.target.y - m.y, m.target.x - m.x);
+    const targetY = m.target.y - (m.target.airHeight || 0);
+    const desiredAngle = Math.atan2(targetY - m.y, m.target.x - m.x);
     let diff = desiredAngle - m.angle;
     while (diff > Math.PI) diff -= Math.PI * 2;
     while (diff < -Math.PI) diff += Math.PI * 2;
     m.angle += Math.max(-0.12, Math.min(0.12, diff)) * dt;
-    const dx = m.target.x - m.x, dy = m.target.y - m.y;
+    const dx = m.target.x - m.x, dy = targetY - m.y;
     const dist = Math.hypot(dx, dy);
     if (dist < 12 || m.life <= 0) { bazookaExplosion(m.x, m.y, m.damage, m.splash); missiles.splice(i, 1); continue; }
     m.x += Math.cos(m.angle) * m.speed * dt;
@@ -1295,28 +1447,26 @@ function loop(time) {
     if (!b.target || b.target.hp <= 0 || enemies.indexOf(b.target) === -1) {
       burst(b.x, b.y, 4, { speed: 1.5, life: 10, size: 1.5 }); bullets.splice(i, 1); continue;
     }
+    const targetY = b.target.y - (b.target.airHeight || 0);
     if (b.type === 'sniper') {
       damageEnemy(b.target, b.damage, b.x, b.y);
-      addShockwave(b.target.x, b.target.y, CYAN, 15, 10);
-      burst(b.target.x, b.target.y, 8, { speed: 3, life: 15, size: 2, color: CYAN });
+      addShockwave(b.target.x, targetY, CYAN, 15, 10);
+      burst(b.target.x, targetY, 8, { speed: 3, life: 15, size: 2, color: CYAN });
       addFlash(0.08); bullets.splice(i, 1); continue;
     }
-    const dx = b.target.x - b.x, dy = b.target.y - b.y;
+    const dx = b.target.x - b.x, dy = targetY - b.y;
     const dist = Math.hypot(dx, dy);
     if (dist < b.speed * dt) {
       damageEnemy(b.target, b.damage, b.x, b.y);
       if (b.type === 'faca') {
-        burst(b.target.x, b.target.y, 12, { speed: 4, life: 18, size: 2.5 });
-        addShockwave(b.target.x, b.target.y, GREEN, 18, 12); addShake(1.5);
+        burst(b.target.x, targetY, 12, { speed: 4, life: 18, size: 2.5 });
+        addShockwave(b.target.x, targetY, GREEN, 18, 12); addShake(1.5);
       } else if (b.type === 'glacial') {
-        // Congela o alvo
-        if (b.target.type !== 'yeti') { // Yeti é imune ao Glacial
-          applyIce(b.target);
-        }
-        burst(b.target.x, b.target.y, 10, { speed: 3, life: 18, size: 2, color: ICE });
-        addShockwave(b.target.x, b.target.y, ICE, 18, 14);
+        applyIce(b.target);
+        burst(b.target.x, targetY, 10, { speed: 3, life: 18, size: 2, color: ICE });
+        addShockwave(b.target.x, targetY, ICE, 18, 14);
       } else if (b.type === 'metralhadora') {
-        burst(b.target.x, b.target.y, 4, { speed: 2.5, life: 10, size: 1.5 });
+        burst(b.target.x, targetY, 4, { speed: 2.5, life: 10, size: 1.5 });
       }
       bullets.splice(i, 1);
     } else { b.x += (dx/dist) * b.speed * dt; b.y += (dy/dist) * b.speed * dt; }
@@ -1330,6 +1480,12 @@ function loop(time) {
     p.life -= dt; if (p.life <= 0) particles.splice(i, 1);
   }
   for (let i = trails.length - 1; i >= 0; i--) { trails[i].life -= dt; if (trails[i].life <= 0) trails.splice(i, 1); }
+  for (let i = airTrails.length - 1; i >= 0; i--) {
+    const at = airTrails[i];
+    at.x += at.vx * dt; at.y += at.vy * dt;
+    at.life -= dt;
+    if (at.life <= 0) airTrails.splice(i, 1);
+  }
   for (let i = shockwaves.length - 1; i >= 0; i--) {
     const s = shockwaves[i]; s.life -= dt;
     const p = 1 - (s.life / s.maxLife); s.radius = s.maxRadius * p;
@@ -1345,21 +1501,15 @@ function loop(time) {
     const mp = moneyPops[i]; mp.y += mp.vy * dt; mp.vy *= 0.97; mp.life -= dt;
     if (mp.life <= 0) moneyPops.splice(i, 1);
   }
-  for (let i = flames.length - 1; i >= 0; i--) {
-    flames[i].life -= dt;
-    if (flames[i].life <= 0) flames.splice(i, 1);
-  }
-  for (let i = teslaBolts.length - 1; i >= 0; i--) {
-    teslaBolts[i].life -= dt;
-    if (teslaBolts[i].life <= 0) teslaBolts.splice(i, 1);
-  }
+  for (let i = flames.length - 1; i >= 0; i--) { flames[i].life -= dt; if (flames[i].life <= 0) flames.splice(i, 1); }
+  for (let i = teslaBolts.length - 1; i >= 0; i--) { teslaBolts[i].life -= dt; if (teslaBolts[i].life <= 0) teslaBolts.splice(i, 1); }
   for (let i = explosions.length - 1; i >= 0; i--) { explosions[i].life -= dt; if (explosions[i].life <= 0) explosions.splice(i, 1); }
 
   shakeAmount *= shakeDecay; if (shakeAmount < 0.1) shakeAmount = 0;
   screenFlash *= 0.88; if (screenFlash < 0.01) screenFlash = 0;
-  if (hordeActive) hordePulse += dt * 0.05;
 
   draw();
+  if (bossActive) updateUI();
 }
 
 // ===== DESENHO =====
@@ -1381,7 +1531,6 @@ function draw() {
   for (let x = 0; x <= canvas.width; x += PPM * 5) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke(); }
   for (let y = 0; y <= canvas.height; y += PPM * 5) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke(); }
 
-  // Zonas de cura (Fungo)
   for (const z of healZones) {
     const p = z.life / z.maxLife;
     ctx.globalAlpha = 0.15 * p + Math.sin(z.pulse) * 0.05;
@@ -1394,15 +1543,15 @@ function draw() {
   }
   ctx.globalAlpha = 1;
 
-  // Aura do Yeti
   for (const e of enemies) {
     if (e.aura > 0) {
       const pulse = 0.6 + Math.sin(Date.now() / 300) * 0.2;
-      ctx.globalAlpha = 0.12 * pulse;
-      ctx.fillStyle = ICE;
+      const col = e.isBoss ? BOSS_RED : ICE;
+      ctx.globalAlpha = (e.isBoss ? 0.18 : 0.12) * pulse;
+      ctx.fillStyle = col;
       ctx.beginPath(); ctx.arc(e.x, e.y, e.aura, 0, Math.PI * 2); ctx.fill();
-      ctx.globalAlpha = 0.5 * pulse;
-      ctx.strokeStyle = ICE; ctx.lineWidth = 2;
+      ctx.globalAlpha = (e.isBoss ? 0.7 : 0.5) * pulse;
+      ctx.strokeStyle = col; ctx.lineWidth = e.isBoss ? 3 : 2;
       ctx.setLineDash([4, 4]);
       ctx.beginPath(); ctx.arc(e.x, e.y, e.aura, 0, Math.PI * 2); ctx.stroke();
       ctx.setLineDash([]);
@@ -1410,44 +1559,19 @@ function draw() {
     }
   }
 
-  // Caminho
-  const pulse = 0.15 + Math.sin(Date.now() / 400) * 0.03;
-  ctx.strokeStyle = hordeActive ? RED : GREEN;
-  ctx.lineWidth = pathWidth; ctx.lineCap = 'square'; ctx.lineJoin = 'miter';
-  ctx.globalAlpha = hordeActive ? (pulse + 0.1) : pulse;
-  ctx.beginPath();
-  ctx.moveTo(path[0].x, path[0].y);
-  for (let i = 1; i < path.length; i++) ctx.lineTo(path[i].x, path[i].y);
-  ctx.stroke();
-  ctx.globalAlpha = 1;
-  ctx.lineWidth = 2; ctx.setLineDash([6, 5]); ctx.stroke(); ctx.setLineDash([]);
-
-  // Trails
-  for (const tr of trails) {
-    const p = tr.life / tr.maxLife;
-    ctx.globalAlpha = p * 0.7; ctx.fillStyle = tr.color;
-    ctx.fillRect(tr.x - tr.size/2, tr.y - tr.size/2, tr.size, tr.size);
-  }
-  ctx.globalAlpha = 1;
-
-  // Zonas do Paradoxo
+  // Paradoxo
   for (const z of paradoxZones) {
     const p = z.life / z.maxLife;
     ctx.globalAlpha = 0.25 * p + Math.sin(z.pulse) * 0.08;
     ctx.fillStyle = PURPLE;
     ctx.beginPath(); ctx.arc(z.x, z.y, z.radius, 0, Math.PI * 2); ctx.fill();
-
     ctx.globalAlpha = 0.7 * p; ctx.strokeStyle = PURPLE; ctx.lineWidth = 3;
     ctx.beginPath(); ctx.arc(z.x, z.y, z.radius, 0, Math.PI * 2); ctx.stroke();
-
-    // Anel interno girando
     ctx.globalAlpha = 0.6 * p;
     ctx.strokeStyle = WHITE; ctx.lineWidth = 1;
     ctx.setLineDash([4, 8]);
     ctx.beginPath(); ctx.arc(z.x, z.y, z.radius * 0.7, Date.now()/500, Date.now()/500 + Math.PI * 2); ctx.stroke();
     ctx.setLineDash([]);
-
-    // Ampulheta
     ctx.globalAlpha = 0.9 * p;
     const s = 8;
     ctx.strokeStyle = WHITE; ctx.lineWidth = 2;
@@ -1457,6 +1581,45 @@ function draw() {
     ctx.lineTo(z.x - s, z.y + s); ctx.lineTo(z.x, z.y);
     ctx.lineTo(z.x - s, z.y - s);
     ctx.stroke();
+  }
+  ctx.globalAlpha = 1;
+
+  // Caminho
+  const pathPulse = 0.15 + Math.sin(Date.now() / 400) * 0.03;
+  ctx.strokeStyle = bossActive ? BOSS_RED : GREEN;
+  ctx.lineWidth = pathWidth; ctx.lineCap = 'square'; ctx.lineJoin = 'miter';
+  ctx.globalAlpha = bossActive ? 0.4 : pathPulse;
+  ctx.beginPath();
+  ctx.moveTo(path[0].x, path[0].y);
+  for (let i = 1; i < path.length; i++) ctx.lineTo(path[i].x, path[i].y);
+  ctx.stroke();
+  ctx.globalAlpha = 1;
+  ctx.lineWidth = 2; ctx.setLineDash([6, 5]); ctx.stroke(); ctx.setLineDash([]);
+
+  // Sombra dos aéreos no caminho
+  for (const e of enemies) {
+    if (e.isAir) {
+      ctx.fillStyle = 'rgba(0,0,0,0.4)';
+      ctx.beginPath();
+      ctx.ellipse(e.x, e.y, e.size * 0.8, e.size * 0.35, 0, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  // Rastro de propulsão do aéreo
+  for (const at of airTrails) {
+    const p = at.life / at.maxLife;
+    ctx.globalAlpha = p * 0.7;
+    ctx.fillStyle = AIR;
+    ctx.fillRect(at.x - 1.5, at.y - 1.5, 3, 3);
+  }
+  ctx.globalAlpha = 1;
+
+  // Trails
+  for (const tr of trails) {
+    const p = tr.life / tr.maxLife;
+    ctx.globalAlpha = p * 0.7; ctx.fillStyle = tr.color;
+    ctx.fillRect(tr.x - tr.size/2, tr.y - tr.size/2, tr.size, tr.size);
   }
   ctx.globalAlpha = 1;
 
@@ -1473,11 +1636,9 @@ function draw() {
     grad.addColorStop(1, 'rgba(255,50,0,0)');
     ctx.fillStyle = grad;
     const spread = Math.PI / 6;
-    ctx.beginPath();
-    ctx.moveTo(0, 0);
+    ctx.beginPath(); ctx.moveTo(0, 0);
     ctx.arc(0, 0, f.range, -spread, spread);
-    ctx.closePath();
-    ctx.fill();
+    ctx.closePath(); ctx.fill();
     ctx.restore();
   }
   ctx.globalAlpha = 1;
@@ -1486,17 +1647,13 @@ function draw() {
   for (const t of towers) {
     const isFrozenByYeti = t.frozenByYeti;
 
-    // Aura de proteção do Defensor
     if (t.isDefensor) {
       const pulse = 0.3 + Math.sin(t.defensorPulse) * 0.15;
-      ctx.strokeStyle = SHIELD;
-      ctx.globalAlpha = pulse;
-      ctx.lineWidth = 3;
+      ctx.strokeStyle = SHIELD; ctx.globalAlpha = pulse; ctx.lineWidth = 3;
       ctx.setLineDash([8, 6]);
       ctx.beginPath(); ctx.arc(t.x, t.y, t.range, 0, Math.PI * 2); ctx.stroke();
       ctx.setLineDash([]);
-      ctx.globalAlpha = 0.08;
-      ctx.fillStyle = SHIELD;
+      ctx.globalAlpha = 0.08; ctx.fillStyle = SHIELD;
       ctx.beginPath(); ctx.arc(t.x, t.y, t.range, 0, Math.PI * 2); ctx.fill();
       ctx.globalAlpha = 1;
     } else if (t.isHealer) {
@@ -1518,18 +1675,15 @@ function draw() {
       ctx.globalAlpha = 0.08; ctx.fillStyle = isFrozenByYeti ? ICE : GOLD;
       ctx.beginPath(); ctx.arc(t.x, t.y, 30, 0, Math.PI * 2); ctx.fill();
       ctx.globalAlpha = 1;
-    } else if (t.isParadox) {
-      ctx.strokeStyle = isFrozenByYeti ? ICE : 'rgba(170,102,255,0.3)';
-      ctx.lineWidth = 1; ctx.setLineDash([3, 5]);
-      ctx.beginPath(); ctx.arc(t.x, t.y, t.range, 0, Math.PI * 2); ctx.stroke();
-      ctx.setLineDash([]);
     } else {
-      ctx.strokeStyle = isFrozenByYeti ? 'rgba(136,221,255,0.4)' :
-        (t.isFlamethrower ? 'rgba(255,100,0,0.3)' :
-         t.isGlacial ? 'rgba(136,221,255,0.3)' :
-         t.isTesla ? 'rgba(255,255,102,0.3)' :
-         'rgba(51,255,51,0.25)');
-      ctx.lineWidth = 1; ctx.setLineDash([3, 5]);
+      let rangeCol = 'rgba(51,255,51,0.25)';
+      if (isFrozenByYeti) rangeCol = 'rgba(136,221,255,0.4)';
+      else if (t.isFlamethrower) rangeCol = 'rgba(255,100,0,0.3)';
+      else if (t.isGlacial) rangeCol = 'rgba(136,221,255,0.3)';
+      else if (t.isTesla) rangeCol = 'rgba(255,255,102,0.3)';
+      else if (t.isParadox) rangeCol = 'rgba(170,102,255,0.3)';
+      else if (t.isBoxer) rangeCol = 'rgba(255,102,68,0.3)';
+      ctx.strokeStyle = rangeCol; ctx.lineWidth = 1; ctx.setLineDash([3, 5]);
       ctx.beginPath(); ctx.arc(t.x, t.y, t.range, 0, Math.PI * 2); ctx.stroke();
       ctx.setLineDash([]);
     }
@@ -1544,22 +1698,27 @@ function draw() {
     else if (t.isTesla) col = hpPct > 0.5 ? TESLA : hpPct > 0.25 ? YELLOW : ORANGE;
     else if (t.isDefensor) col = hpPct > 0.5 ? SHIELD : hpPct > 0.25 ? YELLOW : ORANGE;
     else if (t.isParadox) col = hpPct > 0.5 ? PURPLE : hpPct > 0.25 ? YELLOW : ORANGE;
+    else if (t.isBoxer) col = hpPct > 0.5 ? BOXER : hpPct > 0.25 ? YELLOW : ORANGE;
     else col = hpPct > 0.5 ? GREEN : hpPct > 0.25 ? YELLOW : ORANGE;
 
     let scale = 1;
     if (t.spawnAnim > 0) scale = 0.5 + (1 - t.spawnAnim / 20) * 0.5;
 
-    // Marca de protegido pelo Defensor
     if (t.isProtected && !t.isDefensor) {
-      ctx.strokeStyle = SHIELD;
-      ctx.globalAlpha = 0.4;
-      ctx.lineWidth = 1;
+      ctx.strokeStyle = SHIELD; ctx.globalAlpha = 0.4; ctx.lineWidth = 1;
       ctx.beginPath(); ctx.arc(t.x, t.y, 17, 0, Math.PI * 2); ctx.stroke();
       ctx.globalAlpha = 1;
     }
 
+    let punchOffset = 0;
+    if (t.isBoxer && t.punchAnim > 0) {
+      const punchPct = 1 - t.punchAnim;
+      punchOffset = Math.sin(punchPct * Math.PI) * 6;
+    }
+
     ctx.save();
-    ctx.translate(t.x, t.y); ctx.scale(scale, scale);
+    ctx.translate(t.x + Math.cos(t.angle) * punchOffset, t.y + Math.sin(t.angle) * punchOffset);
+    ctx.scale(scale, scale);
     ctx.strokeStyle = col; ctx.lineWidth = 2;
     ctx.strokeRect(-11, -11, 22, 22);
     ctx.beginPath();
@@ -1573,7 +1732,7 @@ function draw() {
     ctx.moveTo(11, 11); ctx.lineTo(11, 6);
     ctx.stroke();
 
-    if (!t.isHealer && !t.isMerchant && !t.isDefensor && !t.isParadox) {
+    if (!t.isHealer && !t.isMerchant && !t.isDefensor && !t.isParadox && !t.isBoxer) {
       const recoilOffset = t.recoil > 0 ? -t.recoil : 0;
       ctx.rotate(t.angle); ctx.fillStyle = col;
       if (t.type === 'bazuca') {
@@ -1605,27 +1764,26 @@ function draw() {
       ctx.shadowColor = isFrozenByYeti ? ICE : GOLD;
       ctx.shadowBlur = t.incomePulse > 0 ? 15 : 6;
       ctx.fillText('$', t.x, t.y + 1); ctx.shadowBlur = 0;
+    } else if (t.isBoxer) {
+      ctx.shadowColor = BOXER;
+      ctx.shadowBlur = t.punchAnim > 0 ? 12 : 6;
+      ctx.fillStyle = col;
+      ctx.beginPath();
+      ctx.arc(t.x + 2, t.y - 2, 6, 0, Math.PI * 2); ctx.fill();
+      ctx.fillRect(t.x - 6, t.y - 2, 6, 6);
+      ctx.shadowBlur = 0;
     } else if (t.isFlamethrower) {
-      ctx.shadowColor = FIRE;
-      ctx.shadowBlur = 10;
+      ctx.shadowColor = FIRE; ctx.shadowBlur = 10;
       ctx.fillStyle = FIRE_BRIGHT;
       ctx.beginPath();
-      ctx.moveTo(t.x, t.y - 7);
-      ctx.lineTo(t.x - 5, t.y + 3);
-      ctx.lineTo(t.x - 2, t.y + 3);
-      ctx.lineTo(t.x - 2, t.y + 7);
-      ctx.lineTo(t.x + 2, t.y + 7);
-      ctx.lineTo(t.x + 2, t.y + 3);
-      ctx.lineTo(t.x + 5, t.y + 3);
-      ctx.closePath();
-      ctx.fill();
-      ctx.shadowBlur = 0;
+      ctx.moveTo(t.x, t.y - 7); ctx.lineTo(t.x - 5, t.y + 3);
+      ctx.lineTo(t.x - 2, t.y + 3); ctx.lineTo(t.x - 2, t.y + 7);
+      ctx.lineTo(t.x + 2, t.y + 7); ctx.lineTo(t.x + 2, t.y + 3);
+      ctx.lineTo(t.x + 5, t.y + 3); ctx.closePath();
+      ctx.fill(); ctx.shadowBlur = 0;
     } else if (t.isGlacial) {
-      // Floco de neve (6 pontas)
-      ctx.shadowColor = ICE;
-      ctx.shadowBlur = 8;
-      ctx.strokeStyle = col;
-      ctx.lineWidth = 2;
+      ctx.shadowColor = ICE; ctx.shadowBlur = 8;
+      ctx.strokeStyle = col; ctx.lineWidth = 2;
       for (let i = 0; i < 3; i++) {
         const a = (Math.PI / 3) * i;
         ctx.beginPath();
@@ -1635,49 +1793,31 @@ function draw() {
       }
       ctx.shadowBlur = 0;
     } else if (t.isTesla) {
-      // Raio
-      ctx.shadowColor = TESLA;
-      ctx.shadowBlur = 10;
+      ctx.shadowColor = TESLA; ctx.shadowBlur = 10;
       ctx.fillStyle = TESLA;
       ctx.beginPath();
-      ctx.moveTo(t.x - 4, t.y - 8);
-      ctx.lineTo(t.x + 1, t.y - 2);
-      ctx.lineTo(t.x - 3, t.y - 1);
-      ctx.lineTo(t.x + 3, t.y + 8);
-      ctx.lineTo(t.x - 1, t.y + 2);
-      ctx.lineTo(t.x + 3, t.y + 1);
-      ctx.closePath();
-      ctx.fill();
-      ctx.shadowBlur = 0;
+      ctx.moveTo(t.x - 4, t.y - 8); ctx.lineTo(t.x + 1, t.y - 2);
+      ctx.lineTo(t.x - 3, t.y - 1); ctx.lineTo(t.x + 3, t.y + 8);
+      ctx.lineTo(t.x - 1, t.y + 2); ctx.lineTo(t.x + 3, t.y + 1);
+      ctx.closePath(); ctx.fill(); ctx.shadowBlur = 0;
     } else if (t.isDefensor) {
-      // Escudo
-      ctx.shadowColor = SHIELD;
-      ctx.shadowBlur = 10;
+      ctx.shadowColor = SHIELD; ctx.shadowBlur = 10;
       ctx.fillStyle = col;
       ctx.beginPath();
-      ctx.moveTo(t.x, t.y - 9);
-      ctx.lineTo(t.x + 8, t.y - 6);
-      ctx.lineTo(t.x + 8, t.y + 2);
-      ctx.lineTo(t.x, t.y + 9);
-      ctx.lineTo(t.x - 8, t.y + 2);
-      ctx.lineTo(t.x - 8, t.y - 6);
-      ctx.closePath();
-      ctx.fill();
-      ctx.shadowBlur = 0;
+      ctx.moveTo(t.x, t.y - 9); ctx.lineTo(t.x + 8, t.y - 6);
+      ctx.lineTo(t.x + 8, t.y + 2); ctx.lineTo(t.x, t.y + 9);
+      ctx.lineTo(t.x - 8, t.y + 2); ctx.lineTo(t.x - 8, t.y - 6);
+      ctx.closePath(); ctx.fill(); ctx.shadowBlur = 0;
     } else if (t.isParadox) {
-      // Ampulheta
-      ctx.shadowColor = PURPLE;
-      ctx.shadowBlur = 10;
-      ctx.strokeStyle = col;
-      ctx.lineWidth = 2;
+      ctx.shadowColor = PURPLE; ctx.shadowBlur = 10;
+      ctx.strokeStyle = col; ctx.lineWidth = 2;
       const s = 7;
       ctx.beginPath();
       ctx.moveTo(t.x - s, t.y - s); ctx.lineTo(t.x + s, t.y - s);
       ctx.lineTo(t.x, t.y); ctx.lineTo(t.x + s, t.y + s);
       ctx.lineTo(t.x - s, t.y + s); ctx.lineTo(t.x, t.y);
       ctx.lineTo(t.x - s, t.y - s);
-      ctx.stroke();
-      ctx.shadowBlur = 0;
+      ctx.stroke(); ctx.shadowBlur = 0;
     } else {
       ctx.font = 'bold 13px VT323, monospace';
       const sym = t.type === 'recruta' ? 'R' : t.type === 'sniper' ? 'S' : t.type === 'faca' ? 'F' : t.type === 'metralhadora' ? 'M' : 'B';
@@ -1730,11 +1870,12 @@ function draw() {
   for (const b of bullets) {
     if (b.type === 'sniper') {
       if (b.target) {
-        const grad = ctx.createLinearGradient(b.x, b.y, b.target.x, b.target.y);
+        const targetY = b.target.y - (b.target.airHeight || 0);
+        const grad = ctx.createLinearGradient(b.x, b.y, b.target.x, targetY);
         grad.addColorStop(0, 'rgba(51,255,255,0.9)');
         grad.addColorStop(1, 'rgba(51,255,255,0.1)');
         ctx.strokeStyle = grad; ctx.lineWidth = 2;
-        ctx.beginPath(); ctx.moveTo(b.x, b.y); ctx.lineTo(b.target.x, b.target.y); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(b.x, b.y); ctx.lineTo(b.target.x, targetY); ctx.stroke();
       }
     } else if (b.type === 'metralhadora') {
       ctx.fillStyle = YELLOW; ctx.shadowColor = YELLOW; ctx.shadowBlur = 6;
@@ -1763,30 +1904,21 @@ function draw() {
     ctx.shadowBlur = 0; ctx.restore();
   }
 
-  // Raios da Tesla
+  // Tesla
   for (const tb of teslaBolts) {
     const p = tb.life / tb.maxLife;
-    ctx.strokeStyle = TESLA;
-    ctx.shadowColor = TESLA;
-    ctx.shadowBlur = 15;
-    ctx.globalAlpha = p;
-    ctx.lineWidth = 3;
+    ctx.strokeStyle = TESLA; ctx.shadowColor = TESLA; ctx.shadowBlur = 15;
+    ctx.globalAlpha = p; ctx.lineWidth = 3;
     ctx.beginPath();
     for (let i = 0; i < tb.points.length; i++) {
       const pt = tb.points[i];
-      // Adiciona um pouco de ruído
       const nx = pt.x + (i > 0 && i < tb.points.length - 1 ? (Math.random() - 0.5) * 6 : 0);
       const ny = pt.y + (i > 0 && i < tb.points.length - 1 ? (Math.random() - 0.5) * 6 : 0);
-      if (i === 0) ctx.moveTo(nx, ny);
-      else ctx.lineTo(nx, ny);
+      if (i === 0) ctx.moveTo(nx, ny); else ctx.lineTo(nx, ny);
     }
     ctx.stroke();
-    // Camada branca interna
-    ctx.strokeStyle = WHITE;
-    ctx.lineWidth = 1;
-    ctx.stroke();
-    ctx.shadowBlur = 0;
-    ctx.globalAlpha = 1;
+    ctx.strokeStyle = WHITE; ctx.lineWidth = 1; ctx.stroke();
+    ctx.shadowBlur = 0; ctx.globalAlpha = 1;
   }
 
   // Partículas
@@ -1797,7 +1929,7 @@ function draw() {
   }
   ctx.globalAlpha = 1;
 
-  // Efeitos de cura
+  // Curas
   for (const h of heals) {
     const p = h.life / h.maxLife;
     const size = 6 + (1 - p) * 4;
@@ -1816,14 +1948,12 @@ function draw() {
   for (const tx of texts) {
     const alpha = tx.life / tx.maxLife;
     ctx.globalAlpha = alpha; ctx.fillStyle = tx.color;
-    ctx.font = tx.text.length > 4 && tx.text.startsWith('-') && parseInt(tx.text.slice(1)) > 100
-      ? 'bold 22px VT323, monospace' : 'bold 14px VT323, monospace';
+    ctx.font = `bold ${tx.size || 14}px VT323, monospace`;
     ctx.textAlign = 'center'; ctx.shadowColor = tx.color; ctx.shadowBlur = 6;
     ctx.fillText(tx.text, tx.x, tx.y); ctx.shadowBlur = 0;
   }
   ctx.globalAlpha = 1;
 
-  // Money pops
   for (const mp of moneyPops) {
     const alpha = mp.life / mp.maxLife;
     ctx.globalAlpha = alpha; ctx.fillStyle = GOLD;
@@ -1833,93 +1963,22 @@ function draw() {
   }
   ctx.globalAlpha = 1;
 
-  // Drag preview
   if (dragging && dragging.overCanvas) {
     const d = dragging;
     const col = d.valid ? WHITE : RED;
-    const def = d.def;
-
     ctx.strokeStyle = col; ctx.globalAlpha = 0.5; ctx.lineWidth = 2;
     ctx.setLineDash([4, 6]);
-    ctx.beginPath(); ctx.arc(d.x, d.y, def.range || 30, 0, Math.PI * 2); ctx.stroke();
+    ctx.beginPath(); ctx.arc(d.x, d.y, d.def.range || 30, 0, Math.PI * 2); ctx.stroke();
     ctx.setLineDash([]);
     ctx.globalAlpha = 0.08; ctx.fillStyle = col;
-    ctx.beginPath(); ctx.arc(d.x, d.y, def.range || 30, 0, Math.PI * 2); ctx.fill();
-
+    ctx.beginPath(); ctx.arc(d.x, d.y, d.def.range || 30, 0, Math.PI * 2); ctx.fill();
     if (d.type === 'bazuca') {
       ctx.globalAlpha = 0.15; ctx.strokeStyle = ORANGE; ctx.setLineDash([2, 4]);
-      ctx.beginPath(); ctx.arc(d.x, d.y, def.splash, 0, Math.PI * 2); ctx.stroke();
+      ctx.beginPath(); ctx.arc(d.x, d.y, d.def.splash, 0, Math.PI * 2); ctx.stroke();
       ctx.setLineDash([]);
     }
-
     ctx.globalAlpha = 0.9; ctx.strokeStyle = col; ctx.lineWidth = 2;
     ctx.strokeRect(d.x - 11, d.y - 11, 22, 22);
-
-    // Símbolo
-    const isHealer = d.type === 'medico';
-    const isMerchant = d.type === 'comerciante';
-    const isFlame = d.type === 'lancachamas';
-    const isGlacial = d.type === 'glacial';
-    const isTesla = d.type === 'tesla';
-    const isDefensor = d.type === 'defensor';
-    const isParadox = d.type === 'paradoxo';
-
-    if (isHealer) {
-      ctx.fillStyle = col;
-      ctx.fillRect(d.x - 2, d.y - 8, 4, 16);
-      ctx.fillRect(d.x - 8, d.y - 2, 16, 4);
-    } else if (isMerchant) {
-      ctx.fillStyle = col; ctx.font = 'bold 16px VT323, monospace';
-      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      ctx.fillText('$', d.x, d.y + 1);
-    } else if (isFlame) {
-      ctx.fillStyle = col;
-      ctx.beginPath();
-      ctx.moveTo(d.x, d.y - 7); ctx.lineTo(d.x - 5, d.y + 3);
-      ctx.lineTo(d.x - 2, d.y + 3); ctx.lineTo(d.x - 2, d.y + 7);
-      ctx.lineTo(d.x + 2, d.y + 7); ctx.lineTo(d.x + 2, d.y + 3);
-      ctx.lineTo(d.x + 5, d.y + 3); ctx.closePath();
-      ctx.fill();
-    } else if (isGlacial) {
-      ctx.strokeStyle = col; ctx.lineWidth = 2;
-      for (let i = 0; i < 3; i++) {
-        const a = (Math.PI / 3) * i;
-        ctx.beginPath();
-        ctx.moveTo(d.x - Math.cos(a) * 8, d.y - Math.sin(a) * 8);
-        ctx.lineTo(d.x + Math.cos(a) * 8, d.y + Math.sin(a) * 8);
-        ctx.stroke();
-      }
-    } else if (isTesla) {
-      ctx.fillStyle = col;
-      ctx.beginPath();
-      ctx.moveTo(d.x - 4, d.y - 8); ctx.lineTo(d.x + 1, d.y - 2);
-      ctx.lineTo(d.x - 3, d.y - 1); ctx.lineTo(d.x + 3, d.y + 8);
-      ctx.lineTo(d.x - 1, d.y + 2); ctx.lineTo(d.x + 3, d.y + 1);
-      ctx.closePath();
-      ctx.fill();
-    } else if (isDefensor) {
-      ctx.fillStyle = col;
-      ctx.beginPath();
-      ctx.moveTo(d.x, d.y - 9); ctx.lineTo(d.x + 8, d.y - 6);
-      ctx.lineTo(d.x + 8, d.y + 2); ctx.lineTo(d.x, d.y + 9);
-      ctx.lineTo(d.x - 8, d.y + 2); ctx.lineTo(d.x - 8, d.y - 6);
-      ctx.closePath();
-      ctx.fill();
-    } else if (isParadox) {
-      ctx.strokeStyle = col; ctx.lineWidth = 2;
-      const s = 7;
-      ctx.beginPath();
-      ctx.moveTo(d.x - s, d.y - s); ctx.lineTo(d.x + s, d.y - s);
-      ctx.lineTo(d.x, d.y); ctx.lineTo(d.x + s, d.y + s);
-      ctx.lineTo(d.x - s, d.y + s); ctx.lineTo(d.x, d.y);
-      ctx.lineTo(d.x - s, d.y - s);
-      ctx.stroke();
-    } else {
-      ctx.fillStyle = col; ctx.font = 'bold 13px VT323, monospace';
-      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      const sym = d.type === 'recruta' ? 'R' : d.type === 'sniper' ? 'S' : d.type === 'faca' ? 'F' : d.type === 'metralhadora' ? 'M' : 'B';
-      ctx.fillText(sym, d.x, d.y + 1);
-    }
     ctx.globalAlpha = 1;
   }
 
@@ -1930,11 +1989,11 @@ function draw() {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
   }
 
-  if (hordeActive) {
-    const pulseAmount = 0.15 + Math.sin(hordePulse) * 0.15;
-    const grad = ctx.createRadialGradient(240, 240, 180, 240, 240, 300);
-    grad.addColorStop(0, 'rgba(255,51,51,0)');
-    grad.addColorStop(1, `rgba(255,51,51,${pulseAmount})`);
+  if (bossActive) {
+    const pulseAmount = 0.2 + Math.sin(Date.now() / 250) * 0.15;
+    const grad = ctx.createRadialGradient(240, 240, 150, 240, 240, 340);
+    grad.addColorStop(0, 'rgba(255,34,0,0)');
+    grad.addColorStop(1, `rgba(255,34,0,${pulseAmount})`);
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
   }
@@ -1970,50 +2029,52 @@ function drawEnemy(e) {
   const s = e.size;
   const isHit = e.hitFlash > 0;
   const isYeti = e.type === 'yeti';
+  const isBoss = e.isBoss;
   const isBurning = e.fireTimer > 0;
   const isIceFrozen = e.iceFrozen > 0;
+  const isAir = e.isAir;
 
   let color;
   if (isHit) color = '#ffffff';
   else if (isIceFrozen) color = FROZEN;
   else if (isBurning) color = FIRE_BRIGHT;
   else if (isYeti) color = ICE;
+  else if (isBoss) color = BOSS_RED;
+  else if (isAir) color = AIR;
   else if (e.type === 'fungo') color = TOXIC;
-  else color = hordeActive ? '#ff5555' : GREEN;
+  else color = GREEN;
+
+  // Aéreo: aplica offset vertical
+  const yOffset = isAir ? -e.airHeight - Math.sin(e.airBob) * 2 : 0;
 
   let scale = 1;
-  if (e.spawnAnim > 0) scale = 0.3 + (1 - e.spawnAnim / 15) * 0.7;
+  if (e.spawnAnim > 0) {
+    const pct = 1 - e.spawnAnim / (isBoss ? 40 : 15);
+    scale = isBoss ? 0.2 + pct * 0.8 : 0.3 + pct * 0.7;
+  }
 
   if (isBurning && !isHit) { ctx.shadowColor = FIRE; ctx.shadowBlur = 12; }
   if (isIceFrozen && !isHit) { ctx.shadowColor = FROZEN; ctx.shadowBlur = 12; }
+  if (isBoss && !isHit) { ctx.shadowColor = BOSS_RED; ctx.shadowBlur = 25; }
+  if (isAir && !isHit) { ctx.shadowColor = AIR; ctx.shadowBlur = 12; }
 
   ctx.save();
-  ctx.translate(e.x, e.y); ctx.scale(scale, scale);
+  ctx.translate(e.x, e.y + yOffset); ctx.scale(scale, scale);
   ctx.strokeStyle = color;
   ctx.fillStyle = isHit ? color : BLACK;
-  ctx.lineWidth = 2;
-  if (isHit) { ctx.shadowColor = '#ffffff'; ctx.shadowBlur = 8; }
+  ctx.lineWidth = isBoss ? 4 : 2;
 
   switch (e.drawStyle) {
     case 'square':
       ctx.fillRect(-s/2, -s/2, s, s); ctx.strokeRect(-s/2, -s/2, s, s);
       ctx.fillStyle = color;
       if (!isIceFrozen) { ctx.fillRect(-3, -3, 2, 2); ctx.fillRect(1, -3, 2, 2); }
-      else {
-        // X pra congelado
-        ctx.strokeStyle = color;
-        ctx.beginPath();
-        ctx.moveTo(-4, -4); ctx.lineTo(4, 4);
-        ctx.moveTo(4, -4); ctx.lineTo(-4, 4);
-        ctx.stroke();
-      }
       break;
     case 'tank':
       ctx.fillRect(-s/2, -s/2 + 2, s, s - 4); ctx.strokeRect(-s/2, -s/2 + 2, s, s - 4);
       ctx.strokeRect(-s/2 - 2, -s/2 + 4, s + 4, s - 8);
       ctx.fillStyle = color;
       ctx.fillRect(-s/2 + 2, -1, 2, 2); ctx.fillRect(s/2 - 4, -1, 2, 2);
-      ctx.strokeStyle = color;
       ctx.beginPath(); ctx.moveTo(-s/2, 0); ctx.lineTo(s/2, 0); ctx.stroke();
       break;
     case 'triangle':
@@ -2047,14 +2108,12 @@ function drawEnemy(e) {
       ctx.fillStyle = color;
       ctx.beginPath(); ctx.arc(-4, -s/2 + 1, 1.5, 0, Math.PI * 2); ctx.fill();
       ctx.beginPath(); ctx.arc(3, -s/2 - 1, 1.5, 0, Math.PI * 2); ctx.fill();
-      ctx.beginPath(); ctx.arc(5, -s/2 + 3, 1, 0, Math.PI * 2); ctx.fill();
       break;
     case 'yeti':
       ctx.fillStyle = isHit ? color : BLACK;
       ctx.fillRect(-s/2, -s/2, s, s);
       ctx.strokeRect(-s/2, -s/2, s, s);
       ctx.strokeRect(-s/4, -s/4, s/2, s/2);
-      ctx.strokeStyle = color;
       ctx.beginPath();
       ctx.moveTo(-s/2, 0); ctx.lineTo(s/2, 0);
       ctx.moveTo(0, -s/2); ctx.lineTo(0, s/2);
@@ -2062,44 +2121,107 @@ function drawEnemy(e) {
       ctx.moveTo(-s/3, s/3); ctx.lineTo(s/3, -s/3);
       ctx.stroke();
       ctx.fillStyle = color;
-      ctx.fillRect(-4, -4, 2, 2);
-      ctx.fillRect(2, -4, 2, 2);
+      ctx.fillRect(-4, -4, 2, 2); ctx.fillRect(2, -4, 2, 2);
+      break;
+    case 'air':
+      // Disco voador oval
+      ctx.fillStyle = isHit ? color : '#0a2a2a';
+      ctx.beginPath();
+      ctx.ellipse(0, 0, s/2 + 4, s/4, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+      // Cúpula no topo
+      ctx.beginPath();
+      ctx.arc(0, -3, s/3, Math.PI, 0);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+      // Luzes piscando
+      ctx.fillStyle = color;
+      const blink = Math.floor(Date.now() / 200) % 2 === 0;
+      ctx.beginPath(); ctx.arc(-s/2 + 2, 2, 1.8, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(s/2 - 2, 2, 1.8, 0, Math.PI * 2); ctx.fill();
+      if (blink) {
+        ctx.beginPath(); ctx.arc(0, 2, 2.2, 0, Math.PI * 2); ctx.fill();
+      }
+      break;
+    case 'colosso':
+      ctx.fillRect(-s/2, -s/2, s, s);
+      ctx.strokeRect(-s/2, -s/2, s, s);
+      ctx.fillStyle = color;
+      ctx.beginPath(); ctx.moveTo(-8, -s/2); ctx.lineTo(0, -s/2 - 8); ctx.lineTo(8, -s/2); ctx.closePath(); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(-8, s/2); ctx.lineTo(0, s/2 + 8); ctx.lineTo(8, s/2); ctx.closePath(); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(-s/2, -8); ctx.lineTo(-s/2 - 8, 0); ctx.lineTo(-s/2, 8); ctx.closePath(); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(s/2, -8); ctx.lineTo(s/2 + 8, 0); ctx.lineTo(s/2, 8); ctx.closePath(); ctx.fill();
+
+      const pulse = 0.5 + Math.sin(Date.now() / 200) * 0.3;
+      ctx.globalAlpha = pulse;
+      ctx.fillStyle = color;
+      ctx.beginPath(); ctx.arc(0, 0, s * 0.22, 0, Math.PI * 2); ctx.fill();
+      ctx.globalAlpha = 1;
+
+      ctx.shadowColor = color; ctx.shadowBlur = 15;
+      ctx.fillStyle = color;
+      if (e.crackLevel >= 3) ctx.fillStyle = WHITE;
+      ctx.fillRect(-12, -6, 5, 5);
+      ctx.fillRect(7, -6, 5, 5);
+      ctx.shadowBlur = 0;
+
+      if (e.crackLevel >= 1) {
+        ctx.strokeStyle = color; ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(-15, -15); ctx.lineTo(-8, -5); ctx.lineTo(-14, 5);
+        ctx.stroke();
+      }
+      if (e.crackLevel >= 2) {
+        ctx.beginPath();
+        ctx.moveTo(15, -10); ctx.lineTo(8, 0); ctx.lineTo(15, 10);
+        ctx.stroke();
+      }
+      if (e.crackLevel >= 3) {
+        ctx.beginPath();
+        ctx.moveTo(-5, -18); ctx.lineTo(0, -8); ctx.lineTo(-5, 0); ctx.lineTo(0, 10); ctx.lineTo(-5, 18);
+        ctx.stroke();
+      }
       break;
   }
   ctx.shadowBlur = 0;
   ctx.restore();
 
-  // HP bar
-  const w = 20, h = 3, bx = e.x - w/2, by = e.y - s/2 - 7;
+  // HP bar (com offset do aéreo)
+  const barY = e.y + yOffset - s/2 - (isBoss ? 15 : 7);
+  const w = isBoss ? 40 : 20, h = isBoss ? 5 : 3;
+  const bx = e.x - w/2, by = barY;
   ctx.fillStyle = GREEN_DARK; ctx.fillRect(bx, by, w, h);
-  const segs = 5;
+  const segs = isBoss ? 10 : 5;
   const filled = Math.max(0, Math.ceil((e.hp / e.maxHp) * segs));
-  ctx.fillStyle = isYeti ? ICE : (isIceFrozen ? FROZEN : (isBurning ? FIRE : (e.type === 'fungo' ? TOXIC : (hordeActive ? RED : GREEN))));
+  let barCol;
+  if (isBoss) barCol = BOSS_RED;
+  else if (isYeti) barCol = ICE;
+  else if (isAir) barCol = AIR;
+  else if (isIceFrozen) barCol = FROZEN;
+  else if (isBurning) barCol = FIRE;
+  else if (e.type === 'fungo') barCol = TOXIC;
+  else barCol = GREEN;
+  ctx.fillStyle = barCol;
   for (let i = 0; i < filled; i++) {
     const sw = (w / segs) - 1;
     ctx.fillRect(bx + i * (w/segs), by, sw, h);
   }
 
-  // Indicador de queimadura
-  if (isBurning) {
+  // Indicadores
+  if (isBurning && !isAir) {
     const fy = by - 6 + Math.sin(Date.now() / 100) * 1;
     ctx.fillStyle = FIRE_BRIGHT;
-    ctx.shadowColor = FIRE;
-    ctx.shadowBlur = 8;
+    ctx.shadowColor = FIRE; ctx.shadowBlur = 8;
     ctx.beginPath();
-    ctx.moveTo(e.x, fy - 4);
-    ctx.lineTo(e.x - 3, fy + 2);
-    ctx.lineTo(e.x + 3, fy + 2);
-    ctx.closePath();
-    ctx.fill();
+    ctx.moveTo(e.x, fy - 4); ctx.lineTo(e.x - 3, fy + 2); ctx.lineTo(e.x + 3, fy + 2);
+    ctx.closePath(); ctx.fill();
     ctx.shadowBlur = 0;
   }
-  // Indicador de congelamento
   if (isIceFrozen) {
     const fy = by - 6;
-    ctx.strokeStyle = FROZEN;
-    ctx.shadowColor = FROZEN;
-    ctx.shadowBlur = 8;
+    ctx.strokeStyle = FROZEN; ctx.shadowColor = FROZEN; ctx.shadowBlur = 8;
     ctx.lineWidth = 1;
     ctx.beginPath(); ctx.arc(e.x, fy, 4, 0, Math.PI * 2); ctx.stroke();
     ctx.beginPath();
@@ -2110,7 +2232,7 @@ function drawEnemy(e) {
   }
 }
 
-// ===== DECK SYSTEM =====
+// ===== DECK =====
 function buildDeckGrid() {
   const grid = document.getElementById('deckGrid');
   grid.innerHTML = '';
@@ -2132,18 +2254,12 @@ function buildDeckGrid() {
 function toggleDeckCard(type, card) {
   const idx = selectedDeck.indexOf(type);
   if (idx >= 0) {
-    selectedDeck.splice(idx, 1);
-    card.classList.remove('selected');
+    selectedDeck.splice(idx, 1); card.classList.remove('selected');
   } else {
-    if (selectedDeck.length >= 6) {
-      showMsg('> DECK CHEIO (6/6)');
-      return;
-    }
-    selectedDeck.push(type);
-    card.classList.add('selected');
+    if (selectedDeck.length >= 6) { showMsg('> DECK CHEIO (6/6)'); return; }
+    selectedDeck.push(type); card.classList.add('selected');
   }
-  updateDeckUI();
-  saveDeck();
+  updateDeckUI(); saveDeck();
 }
 function updateDeckUI() {
   document.getElementById('deckCount').textContent = selectedDeck.length;
@@ -2160,12 +2276,10 @@ function loadDeck() {
     const saved = localStorage.getItem('td_deck');
     if (saved) selectedDeck = JSON.parse(saved) || [];
   } catch(e) { selectedDeck = []; }
-  // Valida que só tem tipos existentes
   selectedDeck = selectedDeck.filter(t => TOWER_ORDER.includes(t));
   if (selectedDeck.length > 6) selectedDeck = selectedDeck.slice(0, 6);
 }
 
-// ===== BUILD LOJA COM DECK =====
 function buildTroopsShop() {
   const grid = document.getElementById('troopsGrid');
   grid.innerHTML = '';
@@ -2188,17 +2302,12 @@ function buildTroopsShop() {
   }
 }
 
-// ===== START GAME =====
 function showDeckScreen() {
   document.getElementById('menu').style.display = 'none';
   document.getElementById('deckScreen').style.display = 'flex';
-  loadDeck();
-  buildDeckGrid();
-  updateDeckUI();
+  loadDeck(); buildDeckGrid(); updateDeckUI();
 }
-function hideDeckScreen() {
-  document.getElementById('deckScreen').style.display = 'none';
-}
+function hideDeckScreen() { document.getElementById('deckScreen').style.display = 'none'; }
 
 function startGame(mode) {
   gameMode = mode;
@@ -2222,8 +2331,9 @@ function startGame(mode) {
   trails.length = 0; texts.length = 0; shockwaves.length = 0;
   sparks.length = 0; heals.length = 0; moneyPops.length = 0;
   healZones.length = 0; flames.length = 0; teslaBolts.length = 0;
-  paradoxZones.length = 0;
-  waveQueue = []; waveActive = false; waveDelay = 0; hordeActive = false;
+  paradoxZones.length = 0; airTrails.length = 0;
+  waveQueue = []; waveActive = false; waveDelay = 0;
+  bossActive = false; bossRef = null; bossPendingSpawn = 0;
   dragging = null; selectedTowerType = null; pointerDownInfo = null;
 
   buildTroopsShop();
@@ -2231,39 +2341,24 @@ function startGame(mode) {
   startWave();
 }
 
-// Eventos do menu
 let pendingMode = null;
 document.querySelectorAll('.mode-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    pendingMode = btn.dataset.mode;
-    showDeckScreen();
-  });
+  btn.addEventListener('click', () => { pendingMode = btn.dataset.mode; showDeckScreen(); });
 });
-
 document.getElementById('btnDeckStart').addEventListener('click', () => {
   if (selectedDeck.length !== 6) return;
   startGame(pendingMode);
 });
-
 document.getElementById('btnDeckDefault').addEventListener('click', () => {
-  selectedDeck = ['recruta', 'faca', 'sniper', 'metralhadora', 'medico', 'comerciante'];
-  saveDeck();
-  buildDeckGrid();
-  updateDeckUI();
+  selectedDeck = ['recruta','boxeador','sniper','metralhadora','medico','comerciante'];
+  saveDeck(); buildDeckGrid(); updateDeckUI();
 });
-
 document.getElementById('btnDeckClear').addEventListener('click', () => {
-  selectedDeck = [];
-  saveDeck();
-  buildDeckGrid();
-  updateDeckUI();
+  selectedDeck = []; saveDeck(); buildDeckGrid(); updateDeckUI();
 });
-
 document.getElementById('btnDeckBack').addEventListener('click', () => {
-  hideDeckScreen();
-  document.getElementById('menu').style.display = 'flex';
+  hideDeckScreen(); document.getElementById('menu').style.display = 'flex';
 });
-
 document.getElementById('btnMenu').addEventListener('click', () => {
   gameMode = null;
   document.getElementById('menu').style.display = 'flex';
@@ -2276,4 +2371,4 @@ document.getElementById('btnMenu').addEventListener('click', () => {
 requestAnimationFrame(loop);
 </script>
 </body>
- </html>
+</html>
