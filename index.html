@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>TOWER DEFENSE 1970 v16</title>
+<title>TOWER DEFENSE 1970 v17</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
@@ -124,6 +124,18 @@
   .deck-action-btn:disabled { opacity: 0.3; cursor: not-allowed; }
   .deck-action-btn.primary { border-color: #ffd700; color: #ffd700; box-shadow: 0 0 10px #ffd700; }
   .deck-action-btn.primary:hover:not(:disabled) { background: #ffd700; color: #000; box-shadow: 0 0 25px #ffd700; }
+
+  #soundBtn {
+    position: fixed; top: 8px; left: 50%; transform: translateX(-50%);
+    background: #000; border: 2px solid #33ff33; color: #33ff33;
+    font-family: 'VT323', monospace; font-size: 14px;
+    padding: 4px 10px; cursor: pointer; letter-spacing: 2px;
+    box-shadow: 0 0 10px #33ff33; z-index: 100; touch-action: manipulation;
+    display: none;
+  }
+  #soundBtn:hover { background: #33ff33; color: #000; }
+  #soundBtn.muted { border-color: #ff3333; color: #ff3333; box-shadow: 0 0 10px #ff3333; }
+  #soundBtn.muted:hover { background: #ff3333; color: #000; }
 
   #hordeBanner {
     position: fixed; top: 40%; left: 50%;
@@ -304,6 +316,7 @@
     position: static; margin: 6px auto 0 auto; display: block;
     font-size: 14px; padding: 5px 10px;
   }
+  body.mode-mobile #soundBtn { top: 26px; font-size: 12px; padding: 3px 8px; }
   body.mode-mobile #hordeBanner { font-size: 44px; }
   body.mode-mobile #msg { font-size: 16px; padding: 8px 16px; }
   body.mode-mobile #deckGrid { grid-template-columns: repeat(2, 1fr); gap: 4px; }
@@ -314,7 +327,7 @@
   body.mode-mobile #deckScreen h2 { font-size: 22px; }
   body.mode-mobile #deckScreen .deck-info { font-size: 14px; }
   body.mode-mobile .deck-action-btn { font-size: 14px; padding: 8px 14px; }
-  body.mode-mobile #bossHpBar { width: min(96vw, 480px); top: 6px; padding: 4px 6px; }
+  body.mode-mobile #bossHpBar { width: min(96vw, 480px); top: 42px; padding: 4px 6px; }
   body.mode-mobile #bossHpBar .boss-label { font-size: 13px; }
   body.mode-mobile #bossHpBar .boss-bar-outer { height: 12px; }
 </style>
@@ -352,13 +365,14 @@
   </div>
 </div>
 
-<div class="title" id="titleBar" style="display:none;">◄ TOWER DEFENSE · v16 ►</div>
+<div class="title" id="titleBar" style="display:none;">◄ TOWER DEFENSE · v17 ►</div>
 <div class="map-info" id="mapInfoBar" style="display:none;">
   MAPA: <span class="map-name" id="mapName">---</span><br>
   30m × 30m · 1m = 16px<br>
   <span id="hordeIndicator"></span>
 </div>
 <div id="msg"></div>
+<button id="soundBtn" title="Ligar/Desligar som">🔊 SOM: ON</button>
 <div id="hordeBanner">⚠ HORDA ⚠</div>
 
 <div id="bossHpBar">
@@ -395,6 +409,100 @@
 </div>
 
 <script>
+// ================== SISTEMA DE SOM (Web Audio API) ==================
+const Sound = (() => {
+  let audioCtx = null;
+  let muted = false;
+  let masterGain = null;
+
+  function init() {
+    if (audioCtx) return;
+    try {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      masterGain = audioCtx.createGain();
+      masterGain.gain.value = 0.35;
+      masterGain.connect(audioCtx.destination);
+    } catch(e) { console.warn('Audio not supported'); }
+  }
+
+  function resume() {
+    if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+  }
+
+  function tone(freq, duration, type = 'square', volume = 0.3, freqEnd = null) {
+    if (!audioCtx || muted) return;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = type;
+    const now = audioCtx.currentTime;
+    osc.frequency.setValueAtTime(freq, now);
+    if (freqEnd !== null) osc.frequency.exponentialRampToValueAtTime(Math.max(1, freqEnd), now + duration);
+    gain.gain.setValueAtTime(volume, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+    osc.connect(gain);
+    gain.connect(masterGain);
+    osc.start(now);
+    osc.stop(now + duration);
+  }
+
+  function noise(duration, volume = 0.2, filterFreq = 1000) {
+    if (!audioCtx || muted) return;
+    const bufferSize = audioCtx.sampleRate * duration;
+    const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+    const noiseSource = audioCtx.createBufferSource();
+    noiseSource.buffer = buffer;
+    const filter = audioCtx.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.value = filterFreq;
+    const gain = audioCtx.createGain();
+    const now = audioCtx.currentTime;
+    gain.gain.setValueAtTime(volume, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+    noiseSource.connect(filter);
+    filter.connect(gain);
+    gain.connect(masterGain);
+    noiseSource.start(now);
+    noiseSource.stop(now + duration);
+  }
+
+  return {
+    init, resume,
+    toggle() {
+      muted = !muted;
+      return muted;
+    },
+    isMuted() { return muted; },
+    // ----- SONS ESPECÍFICOS -----
+    shootRecruta() { tone(800, 0.05, 'square', 0.15, 400); },
+    shootMetralhadora() { tone(1200, 0.02, 'square', 0.12, 800); },
+    shootSniper() { tone(200, 0.15, 'sawtooth', 0.18, 1500); },
+    shootFaca() { tone(600, 0.04, 'square', 0.18, 900); },
+    shootBoxer() { tone(150, 0.06, 'triangle', 0.2, 80); },
+    shootTesla() { tone(300, 0.1, 'sawtooth', 0.15, 600); },
+    shootGlacial() { tone(1400, 0.06, 'sine', 0.15, 1800); },
+    shootLanca() { noise(0.1, 0.12, 800); },
+    shootDrone() { tone(1600, 0.04, 'sine', 0.12, 2000); },
+    fireBazuca() { tone(100, 0.25, 'sawtooth', 0.2, 40); noise(0.2, 0.15, 400); },
+    explosion() { noise(0.35, 0.25, 600); tone(60, 0.35, 'sawtooth', 0.2, 20); },
+    bigExplosion() { noise(0.6, 0.35, 500); tone(40, 0.6, 'sawtooth', 0.3, 10); },
+    ogroPound() { noise(0.4, 0.4, 300); tone(50, 0.5, 'square', 0.3, 15); },
+    enemyHit() { tone(400, 0.03, 'square', 0.08, 200); },
+    enemyDeath() { tone(300, 0.08, 'square', 0.15, 100); },
+    playerHit() { tone(200, 0.3, 'sawtooth', 0.3, 60); noise(0.2, 0.2, 400); },
+    heal() { tone(500, 0.2, 'sine', 0.2, 900); },
+    placeTower() { tone(700, 0.1, 'square', 0.2, 1000); tone(1000, 0.1, 'square', 0.15, 1400); },
+    coin() { tone(800, 0.08, 'square', 0.2, 1200); tone(1200, 0.08, 'square', 0.15, 1600); },
+    newWave() { tone(400, 0.1, 'square', 0.15); setTimeout(() => tone(600, 0.1, 'square', 0.15), 100); setTimeout(() => tone(800, 0.15, 'square', 0.2), 200); },
+    bossAlert() { tone(80, 0.3, 'sawtooth', 0.3, 40); setTimeout(() => tone(60, 0.3, 'sawtooth', 0.3, 30), 350); setTimeout(() => tone(40, 0.5, 'sawtooth', 0.35, 20), 700); },
+    gameOver() { tone(400, 0.4, 'square', 0.3, 200); setTimeout(() => tone(200, 0.4, 'square', 0.3, 100), 400); setTimeout(() => tone(100, 0.8, 'square', 0.3, 40), 800); },
+    error() { tone(150, 0.15, 'square', 0.2, 100); },
+    select() { tone(1000, 0.03, 'square', 0.1); },
+    upgrade() { tone(600, 0.08, 'square', 0.15, 900); setTimeout(() => tone(900, 0.08, 'square', 0.15, 1200), 80); }
+  };
+})();
+
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 const PPM = 16;
@@ -418,6 +526,7 @@ const SHIELD = '#66ddff';
 const TESLA = '#ffff66';
 const BOXER = '#ff6644';
 const AIR = '#88ffee';
+const DRONE = '#66eeff';
 const OGRE = '#66ff33';
 const OGRE_DARK = '#2a5a1a';
 
@@ -470,10 +579,10 @@ let dragging = null;
 let selectedTowerType = null;
 let pointerDownInfo = null;
 
-// ===== TROPAS =====
 const TOWER_TYPES = {
   recruta:      { cost: 50,  range: 6 * PPM,   damage: 25, fireRate: 60,  hp: 100, maxHp: 100, name: 'RECRUTA',       desc: 'HP 100 · DMG 25 · 1s · 6m' },
   boxeador:     { cost: 50,  range: 3 * PPM,   damage: 35, fireRate: 48,  hp: 120, maxHp: 120, name: 'BOXEADOR',      desc: 'HP 120 · DMG 35 · 0.8s · 3m', isBoxer: true },
+  drone:        { cost: 100, range: 8 * PPM,   damage: 25, fireRate: 60,  hp: 100, maxHp: 100, name: 'DRONE',         desc: 'HP 100 · DMG 25 · 1s · 8m · ANTI-AÉREO 3x', isDrone: true, hitsAir: true },
   faca:         { cost: 100, range: 2.5 * PPM, damage: 80, fireRate: 30,  hp: 150, maxHp: 150, name: 'FACA',          desc: 'HP 150 · DMG 80 · 0.5s · 2.5m' },
   sniper:       { cost: 150, range: 15 * PPM,  damage: 50, fireRate: 120, hp: 70,  maxHp: 70,  name: 'SNIPER',        desc: 'HP 70 · DMG 50 · 2s · 15m', hitsAir: true },
   metralhadora: { cost: 150, range: 7 * PPM,   damage: 25, fireRate: 12,  hp: 100, maxHp: 100, name: 'METRALHADORA',  desc: 'HP 100 · DMG 25 · 0.2s · 7m' },
@@ -487,7 +596,7 @@ const TOWER_TYPES = {
   paradoxo:     { cost: 400, range: 5 * PPM,   damage: 0,  fireRate: 900, hp: 100, maxHp: 100, name: 'PARADOXO',      desc: 'HP 100 · PARA TEMPO 3s · 15s', isParadox: true }
 };
 
-const TOWER_ORDER = ['recruta','boxeador','faca','sniper','metralhadora','lancachamas','glacial','bazuca','tesla','medico','defensor','comerciante','paradoxo'];
+const TOWER_ORDER = ['recruta','boxeador','drone','faca','sniper','metralhadora','lancachamas','glacial','bazuca','tesla','medico','defensor','comerciante','paradoxo'];
 
 function getMerchantCost() {
   const aliveMerchants = towers.filter(t => t.isMerchant).length;
@@ -499,7 +608,6 @@ function getCostForType(type) {
 }
 function speedToPixels(vel) { return ((vel / 20) * PPM) / 60; }
 
-// ===== INIMIGOS =====
 const ENEMY_TYPES = {
   padrao:    { hp: 100, damage: 50,  speed: 100, size: 14, reward: 12, drawStyle: 'square' },
   ofensivo:  { hp: 90,  damage: 150, speed: 90,  size: 14, reward: 20, drawStyle: 'triangle' },
@@ -547,17 +655,8 @@ function getWaveComposition(wave) {
 }
 
 function isBossWave(wave) { return wave > 0 && wave % 10 === 0; }
-
-// HP: 5000 * 1.5^((wave/10)-1)
-// Dano: 200 * 1.2^((wave/10)-1)
-function getBossHp(wave) {
-  const factor = Math.pow(1.5, (wave / 10) - 1);
-  return Math.floor(5000 * factor);
-}
-function getBossDamage(wave) {
-  const factor = Math.pow(1.2, (wave / 10) - 1);
-  return Math.floor(200 * factor);
-}
+function getBossHp(wave) { return Math.floor(5000 * Math.pow(1.5, (wave / 10) - 1)); }
+function getBossDamage(wave) { return Math.floor(200 * Math.pow(1.2, (wave / 10) - 1)); }
 
 function distToSegment(p, a, b) {
   const dx = b.x - a.x, dy = b.y - a.y;
@@ -679,8 +778,9 @@ function damagePlayer(amount) {
   if (playerHp < 0) playerHp = 0;
   addFlash(0.45, '255,51,51'); addShake(7);
   addText(canvas.width / 2, 60, '-' + amount, RED, 70, 22);
+  Sound.playerHit();
   updateUI();
-  if (playerHp <= 0) { gameOver = true; showMsg('> VOCÊ CAIU <'); }
+  if (playerHp <= 0) { gameOver = true; showMsg('> VOCÊ CAIU <'); Sound.gameOver(); }
 }
 function healPlayer(amount) {
   const old = playerHp;
@@ -689,6 +789,7 @@ function healPlayer(amount) {
   if (healed > 0) {
     addFlash(0.2, '51,255,51');
     addText(canvas.width / 2, 60, '+' + healed + ' HP', GREEN_BRIGHT, 60, 22);
+    Sound.heal();
     updateUI();
   }
 }
@@ -750,6 +851,7 @@ function tryPlace(x, y, type) {
     if (isOnPath(x, y)) showMsg('> ÁREA BLOQUEADA');
     else if (towers.some(t => Math.hypot(t.x-x, t.y-y) < 30)) showMsg('> MUITO PRÓXIMO');
     else if (gold < getCostForType(type)) showMsg('> CRÉDITOS INSUFICIENTES');
+    Sound.error();
     return false;
   }
   const def = TOWER_TYPES[type];
@@ -766,19 +868,22 @@ function tryPlace(x, y, type) {
     isDefensor: def.isDefensor || false,
     isParadox: def.isParadox || false,
     isBoxer: def.isBoxer || false,
+    isDrone: def.isDrone || false,
     hitsAir: def.hitsAir || false,
     chainRange: def.chainRange || 0,
     maxChains: def.maxChains || 0,
     hp: def.hp, maxHp: def.maxHp,
     cooldown: 0, angle: 0,
     spawnAnim: 20, recoil: 0, healPulse: 0, incomePulse: 0,
-    defensorPulse: 0, punchAnim: 0
+    defensorPulse: 0, punchAnim: 0,
+    droneRotorAngle: 0
   });
   gold -= actualCost;
-  const col = def.isHealer ? GREEN_BRIGHT : def.isMerchant ? GOLD : def.isGlacial ? ICE : def.isTesla ? TESLA : def.isDefensor ? SHIELD : def.isParadox ? PURPLE : def.isFlamethrower ? FIRE : def.isBoxer ? BOXER : GREEN;
+  const col = def.isHealer ? GREEN_BRIGHT : def.isMerchant ? GOLD : def.isGlacial ? ICE : def.isTesla ? TESLA : def.isDefensor ? SHIELD : def.isParadox ? PURPLE : def.isFlamethrower ? FIRE : def.isBoxer ? BOXER : def.isDrone ? DRONE : GREEN;
   addShockwave(x, y, col, 40, 22);
   burst(x, y, 16, { speed: 3, life: 25, color: col, size: 2 });
   addFlash(0.15);
+  Sound.placeTower();
   updateUI();
   return true;
 }
@@ -819,7 +924,7 @@ document.addEventListener('pointerup', e => {
     if (moved < 8) {
       const type = pointerDownInfo.type;
       if (selectedTowerType === type) clearSelection();
-      else selectTowerType(type);
+      else { selectTowerType(type); Sound.select(); }
     }
     pointerDownInfo = null;
   }
@@ -886,9 +991,7 @@ function spawnEnemy(typeKey, x, y, wp, overrideHp, overrideDmg) {
     spawnAnim: t.isBoss ? 40 : 15, hitFlash: 0, lastTrailTime: 0, lastHealTick: 0,
     isBoss: t.isBoss || false,
     stepTimer: 0, crackLevel: 0,
-    // Boss Ogro: pisão
-    lastPoundHp: hp, // referência (HP cheio no spawn)
-    poundThreshold: 1000
+    lastPoundHp: hp, poundThreshold: 1000
   };
   enemies.push(enemy);
   if (t.isBoss) {
@@ -898,6 +1001,7 @@ function spawnEnemy(typeKey, x, y, wp, overrideHp, overrideDmg) {
     burst(ex, ey, 50, { speed: 6, life: 40, size: 4, color: OGRE });
     addFlash(0.5, '102,255,51');
     addShake(12);
+    Sound.bossAlert();
   } else if (t.isAir) {
     addShockwave(ex, ey - t.airHeight, AIR, 25, 15);
     burst(ex, ey - t.airHeight, 10, { speed: 2.5, life: 20, size: 2, color: AIR });
@@ -921,7 +1025,6 @@ function startWave() {
     showBanner('👹 OGRO 👹', true);
     addFlash(0.6, '102,255,51'); addShake(15);
     setTimeout(() => showBanner('👹 OGRO 👹', true), 150);
-    // Spawna o ogro direto (1 por onda)
     const hp = getBossHp(waveNum);
     const dmg = getBossDamage(waveNum);
     setTimeout(() => {
@@ -935,6 +1038,7 @@ function startWave() {
   spawnCooldown = 0; waveActive = true;
   addShockwave(240, 240, GREEN, 300, 40);
   addFlash(0.2); addShake(3);
+  Sound.newWave();
   updateUI();
 }
 
@@ -944,6 +1048,7 @@ function areaExplosion(x, y, damage, radius) {
   burst(x, y, 40, { speed: 6, life: 40, size: 3, gravity: 0.2, friction: 0.92 });
   burst(x, y, 20, { speed: 9, life: 25, size: 2, color: YELLOW, friction: 0.9 });
   addFlash(0.5); addShake(8);
+  Sound.bigExplosion();
   const inRange = towers.filter(t => Math.hypot(t.x - x, t.y - y) <= radius);
   for (const t of inRange) {
     let dmg = damage;
@@ -961,7 +1066,6 @@ function areaExplosion(x, y, damage, radius) {
   updateUI();
 }
 
-// Ogro pisão: 75 de dano em 5m
 function ogroPound(x, y) {
   const radius = 5 * PPM;
   addShockwave(x, y, OGRE, radius, 30);
@@ -972,6 +1076,7 @@ function ogroPound(x, y) {
   addShake(12);
   addFlash(0.35, '102,255,51');
   addText(x, y - 30, 'PISÃO!', OGRE, 70, 24);
+  Sound.ogroPound();
 
   const inRange = towers.filter(t => Math.hypot(t.x - x, t.y - y) <= radius);
   for (const t of inRange) {
@@ -997,6 +1102,7 @@ function bossFinalExplosion(x, y) {
   burst(x, y, 80, { speed: 8, life: 50, size: 4, gravity: 0.2, friction: 0.9, color: OGRE });
   burst(x, y, 40, { speed: 12, life: 35, size: 3, color: YELLOW, friction: 0.88 });
   addFlash(0.7, '102,255,51'); addShake(18);
+  Sound.bigExplosion();
   const radius = 8 * PPM;
   const inRange = towers.filter(t => Math.hypot(t.x - x, t.y - y) <= radius);
   for (const t of inRange) {
@@ -1017,13 +1123,11 @@ function bossFinalExplosion(x, y) {
 
 function damageEnemy(e, amount, fromX, fromY, isFire) {
   const real = Math.max(1, amount - (e.armor || 0));
-  const hpBefore = e.hp;
   e.hp -= real; e.hitFlash = 6;
   if (!isFire) burst(e.x, e.y - (e.airHeight || 0), 5, { speed: 2, life: 12, size: 1.5, color: e.isAir ? AIR : GREEN_BRIGHT });
   addText(e.x, e.y - (e.airHeight || 0) - e.size - 5, '-' + real, isFire ? FIRE_BRIGHT : (e.isAir ? AIR : GREEN_BRIGHT), 30, e.isBoss ? 18 : 14);
   if (fromX !== undefined && fromY !== undefined) addSpark(fromX, fromY, e.x, e.y - (e.airHeight || 0), e.isAir ? AIR : GREEN_BRIGHT);
-  
-  // Verifica pisão do Ogro: a cada 1000 HP perdido
+
   if (e.isBoss && e.type === 'ogro') {
     const hpLost = e.maxHp - e.hp;
     const poundsExpected = Math.floor(hpLost / e.poundThreshold);
@@ -1042,8 +1146,8 @@ function applyFire(e) {
 }
 function applyIce(e) {
   if (e.isAir) return;
-  if (e.isBoss) return; // Boss imune
-  if (e.type === 'yeti') return; // Yeti imune
+  if (e.isBoss) return;
+  if (e.type === 'yeti') return;
   if (e.type === 'blindado') { e.iceFrozen = 0.75 * 60; return; }
   e.iceFrozen = 1.5 * 60;
 }
@@ -1054,6 +1158,7 @@ function bazookaExplosion(x, y, damage, radius) {
   burst(x, y, 50, { speed: 7, life: 40, size: 3, gravity: 0.15, friction: 0.9 });
   burst(x, y, 25, { speed: 11, life: 25, size: 2, color: YELLOW, friction: 0.88 });
   addFlash(0.55); addShake(9);
+  Sound.explosion();
   const inRange = enemies.filter(e => Math.hypot(e.x - x, (e.y - (e.airHeight || 0)) - y) <= radius);
   for (const e of inRange) {
     const dist = Math.hypot(e.x - x, (e.y - (e.airHeight || 0)) - y);
@@ -1097,8 +1202,8 @@ function spawnFungusZone(x, y) {
   addFlash(0.15, '102,255,51');
 }
 
-// ===== LOOP =====
 let lastTime = 0;
+let lastSoundTick = 0;
 function loop(time) {
   requestAnimationFrame(loop);
   if (!gameMode) return;
@@ -1126,6 +1231,7 @@ function loop(time) {
   for (const t of towers) {
     t.frozenByYeti = false; t.isProtected = false;
     if (t.punchAnim > 0) t.punchAnim -= dt * 2;
+    if (t.isDrone) t.droneRotorAngle += dt * 0.8;
   }
 
   for (const t of towers) {
@@ -1137,7 +1243,6 @@ function loop(time) {
     }
   }
 
-  // Inimigos
   for (let i = enemies.length - 1; i >= 0; i--) {
     const e = enemies[i];
     if (e.spawnAnim > 0) e.spawnAnim -= dt;
@@ -1242,6 +1347,7 @@ function loop(time) {
         speed: 3, life: 22, size: e.isBoss ? 4 : 2, color: deathCol
       });
       addText(e.x, e.y - (e.airHeight || 0) - e.size - 5, '+' + e.reward, YELLOW, 40, e.isBoss ? 26 : 14);
+      if (!e.isBoss) Sound.enemyDeath();
       if (e.onDeath === 'clone') spawnCloneMinions(e.x, e.y, e.wp);
       else if (e.onDeath === 'explode') areaExplosion(e.x, e.y, 50, 4 * PPM);
       else if (e.onDeath === 'fungusZone') spawnFungusZone(e.x, e.y);
@@ -1308,7 +1414,7 @@ function loop(time) {
             if (healed > 0) { addHealEffect(o.x, o.y, t.heal); healedAny = true; }
           }
         }
-        if (healedAny) { addShockwave(t.x, t.y, GREEN_BRIGHT, t.range, 30); t.healPulse = 1; updateUI(); }
+        if (healedAny) { addShockwave(t.x, t.y, GREEN_BRIGHT, t.range, 30); t.healPulse = 1; Sound.heal(); updateUI(); }
         t.cooldown = t.fireRate;
       }
       continue;
@@ -1321,6 +1427,7 @@ function loop(time) {
         addShockwave(t.x, t.y, GOLD, 35, 25);
         burst(t.x, t.y, 12, { speed: 2, life: 35, color: GOLD, size: 2 });
         t.incomePulse = 1;
+        Sound.coin();
         updateUI(); t.cooldown = t.fireRate;
       }
       continue;
@@ -1336,19 +1443,36 @@ function loop(time) {
         burst(t.x, t.y, 30, { speed: 4, life: 30, size: 3, color: PURPLE });
         addFlash(0.35, '170,102,255');
         addShake(4);
+        Sound.shootGlacial();
         t.cooldown = t.fireRate;
       }
       continue;
     }
 
+    // ===== ENCONTRA ALVO =====
+    // DRONE: prioridade 100% em aéreos dentro do alcance
     let target = null, bestDist = Infinity;
-    for (const e of enemies) {
-      const d = Math.hypot(e.x - t.x, (e.y - (e.airHeight || 0)) - t.y);
-      if (d < t.range && d < bestDist) {
-        if (e.isAir && !t.hitsAir) continue;
-        bestDist = d; target = e;
+    
+    if (t.isDrone) {
+      // Fase 1: procurar aéreos
+      for (const e of enemies) {
+        if (!e.isAir) continue;
+        const d = Math.hypot(e.x - t.x, (e.y - (e.airHeight || 0)) - t.y);
+        if (d < t.range && d < bestDist) { bestDist = d; target = e; }
       }
     }
+    
+    // Se não achou (ou não é drone), procura normalmente
+    if (!target) {
+      for (const e of enemies) {
+        const d = Math.hypot(e.x - t.x, (e.y - (e.airHeight || 0)) - t.y);
+        if (d < t.range && d < bestDist) {
+          if (e.isAir && !t.hitsAir) continue;
+          bestDist = d; target = e;
+        }
+      }
+    }
+    
     if (target) {
       const targetY = target.y - (target.airHeight || 0);
       t.angle = Math.atan2(targetY - t.y, target.x - t.x);
@@ -1356,28 +1480,35 @@ function loop(time) {
         const mx = t.x + Math.cos(t.angle) * 14;
         const my = t.y + Math.sin(t.angle) * 14;
 
+        // DRONE: 3x dano em aéreo
+        let actualDamage = t.damage;
+        if (t.isDrone && target.isAir) actualDamage = t.damage * 3;
+
         if (t.isFlamethrower) {
           addFlameCone(t.x, t.y, t.angle, t.range);
-          damageEnemy(target, t.damage, t.x, t.y);
+          damageEnemy(target, actualDamage, t.x, t.y);
           applyFire(target);
           burst(mx, my, 6, { speed: 2.5, life: 15, size: 2, color: FIRE });
           t.recoil = 2;
+          Sound.shootLanca();
         } else if (t.isBoxer) {
           t.punchAnim = 1;
-          damageEnemy(target, t.damage, t.x, t.y);
+          damageEnemy(target, actualDamage, t.x, t.y);
           burst(target.x, targetY, 8, { speed: 3, life: 15, size: 2, color: BOXER });
           addShockwave(target.x, targetY, BOXER, 18, 12);
           t.recoil = 4;
+          Sound.shootBoxer();
         } else if (t.isGlacial) {
           burst(mx, my, 5, { speed: 2, life: 12, size: 2, color: ICE });
           addShockwave(mx, my, ICE, 10, 10);
-          bullets.push({ x: t.x, y: t.y, target, damage: t.damage, speed: 8, type: 'glacial', angle: t.angle });
+          bullets.push({ x: t.x, y: t.y, target, damage: actualDamage, speed: 8, type: 'glacial', angle: t.angle });
           t.recoil = 3;
+          Sound.shootGlacial();
         } else if (t.isTesla) {
           const chainPoints = [{ x: t.x, y: t.y }, { x: target.x, y: targetY }];
           const hitEnemies = [target];
           let current = target; let currentY = targetY;
-          let currentDmg = t.damage;
+          let currentDmg = actualDamage;
           damageEnemy(current, currentDmg);
           currentDmg -= 5;
           let chainsLeft = t.maxChains;
@@ -1403,16 +1534,23 @@ function loop(time) {
           burst(target.x, targetY, 8, { speed: 3, life: 15, size: 2, color: TESLA });
           addFlash(0.08, '255,255,102');
           t.recoil = 3;
+          Sound.shootTesla();
         } else if (t.type === 'bazuca') {
           burst(mx, my, 8, { speed: 3, life: 14, size: 2, color: ORANGE });
           addShockwave(mx, my, ORANGE, 12, 12);
-          missiles.push({ x: t.x, y: t.y, target, damage: t.damage, splash: t.splash, speed: 6, angle: t.angle, life: 300 });
+          missiles.push({ x: t.x, y: t.y, target, damage: actualDamage, splash: t.splash, speed: 6, angle: t.angle, life: 300 });
           t.recoil = 6;
+          Sound.fireBazuca();
         } else {
-          burst(mx, my, 5, { speed: 2, life: 10, size: 1.5, color: GREEN_BRIGHT });
-          addShockwave(mx, my, GREEN, 8, 8);
+          burst(mx, my, 5, { speed: 2, life: 10, size: 1.5, color: t.isDrone ? DRONE : GREEN_BRIGHT });
+          addShockwave(mx, my, t.isDrone ? DRONE : GREEN, 8, 8);
           t.recoil = 4;
-          bullets.push({ x: t.x, y: t.y, target, damage: t.damage, speed: 8, type: t.type, angle: t.angle });
+          bullets.push({ x: t.x, y: t.y, target, damage: actualDamage, speed: 8, type: t.isDrone ? 'drone' : t.type, angle: t.angle });
+          if (t.isDrone) Sound.shootDrone();
+          else if (t.type === 'sniper') Sound.shootSniper();
+          else if (t.type === 'metralhadora') Sound.shootMetralhadora();
+          else if (t.type === 'faca') Sound.shootFaca();
+          else Sound.shootRecruta();
         }
         t.cooldown = t.fireRate;
       }
@@ -1445,7 +1583,8 @@ function loop(time) {
 
   for (let i = bullets.length - 1; i >= 0; i--) {
     const b = bullets[i];
-    addTrail(b.x, b.y, b.type === 'sniper' ? CYAN : b.type === 'glacial' ? ICE : GREEN, b.type === 'faca' ? 3 : 2, 10);
+    const trailCol = b.type === 'sniper' ? CYAN : b.type === 'glacial' ? ICE : (b.type === 'drone' ? DRONE : GREEN);
+    addTrail(b.x, b.y, trailCol, b.type === 'faca' ? 3 : 2, 10);
     if (!b.target || b.target.hp <= 0 || enemies.indexOf(b.target) === -1) {
       burst(b.x, b.y, 4, { speed: 1.5, life: 10, size: 1.5 }); bullets.splice(i, 1); continue;
     }
@@ -1460,6 +1599,7 @@ function loop(time) {
     const dist = Math.hypot(dx, dy);
     if (dist < b.speed * dt) {
       damageEnemy(b.target, b.damage, b.x, b.y);
+      Sound.enemyHit();
       if (b.type === 'faca') {
         burst(b.target.x, targetY, 12, { speed: 4, life: 18, size: 2.5 });
         addShockwave(b.target.x, targetY, GREEN, 18, 12); addShake(1.5);
@@ -1469,6 +1609,9 @@ function loop(time) {
         addShockwave(b.target.x, targetY, ICE, 18, 14);
       } else if (b.type === 'metralhadora') {
         burst(b.target.x, targetY, 4, { speed: 2.5, life: 10, size: 1.5 });
+      } else if (b.type === 'drone') {
+        burst(b.target.x, targetY, 6, { speed: 3, life: 15, size: 2, color: DRONE });
+        addShockwave(b.target.x, targetY, DRONE, 14, 10);
       }
       bullets.splice(i, 1);
     } else { b.x += (dx/dist) * b.speed * dt; b.y += (dy/dist) * b.speed * dt; }
@@ -1512,7 +1655,7 @@ function loop(time) {
   if (bossActive) updateUI();
 }
 
-// ===== DESENHO =====
+// ===== DESENHO (igual v16 + drone + cor distinta) =====
 function draw() {
   ctx.save();
   if (shakeAmount > 0.1) {
@@ -1675,6 +1818,7 @@ function draw() {
       else if (t.isTesla) rangeCol = 'rgba(255,255,102,0.3)';
       else if (t.isParadox) rangeCol = 'rgba(170,102,255,0.3)';
       else if (t.isBoxer) rangeCol = 'rgba(255,102,68,0.3)';
+      else if (t.isDrone) rangeCol = 'rgba(102,238,255,0.35)';
       ctx.strokeStyle = rangeCol; ctx.lineWidth = 1; ctx.setLineDash([3, 5]);
       ctx.beginPath(); ctx.arc(t.x, t.y, t.range, 0, Math.PI * 2); ctx.stroke();
       ctx.setLineDash([]);
@@ -1691,6 +1835,7 @@ function draw() {
     else if (t.isDefensor) col = hpPct > 0.5 ? SHIELD : hpPct > 0.25 ? YELLOW : ORANGE;
     else if (t.isParadox) col = hpPct > 0.5 ? PURPLE : hpPct > 0.25 ? YELLOW : ORANGE;
     else if (t.isBoxer) col = hpPct > 0.5 ? BOXER : hpPct > 0.25 ? YELLOW : ORANGE;
+    else if (t.isDrone) col = hpPct > 0.5 ? DRONE : hpPct > 0.25 ? YELLOW : ORANGE;
     else col = hpPct > 0.5 ? GREEN : hpPct > 0.25 ? YELLOW : ORANGE;
 
     let scale = 1;
@@ -1810,6 +1955,28 @@ function draw() {
       ctx.lineTo(t.x - s, t.y + s); ctx.lineTo(t.x, t.y);
       ctx.lineTo(t.x - s, t.y - s);
       ctx.stroke(); ctx.shadowBlur = 0;
+    } else if (t.isDrone) {
+      // Hélices girando em cima
+      ctx.shadowColor = DRONE; ctx.shadowBlur = 10;
+      ctx.strokeStyle = col; ctx.lineWidth = 2;
+      const rotAngle = t.droneRotorAngle;
+      // 2 hélices em X
+      for (let i = 0; i < 2; i++) {
+        const baseAngle = rotAngle + i * Math.PI;
+        ctx.beginPath();
+        ctx.moveTo(t.x + Math.cos(baseAngle) * 8, t.y - 6 + Math.sin(baseAngle) * 3);
+        ctx.lineTo(t.x - Math.cos(baseAngle) * 8, t.y - 6 - Math.sin(baseAngle) * 3);
+        ctx.stroke();
+      }
+      // Corpo central
+      ctx.fillStyle = col;
+      ctx.beginPath();
+      ctx.arc(t.x, t.y, 4, 0, Math.PI * 2); ctx.fill();
+      // Antena
+      ctx.beginPath();
+      ctx.moveTo(t.x, t.y - 4); ctx.lineTo(t.x, t.y - 10);
+      ctx.stroke();
+      ctx.shadowBlur = 0;
     } else {
       ctx.font = 'bold 13px VT323, monospace';
       const sym = t.type === 'recruta' ? 'R' : t.type === 'sniper' ? 'S' : t.type === 'faca' ? 'F' : t.type === 'metralhadora' ? 'M' : 'B';
@@ -1873,6 +2040,9 @@ function draw() {
       ctx.fillStyle = ICE; ctx.shadowColor = ICE; ctx.shadowBlur = 10;
       ctx.beginPath(); ctx.arc(b.x, b.y, 4, 0, Math.PI * 2); ctx.fill();
       ctx.shadowBlur = 0;
+    } else if (b.type === 'drone') {
+      ctx.fillStyle = DRONE; ctx.shadowColor = DRONE; ctx.shadowBlur = 8;
+      ctx.fillRect(b.x - 2, b.y - 2, 4, 4); ctx.shadowBlur = 0;
     } else {
       const p = 0.7 + Math.sin(Date.now() / 60) * 0.3;
       ctx.fillStyle = GREEN_BRIGHT; ctx.shadowColor = GREEN; ctx.shadowBlur = 8 * p;
@@ -2120,12 +2290,9 @@ function drawEnemy(e) {
       if (blink) { ctx.beginPath(); ctx.arc(0, 2, 2.2, 0, Math.PI * 2); ctx.fill(); }
       break;
     case 'ogro':
-      // Corpo gigante verde
       ctx.fillStyle = isHit ? color : '#1a3a0a';
       ctx.fillRect(-s/2, -s/2, s, s);
       ctx.strokeStyle = color; ctx.strokeRect(-s/2, -s/2, s, s);
-
-      // Chifres no topo
       ctx.fillStyle = color;
       ctx.beginPath();
       ctx.moveTo(-15, -s/2); ctx.lineTo(-10, -s/2 - 12); ctx.lineTo(-5, -s/2);
@@ -2133,15 +2300,11 @@ function drawEnemy(e) {
       ctx.beginPath();
       ctx.moveTo(5, -s/2); ctx.lineTo(10, -s/2 - 12); ctx.lineTo(15, -s/2);
       ctx.closePath(); ctx.fill();
-
-      // Punhos (laterais)
       ctx.beginPath();
       ctx.arc(-s/2 - 4, 5, 7, 0, Math.PI * 2); ctx.fill();
       ctx.beginPath();
       ctx.arc(s/2 + 4, 5, 7, 0, Math.PI * 2); ctx.fill();
       ctx.stroke();
-
-      // Olhos vermelhos/amarelos brilhantes
       ctx.fillStyle = '#ffff33';
       ctx.shadowColor = '#ffff33'; ctx.shadowBlur = 15;
       const eyeBlink = Math.floor(Date.now() / 300) % 4 === 0;
@@ -2153,8 +2316,6 @@ function drawEnemy(e) {
         ctx.fillRect(5, -2, 6, 2);
       }
       ctx.shadowBlur = 0;
-
-      // Boca com dentes
       ctx.fillStyle = '#000000';
       ctx.fillRect(-10, 6, 20, 8);
       ctx.fillStyle = color;
@@ -2170,7 +2331,6 @@ function drawEnemy(e) {
   ctx.shadowBlur = 0;
   ctx.restore();
 
-  // HP bar
   const barY = e.y + yOffset - s/2 - (isBoss ? 15 : 7);
   const w = isBoss ? 50 : 20, h = isBoss ? 6 : 3;
   const bx = e.x - w/2, by = barY;
@@ -2213,7 +2373,6 @@ function drawEnemy(e) {
   }
 }
 
-// ===== DECK =====
 function buildDeckGrid() {
   const grid = document.getElementById('deckGrid');
   grid.innerHTML = '';
@@ -2237,9 +2396,10 @@ function toggleDeckCard(type, card) {
   if (idx >= 0) {
     selectedDeck.splice(idx, 1); card.classList.remove('selected');
   } else {
-    if (selectedDeck.length >= DECK_SIZE) { showMsg('> DECK CHEIO (' + DECK_SIZE + '/' + DECK_SIZE + ')'); return; }
+    if (selectedDeck.length >= DECK_SIZE) { showMsg('> DECK CHEIO (' + DECK_SIZE + '/' + DECK_SIZE + ')'); Sound.error(); return; }
     selectedDeck.push(type); card.classList.add('selected');
   }
+  Sound.select();
   updateDeckUI(); saveDeck();
 }
 function updateDeckUI() {
@@ -2276,7 +2436,7 @@ function buildTroopsShop() {
     btn.addEventListener('pointerdown', e => {
       e.preventDefault();
       const cost = getCostForType(type);
-      if (gold < cost) { showMsg('> CRÉDITOS INSUFICIENTES'); addShake(2); return; }
+      if (gold < cost) { showMsg('> CRÉDITOS INSUFICIENTES'); addShake(2); Sound.error(); return; }
       pointerDownInfo = { x: e.clientX, y: e.clientY, type, source: 'button' };
     });
     grid.appendChild(btn);
@@ -2287,6 +2447,7 @@ function showDeckScreen() {
   document.getElementById('menu').style.display = 'none';
   document.getElementById('deckScreen').style.display = 'flex';
   loadDeck(); buildDeckGrid(); updateDeckUI();
+  Sound.select();
 }
 function hideDeckScreen() { document.getElementById('deckScreen').style.display = 'none'; }
 
@@ -2301,6 +2462,7 @@ function startGame(mode) {
   document.getElementById('game').style.display = 'flex';
   document.getElementById('titleBar').style.display = 'block';
   document.getElementById('mapInfoBar').style.display = 'block';
+  document.getElementById('soundBtn').style.display = 'block';
 
   document.body.classList.remove('mode-pc', 'mode-mobile');
   document.body.classList.add('mode-' + mode);
@@ -2317,10 +2479,24 @@ function startGame(mode) {
   bossActive = false; bossRef = null;
   dragging = null; selectedTowerType = null; pointerDownInfo = null;
 
+  Sound.resume();
   buildTroopsShop();
   updateUI();
   startWave();
 }
+
+// ===== SOM: botão mute =====
+const soundBtn = document.getElementById('soundBtn');
+soundBtn.addEventListener('click', () => {
+  Sound.init();
+  const muted = Sound.toggle();
+  soundBtn.textContent = muted ? '🔇 SOM: OFF' : '🔊 SOM: ON';
+  soundBtn.classList.toggle('muted', muted);
+  if (!muted) Sound.select();
+});
+
+// Inicializa áudio no primeiro toque
+document.addEventListener('pointerdown', () => { Sound.init(); Sound.resume(); }, { once: true });
 
 let pendingMode = null;
 document.querySelectorAll('.mode-btn').forEach(btn => {
@@ -2331,14 +2507,14 @@ document.getElementById('btnDeckStart').addEventListener('click', () => {
   startGame(pendingMode);
 });
 document.getElementById('btnDeckDefault').addEventListener('click', () => {
-  selectedDeck = ['recruta','boxeador','sniper','metralhadora','lancachamas','bazuca','medico','comerciante'];
-  saveDeck(); buildDeckGrid(); updateDeckUI();
+  selectedDeck = ['recruta','boxeador','drone','faca','sniper','bazuca','medico','comerciante'];
+  saveDeck(); buildDeckGrid(); updateDeckUI(); Sound.select();
 });
 document.getElementById('btnDeckClear').addEventListener('click', () => {
-  selectedDeck = []; saveDeck(); buildDeckGrid(); updateDeckUI();
+  selectedDeck = []; saveDeck(); buildDeckGrid(); updateDeckUI(); Sound.error();
 });
 document.getElementById('btnDeckBack').addEventListener('click', () => {
-  hideDeckScreen(); document.getElementById('menu').style.display = 'flex';
+  hideDeckScreen(); document.getElementById('menu').style.display = 'flex'; Sound.select();
 });
 document.getElementById('btnMenu').addEventListener('click', () => {
   gameMode = null;
@@ -2346,6 +2522,7 @@ document.getElementById('btnMenu').addEventListener('click', () => {
   document.getElementById('game').style.display = 'none';
   document.getElementById('titleBar').style.display = 'none';
   document.getElementById('mapInfoBar').style.display = 'none';
+  document.getElementById('soundBtn').style.display = 'none';
   document.body.classList.remove('mode-pc', 'mode-mobile');
 });
 
