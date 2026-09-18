@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>TOWER DEFENSE 1970 v17</title>
+<title>TOWER DEFENSE 1970 v18</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
@@ -31,7 +31,7 @@
   #menu {
     position: fixed; inset: 0; background: #000;
     display: flex; flex-direction: column; justify-content: center; align-items: center;
-    z-index: 10000; font-family: 'VT323', monospace; gap: 40px; padding: 20px;
+    z-index: 10000; font-family: 'VT323', monospace; gap: 30px; padding: 20px;
   }
   #menu h1 {
     font-size: 52px; color: #33ff33;
@@ -44,11 +44,18 @@
     50% { text-shadow: 0 0 30px #33ff33, 0 0 60px #33ff33, 0 0 90px #33ff33; }
   }
   #menu .subtitle { color: #22aa22; font-size: 22px; letter-spacing: 6px; margin-top: -30px; }
-  .menu-options { display: flex; gap: 30px; flex-wrap: wrap; justify-content: center; }
+  #crystalDisplay {
+    color: #66ddff; font-size: 26px; letter-spacing: 3px;
+    text-shadow: 0 0 10px #66ddff, 0 0 20px #66ddff;
+    border: 2px solid #66ddff; padding: 8px 20px;
+    background: #000;
+    box-shadow: 0 0 15px #66ddff, inset 0 0 10px rgba(102,221,255,0.2);
+  }
+  .menu-options { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
   .mode-btn {
     background: #000; border: 3px solid #33ff33; color: #33ff33;
-    padding: 26px 36px; font-family: 'VT323', monospace; cursor: pointer;
-    text-align: center; min-width: 200px; transition: all 0.15s;
+    padding: 20px 30px; font-family: 'VT323', monospace; cursor: pointer;
+    text-align: center; min-width: 180px; transition: all 0.15s;
     box-shadow: 0 0 20px #33ff33, inset 0 0 15px rgba(51,255,51,0.2);
     user-select: none; touch-action: manipulation;
   }
@@ -60,29 +67,37 @@
   .mode-btn:active .mode-icon, .mode-btn:active .mode-name, .mode-btn:active .mode-desc {
     color: #000; text-shadow: none;
   }
-  .mode-icon { font-size: 60px; margin-bottom: 10px; line-height: 1; }
-  .mode-name { font-size: 34px; letter-spacing: 6px; margin-bottom: 8px; text-shadow: 0 0 10px #33ff33; }
-  .mode-desc { font-size: 15px; letter-spacing: 3px; color: #22aa22; }
+  .mode-btn.cyan { border-color: #66ddff; color: #66ddff; box-shadow: 0 0 20px #66ddff, inset 0 0 15px rgba(102,221,255,0.2); }
+  .mode-btn.cyan:hover { background: #66ddff; color: #000; box-shadow: 0 0 40px #66ddff, 0 0 80px #66ddff; }
+  .mode-icon { font-size: 50px; margin-bottom: 8px; line-height: 1; }
+  .mode-name { font-size: 28px; letter-spacing: 5px; margin-bottom: 6px; text-shadow: 0 0 10px currentColor; }
+  .mode-desc { font-size: 14px; letter-spacing: 2px; color: #22aa22; }
 
-  #deckScreen {
+  #deckScreen, #upgradeScreen {
     position: fixed; inset: 0; background: #000;
     display: none; flex-direction: column;
     z-index: 10000; font-family: 'VT323', monospace;
     padding: 15px; overflow-y: auto;
   }
-  #deckScreen h2 {
+  #deckScreen h2, #upgradeScreen h2 {
     font-size: 32px; color: #33ff33;
     text-shadow: 0 0 15px #33ff33;
     letter-spacing: 5px; text-align: center;
     margin-bottom: 5px;
   }
-  #deckScreen .deck-info {
+  #upgradeScreen h2 { color: #66ddff; text-shadow: 0 0 15px #66ddff; }
+  .deck-info {
     text-align: center; color: #22aa22;
     font-size: 18px; letter-spacing: 2px;
     margin-bottom: 12px;
   }
-  #deckScreen .deck-info strong { color: #ffd700; text-shadow: 0 0 8px #ffd700; }
-  #deckScreen .deck-info.full strong { color: #33ff33; }
+  .deck-info strong { color: #ffd700; text-shadow: 0 0 8px #ffd700; }
+  .deck-info.full strong { color: #33ff33; }
+  #upgradeScreen .crystal-total {
+    text-align: center; color: #66ddff; font-size: 24px;
+    letter-spacing: 3px; margin-bottom: 15px;
+    text-shadow: 0 0 10px #66ddff;
+  }
   #deckGrid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -108,9 +123,55 @@
   .deck-card.selected .card-name { color: #ffd700; text-shadow: 0 0 6px #ffd700; }
   .deck-card .card-cost { font-size: 13px; color: #ffd700; margin-bottom: 4px; }
   .deck-card .card-stat { font-size: 11px; color: #22aa22; }
-  .deck-card.selected .card-stat { color: #88dd88; }
 
-  #deckActions {
+  /* Upgrade cards */
+  #upgradeGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 10px; max-width: 1100px; margin: 0 auto; width: 100%;
+  }
+  .upgrade-card {
+    background: #000; border: 2px solid #66ddff; color: #66ddff;
+    padding: 10px; font-family: 'VT323', monospace; text-align: left;
+    line-height: 1.25; position: relative;
+  }
+  .upgrade-card .u-name {
+    font-size: 18px; font-weight: bold; margin-bottom: 5px;
+    text-shadow: 0 0 6px #66ddff;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .upgrade-card .u-stars {
+    font-size: 18px; color: #ffd700;
+    text-shadow: 0 0 6px #ffd700;
+  }
+  .upgrade-card .u-stats {
+    font-size: 12px; color: #22aa22;
+    margin-bottom: 6px; line-height: 1.4;
+  }
+  .upgrade-card .u-stats .next { color: #88ff88; }
+  .upgrade-card .u-btn {
+    width: 100%; padding: 6px; margin-top: 4px;
+    background: #000; border: 2px solid #66ddff; color: #66ddff;
+    font-family: 'VT323', monospace; font-size: 14px;
+    cursor: pointer; letter-spacing: 2px;
+    box-shadow: 0 0 8px #66ddff;
+    transition: all 0.15s;
+  }
+  .upgrade-card .u-btn:hover:not(:disabled) {
+    background: #66ddff; color: #000; box-shadow: 0 0 20px #66ddff;
+  }
+  .upgrade-card .u-btn:disabled {
+    opacity: 0.35; cursor: not-allowed;
+    border-color: #555; color: #555; box-shadow: none;
+  }
+  .upgrade-card .u-btn.max {
+    border-color: #ffd700; color: #ffd700;
+    background: #1a1a00;
+    cursor: default;
+  }
+  .upgrade-card .u-btn.max:hover { background: #1a1a00; color: #ffd700; box-shadow: 0 0 8px #ffd700; }
+
+  #deckActions, #upgradeActions {
     display: flex; gap: 15px; justify-content: center;
     margin-top: 15px; flex-wrap: wrap; padding-bottom: 20px;
   }
@@ -124,6 +185,8 @@
   .deck-action-btn:disabled { opacity: 0.3; cursor: not-allowed; }
   .deck-action-btn.primary { border-color: #ffd700; color: #ffd700; box-shadow: 0 0 10px #ffd700; }
   .deck-action-btn.primary:hover:not(:disabled) { background: #ffd700; color: #000; box-shadow: 0 0 25px #ffd700; }
+  .deck-action-btn.cyan { border-color: #66ddff; color: #66ddff; box-shadow: 0 0 10px #66ddff; }
+  .deck-action-btn.cyan:hover:not(:disabled) { background: #66ddff; color: #000; box-shadow: 0 0 25px #66ddff; }
 
   #soundBtn {
     position: fixed; top: 8px; left: 50%; transform: translateX(-50%);
@@ -206,6 +269,7 @@
     font-family: 'VT323', monospace; font-size: 14px;
     letter-spacing: 1px; text-shadow: 0 0 4px #33ff33;
     line-height: 1.25; touch-action: none;
+    position: relative;
   }
   .tower-btn:hover { background: #33ff33; color: #000; text-shadow: none; }
   .tower-btn:active { cursor: grabbing; }
@@ -217,6 +281,11 @@
   @keyframes blink {
     0%, 50% { background: #33ff33; }
     51%, 100% { background: #003300; color: #33ff33; }
+  }
+  .tower-btn .star-badge {
+    position: absolute; top: 2px; right: 4px;
+    color: #ffd700; font-size: 12px;
+    text-shadow: 0 0 4px #ffd700;
   }
   .stat-line { font-size: 11px; color: #22aa22; margin-top: 1px; }
   .cost-line { color: #ffd700; font-weight: bold; }
@@ -319,13 +388,12 @@
   body.mode-mobile #soundBtn { top: 26px; font-size: 12px; padding: 3px 8px; }
   body.mode-mobile #hordeBanner { font-size: 44px; }
   body.mode-mobile #msg { font-size: 16px; padding: 8px 16px; }
-  body.mode-mobile #deckGrid { grid-template-columns: repeat(2, 1fr); gap: 4px; }
-  body.mode-mobile .deck-card { padding: 5px; }
-  body.mode-mobile .deck-card .card-name { font-size: 12px; }
+  body.mode-mobile #deckGrid, body.mode-mobile #upgradeGrid { grid-template-columns: repeat(2, 1fr); gap: 4px; }
+  body.mode-mobile .deck-card, body.mode-mobile .upgrade-card { padding: 5px; }
+  body.mode-mobile .deck-card .card-name, body.mode-mobile .upgrade-card .u-name { font-size: 12px; }
   body.mode-mobile .deck-card .card-cost { font-size: 10px; }
-  body.mode-mobile .deck-card .card-stat { font-size: 9px; }
-  body.mode-mobile #deckScreen h2 { font-size: 22px; }
-  body.mode-mobile #deckScreen .deck-info { font-size: 14px; }
+  body.mode-mobile .deck-card .card-stat, body.mode-mobile .upgrade-card .u-stats { font-size: 9px; }
+  body.mode-mobile #deckScreen h2, body.mode-mobile #upgradeScreen h2 { font-size: 22px; }
   body.mode-mobile .deck-action-btn { font-size: 14px; padding: 8px 14px; }
   body.mode-mobile #bossHpBar { width: min(96vw, 480px); top: 42px; padding: 4px 6px; }
   body.mode-mobile #bossHpBar .boss-label { font-size: 13px; }
@@ -334,9 +402,11 @@
 </head>
 <body>
 
+<!-- ============ MENU ============ -->
 <div id="menu">
   <h1>◄ TOWER DEFENSE ►</h1>
   <div class="subtitle">1 9 7 0</div>
+  <div id="crystalDisplay">💎 <span id="menuCrystals">0</span> CRISTAIS</div>
   <div class="menu-options">
     <button class="mode-btn" data-mode="pc">
       <div class="mode-icon">🖥️</div>
@@ -348,9 +418,15 @@
       <div class="mode-name">MOBILE</div>
       <div class="mode-desc">TOQUE · ARRASTE</div>
     </button>
+    <button class="mode-btn cyan" id="btnOpenUpgrade">
+      <div class="mode-icon">⭐</div>
+      <div class="mode-name">APRIMORAR</div>
+      <div class="mode-desc">GASTE CRISTAIS</div>
+    </button>
   </div>
 </div>
 
+<!-- ============ DECK SCREEN ============ -->
 <div id="deckScreen">
   <h2>◄ ESCOLHA SEU DECK ►</h2>
   <div class="deck-info" id="deckInfo">
@@ -365,7 +441,17 @@
   </div>
 </div>
 
-<div class="title" id="titleBar" style="display:none;">◄ TOWER DEFENSE · v17 ►</div>
+<!-- ============ UPGRADE SCREEN ============ -->
+<div id="upgradeScreen">
+  <h2>⭐ APRIMORAMENTO ⭐</h2>
+  <div class="crystal-total">💎 <span id="upgradeCrystals">0</span> CRISTAIS DISPONÍVEIS</div>
+  <div id="upgradeGrid"></div>
+  <div id="upgradeActions">
+    <button class="deck-action-btn cyan" id="btnUpgradeBack">◄ MENU</button>
+  </div>
+</div>
+
+<div class="title" id="titleBar" style="display:none;">◄ TOWER DEFENSE · v18 ►</div>
 <div class="map-info" id="mapInfoBar" style="display:none;">
   MAPA: <span class="map-name" id="mapName">---</span><br>
   30m × 30m · 1m = 16px<br>
@@ -409,12 +495,11 @@
 </div>
 
 <script>
-// ================== SISTEMA DE SOM (Web Audio API) ==================
+// ================== SOM ==================
 const Sound = (() => {
   let audioCtx = null;
   let muted = false;
   let masterGain = null;
-
   function init() {
     if (audioCtx) return;
     try {
@@ -422,13 +507,9 @@ const Sound = (() => {
       masterGain = audioCtx.createGain();
       masterGain.gain.value = 0.35;
       masterGain.connect(audioCtx.destination);
-    } catch(e) { console.warn('Audio not supported'); }
+    } catch(e) {}
   }
-
-  function resume() {
-    if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
-  }
-
+  function resume() { if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume(); }
   function tone(freq, duration, type = 'square', volume = 0.3, freqEnd = null) {
     if (!audioCtx || muted) return;
     const osc = audioCtx.createOscillator();
@@ -439,12 +520,9 @@ const Sound = (() => {
     if (freqEnd !== null) osc.frequency.exponentialRampToValueAtTime(Math.max(1, freqEnd), now + duration);
     gain.gain.setValueAtTime(volume, now);
     gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
-    osc.connect(gain);
-    gain.connect(masterGain);
-    osc.start(now);
-    osc.stop(now + duration);
+    osc.connect(gain); gain.connect(masterGain);
+    osc.start(now); osc.stop(now + duration);
   }
-
   function noise(duration, volume = 0.2, filterFreq = 1000) {
     if (!audioCtx || muted) return;
     const bufferSize = audioCtx.sampleRate * duration;
@@ -460,21 +538,13 @@ const Sound = (() => {
     const now = audioCtx.currentTime;
     gain.gain.setValueAtTime(volume, now);
     gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
-    noiseSource.connect(filter);
-    filter.connect(gain);
-    gain.connect(masterGain);
-    noiseSource.start(now);
-    noiseSource.stop(now + duration);
+    noiseSource.connect(filter); filter.connect(gain); gain.connect(masterGain);
+    noiseSource.start(now); noiseSource.stop(now + duration);
   }
-
   return {
     init, resume,
-    toggle() {
-      muted = !muted;
-      return muted;
-    },
+    toggle() { muted = !muted; return muted; },
     isMuted() { return muted; },
-    // ----- SONS ESPECÍFICOS -----
     shootRecruta() { tone(800, 0.05, 'square', 0.15, 400); },
     shootMetralhadora() { tone(1200, 0.02, 'square', 0.12, 800); },
     shootSniper() { tone(200, 0.15, 'sawtooth', 0.18, 1500); },
@@ -499,7 +569,8 @@ const Sound = (() => {
     gameOver() { tone(400, 0.4, 'square', 0.3, 200); setTimeout(() => tone(200, 0.4, 'square', 0.3, 100), 400); setTimeout(() => tone(100, 0.8, 'square', 0.3, 40), 800); },
     error() { tone(150, 0.15, 'square', 0.2, 100); },
     select() { tone(1000, 0.03, 'square', 0.1); },
-    upgrade() { tone(600, 0.08, 'square', 0.15, 900); setTimeout(() => tone(900, 0.08, 'square', 0.15, 1200), 80); }
+    upgrade() { tone(600, 0.08, 'square', 0.15, 900); setTimeout(() => tone(900, 0.08, 'square', 0.15, 1200), 80); setTimeout(() => tone(1200, 0.1, 'square', 0.2, 1600), 160); },
+    crystal() { tone(1500, 0.05, 'sine', 0.2, 2000); setTimeout(() => tone(2000, 0.08, 'sine', 0.2, 2400), 60); setTimeout(() => tone(2400, 0.1, 'sine', 0.15, 2800), 130); }
   };
 })();
 
@@ -527,8 +598,175 @@ const TESLA = '#ffff66';
 const BOXER = '#ff6644';
 const AIR = '#88ffee';
 const DRONE = '#66eeff';
+const CRYSTAL = '#66ddff';
 const OGRE = '#66ff33';
 const OGRE_DARK = '#2a5a1a';
+
+// ============ PROGRESSÃO DE ESTRELAS ============
+// Cada tropa tem 4 níveis (0, 1, 2, 3) com stats diferentes
+const STAR_PROGRESSION = {
+  recruta: [
+    { hp: 100, damage: 25, range: 6 * PPM, fireRate: 60 },
+    { hp: 150, damage: 50, range: 8 * PPM, fireRate: 60 },
+    { hp: 200, damage: 80, range: 10 * PPM, fireRate: 60 },
+    { hp: 300, damage: 120, range: 10 * PPM, fireRate: 30 } // ⭐3: tiro 0.5s
+  ],
+  boxeador: [
+    { hp: 120, damage: 35, range: 3 * PPM, fireRate: 48 },
+    { hp: 180, damage: 55, range: 3.5 * PPM, fireRate: 48 },
+    { hp: 250, damage: 80, range: 4 * PPM, fireRate: 42 },
+    { hp: 400, damage: 130, range: 4.5 * PPM, fireRate: 36 } // ⭐3: atordoa
+  ],
+  drone: [
+    { hp: 100, damage: 25, range: 8 * PPM, fireRate: 60 },
+    { hp: 150, damage: 40, range: 9 * PPM, fireRate: 54 },
+    { hp: 220, damage: 60, range: 10 * PPM, fireRate: 48 },
+    { hp: 320, damage: 90, range: 11 * PPM, fireRate: 42 } // ⭐3: splash aéreo
+  ],
+  faca: [
+    { hp: 150, damage: 80, range: 2.5 * PPM, fireRate: 30 },
+    { hp: 220, damage: 110, range: 3 * PPM, fireRate: 30 },
+    { hp: 300, damage: 150, range: 3.5 * PPM, fireRate: 27 },
+    { hp: 450, damage: 220, range: 4 * PPM, fireRate: 24 } // ⭐3: ignora armadura
+  ],
+  sniper: [
+    { hp: 70, damage: 50, range: 15 * PPM, fireRate: 120 },
+    { hp: 110, damage: 85, range: 17 * PPM, fireRate: 108 },
+    { hp: 160, damage: 130, range: 19 * PPM, fireRate: 96 },
+    { hp: 250, damage: 200, range: 22 * PPM, fireRate: 84 } // ⭐3: perfura
+  ],
+  metralhadora: [
+    { hp: 100, damage: 25, range: 7 * PPM, fireRate: 12 },
+    { hp: 150, damage: 32, range: 8 * PPM, fireRate: 11 },
+    { hp: 220, damage: 42, range: 9 * PPM, fireRate: 9 },
+    { hp: 320, damage: 55, range: 10 * PPM, fireRate: 6 } // ⭐3: tiro explosivo
+  ],
+  lancachamas: [
+    { hp: 100, damage: 15, range: 4 * PPM, fireRate: 6, fireDmg: 10, fireDur: 300 },
+    { hp: 150, damage: 22, range: 4.5 * PPM, fireRate: 6, fireDmg: 15, fireDur: 300 },
+    { hp: 220, damage: 30, range: 5 * PPM, fireRate: 6, fireDmg: 22, fireDur: 360 },
+    { hp: 350, damage: 45, range: 5.5 * PPM, fireRate: 6, fireDmg: 35, fireDur: 420 } // ⭐3: fogo ignora armor
+  ],
+  glacial: [
+    { hp: 100, damage: 15, range: 5 * PPM, fireRate: 36, iceDur: 90 },
+    { hp: 150, damage: 25, range: 6 * PPM, fireRate: 33, iceDur: 120 },
+    { hp: 220, damage: 40, range: 7 * PPM, fireRate: 30, iceDur: 150 },
+    { hp: 350, damage: 65, range: 8 * PPM, fireRate: 27, iceDur: 210 } // ⭐3: splash gelo
+  ],
+  bazuca: [
+    { hp: 100, damage: 150, range: 10 * PPM, fireRate: 300, splash: 3 * PPM },
+    { hp: 150, damage: 220, range: 11 * PPM, fireRate: 270, splash: 3.5 * PPM },
+    { hp: 220, damage: 320, range: 12 * PPM, fireRate: 240, splash: 4 * PPM },
+    { hp: 350, damage: 480, range: 13 * PPM, fireRate: 180, splash: 5 * PPM } // ⭐3: divide míssil
+  ],
+  tesla: [
+    { hp: 80, damage: 30, range: 6 * PPM, fireRate: 120, chainRange: 3 * PPM, maxChains: 3 },
+    { hp: 130, damage: 45, range: 7 * PPM, fireRate: 108, chainRange: 3.5 * PPM, maxChains: 4 },
+    { hp: 190, damage: 65, range: 8 * PPM, fireRate: 96, chainRange: 4 * PPM, maxChains: 5 },
+    { hp: 300, damage: 95, range: 9 * PPM, fireRate: 84, chainRange: 4.5 * PPM, maxChains: 7 } // ⭐3: atordoa
+  ],
+  medico: [
+    { hp: 100, heal: 20, range: 5 * PPM, fireRate: 300 },
+    { hp: 150, heal: 35, range: 6 * PPM, fireRate: 270 },
+    { hp: 220, heal: 55, range: 7 * PPM, fireRate: 240 },
+    { hp: 350, heal: 85, range: 9 * PPM, fireRate: 180 } // ⭐3: cura jogador
+  ],
+  defensor: [
+    { hp: 200, range: 5 * PPM, reduction: 0.5 },
+    { hp: 300, range: 6 * PPM, reduction: 0.55 },
+    { hp: 450, range: 7 * PPM, reduction: 0.6 },
+    { hp: 700, range: 9 * PPM, reduction: 0.65 } // ⭐3: regen
+  ],
+  comerciante: [
+    { hp: 100, income: 50, fireRate: 300 },
+    { hp: 150, income: 80, fireRate: 270 },
+    { hp: 220, income: 120, fireRate: 240 },
+    { hp: 350, income: 200, fireRate: 180 } // ⭐3: cristal
+  ],
+  paradoxo: [
+    { hp: 100, range: 5 * PPM, duration: 180, fireRate: 900 },
+    { hp: 150, range: 5.5 * PPM, duration: 210, fireRate: 780 },
+    { hp: 220, range: 6 * PPM, duration: 240, fireRate: 660 },
+    { hp: 350, range: 7 * PPM, duration: 300, fireRate: 480 } // ⭐3: buff aliado
+  ]
+};
+
+const TOWER_TYPES = {
+  recruta:      { cost: 50,  name: 'RECRUTA',       desc: 'HP/100 · DMG/25 · 1s · 6m', hitsAir: false },
+  boxeador:     { cost: 50,  name: 'BOXEADOR',      desc: 'HP/120 · DMG/35 · 0.8s · 3m', isBoxer: true, hitsAir: false },
+  drone:        { cost: 100, name: 'DRONE',         desc: 'HP/100 · DMG/25 · 1s · 8m · ANTI-AÉREO', isDrone: true, hitsAir: true },
+  faca:         { cost: 100, name: 'FACA',          desc: 'HP/150 · DMG/80 · 0.5s · 2.5m', hitsAir: false },
+  sniper:       { cost: 150, name: 'SNIPER',        desc: 'HP/70 · DMG/50 · 2s · 15m', hitsAir: true },
+  metralhadora: { cost: 150, name: 'METRALHADORA',  desc: 'HP/100 · DMG/25 · 0.2s · 7m', hitsAir: false },
+  lancachamas:  { cost: 180, name: 'LANÇA-CHAMAS',  desc: 'HP/100 · DMG/15 · 0.1s · 4m · FOGO', isFlamethrower: true, hitsAir: false },
+  glacial:      { cost: 200, name: 'GLACIAL',       desc: 'HP/100 · DMG/15 · 0.6s · 5m · CONGELA', isGlacial: true, hitsAir: false },
+  bazuca:       { cost: 200, name: 'BAZUCA',        desc: 'HP/100 · DMG/150 · 5s · 10m · ÁREA', splash: 3 * PPM, hitsAir: true },
+  tesla:        { cost: 230, name: 'TESLA',         desc: 'HP/80 · DMG/30 · 2s · 6m · RICOCHETE', isTesla: true, hitsAir: false },
+  medico:       { cost: 250, name: 'MÉDICO',        desc: 'HP/100 · CURA/20 · 5s · 5m', heal: 20, isHealer: true, hitsAir: false },
+  defensor:     { cost: 270, name: 'DEFENSOR',      desc: 'HP/200 · AURA -50% DANO · 5m', isDefensor: true, hitsAir: false },
+  comerciante:  { baseCost: 400, cost: 400, name: 'COMERCIANTE', desc: 'HP/100 · +50 OURO · 5s', income: 50, isMerchant: true, hitsAir: false },
+  paradoxo:     { cost: 400, name: 'PARADOXO',      desc: 'HP/100 · PARA TEMPO · 15s · 5m', isParadox: true, hitsAir: false }
+};
+
+const TOWER_ORDER = ['recruta','boxeador','drone','faca','sniper','metralhadora','lancachamas','glacial','bazuca','tesla','medico','defensor','comerciante','paradoxo'];
+
+// ============ PERSISTÊNCIA: CRISTAIS e ESTRELAS ============
+function loadCrystals() {
+  try { return parseInt(localStorage.getItem('td_crystals')) || 0; }
+  catch(e) { return 0; }
+}
+function saveCrystals(n) {
+  try { localStorage.setItem('td_crystals', n.toString()); } catch(e) {}
+}
+function loadStars() {
+  try {
+    const s = localStorage.getItem('td_stars');
+    if (s) return JSON.parse(s);
+  } catch(e) {}
+  const empty = {};
+  for (const t of TOWER_ORDER) empty[t] = 0;
+  return empty;
+}
+function saveStars(s) {
+  try { localStorage.setItem('td_stars', JSON.stringify(s)); } catch(e) {}
+}
+
+let crystals = loadCrystals();
+let stars = loadStars();
+
+// ============ STATS FINAIS (base + estrelas) ============
+function getTowerStats(type) {
+  const level = stars[type] || 0;
+  const prog = STAR_PROGRESSION[type][level];
+  const baseDef = TOWER_TYPES[type];
+  return {
+    hp: prog.hp,
+    maxHp: prog.hp,
+    damage: prog.damage !== undefined ? prog.damage : 0,
+    range: prog.range,
+    fireRate: prog.fireRate,
+    splash: prog.splash || 0,
+    heal: prog.heal !== undefined ? prog.heal : (baseDef.heal || 0),
+    income: prog.income !== undefined ? prog.income : (baseDef.income || 0),
+    chainRange: prog.chainRange || 0,
+    maxChains: prog.maxChains || 0,
+    fireDmg: prog.fireDmg || 10,
+    fireDur: prog.fireDur || 300,
+    iceDur: prog.iceDur || 90,
+    duration: prog.duration || 180,
+    reduction: prog.reduction || 0.5
+  };
+}
+
+function getMerchantCost() {
+  const aliveMerchants = towers.filter(t => t.isMerchant).length;
+  return 400 + aliveMerchants * 100;
+}
+function getCostForType(type) {
+  if (type === 'comerciante') return getMerchantCost();
+  return TOWER_TYPES[type].cost;
+}
+function speedToPixels(vel) { return ((vel / 20) * PPM) / 60; }
 
 const MAPS = [{
   name: 'ZIGUE-ZAGUE', path: [
@@ -549,6 +787,8 @@ let selectedDeck = [];
 const DECK_SIZE = 8;
 const PLAYER_MAX_HP = 300;
 let playerHp = PLAYER_MAX_HP;
+let runCrystalsEarned = 0;
+let merchantCrystalTimers = new Map(); // tropas comerciante -> timer
 
 const towers = [];
 const enemies = [];
@@ -562,6 +802,7 @@ const shockwaves = [];
 const sparks = [];
 const heals = [];
 const moneyPops = [];
+const crystalPops = [];
 const healZones = [];
 const flames = [];
 const teslaBolts = [];
@@ -574,39 +815,9 @@ let screenFlash = 0;
 let screenFlashColor = '51,255,51';
 let bossActive = false;
 let bossRef = null;
-let hordePulse = 0;
 let dragging = null;
 let selectedTowerType = null;
 let pointerDownInfo = null;
-
-const TOWER_TYPES = {
-  recruta:      { cost: 50,  range: 6 * PPM,   damage: 25, fireRate: 60,  hp: 100, maxHp: 100, name: 'RECRUTA',       desc: 'HP 100 · DMG 25 · 1s · 6m' },
-  boxeador:     { cost: 50,  range: 3 * PPM,   damage: 35, fireRate: 48,  hp: 120, maxHp: 120, name: 'BOXEADOR',      desc: 'HP 120 · DMG 35 · 0.8s · 3m', isBoxer: true },
-  drone:        { cost: 100, range: 8 * PPM,   damage: 25, fireRate: 60,  hp: 100, maxHp: 100, name: 'DRONE',         desc: 'HP 100 · DMG 25 · 1s · 8m · ANTI-AÉREO 3x', isDrone: true, hitsAir: true },
-  faca:         { cost: 100, range: 2.5 * PPM, damage: 80, fireRate: 30,  hp: 150, maxHp: 150, name: 'FACA',          desc: 'HP 150 · DMG 80 · 0.5s · 2.5m' },
-  sniper:       { cost: 150, range: 15 * PPM,  damage: 50, fireRate: 120, hp: 70,  maxHp: 70,  name: 'SNIPER',        desc: 'HP 70 · DMG 50 · 2s · 15m', hitsAir: true },
-  metralhadora: { cost: 150, range: 7 * PPM,   damage: 25, fireRate: 12,  hp: 100, maxHp: 100, name: 'METRALHADORA',  desc: 'HP 100 · DMG 25 · 0.2s · 7m' },
-  lancachamas:  { cost: 180, range: 4 * PPM,   damage: 15, fireRate: 6,   hp: 100, maxHp: 100, name: 'LANÇA-CHAMAS',  desc: 'HP 100 · DMG 15 · 0.1s · 4m · FOGO', isFlamethrower: true },
-  glacial:      { cost: 200, range: 5 * PPM,   damage: 15, fireRate: 36,  hp: 100, maxHp: 100, name: 'GLACIAL',       desc: 'HP 100 · DMG 15 · 0.6s · 5m · CONGELA', isGlacial: true },
-  bazuca:       { cost: 200, range: 10 * PPM,  damage: 150, fireRate: 300, hp: 100, maxHp: 100, name: 'BAZUCA',        desc: 'HP 100 · DMG 150 · 5s · 10m · ÁREA', splash: 3 * PPM, hitsAir: true },
-  tesla:        { cost: 230, range: 6 * PPM,   damage: 30, fireRate: 120, hp: 80,  maxHp: 80,  name: 'TESLA',         desc: 'HP 80 · DMG 30 · 2s · 6m · RICOCHETE', isTesla: true, chainRange: 3 * PPM, maxChains: 3 },
-  medico:       { cost: 250, range: 5 * PPM,   damage: 0,  fireRate: 300, hp: 100, maxHp: 100, name: 'MÉDICO',        desc: 'HP 100 · CURA 20 · 5s · 5m', heal: 20, isHealer: true },
-  defensor:     { cost: 270, range: 5 * PPM,   damage: 0,  fireRate: 60,  hp: 200, maxHp: 200, name: 'DEFENSOR',      desc: 'HP 200 · AURA -50% DANO · 5m', isDefensor: true },
-  comerciante:  { baseCost: 400, cost: 400, range: 0, damage: 0, fireRate: 300, hp: 100, maxHp: 100, name: 'COMERCIANTE', desc: 'HP 100 · +50 OURO · 5s', income: 50, isMerchant: true },
-  paradoxo:     { cost: 400, range: 5 * PPM,   damage: 0,  fireRate: 900, hp: 100, maxHp: 100, name: 'PARADOXO',      desc: 'HP 100 · PARA TEMPO 3s · 15s', isParadox: true }
-};
-
-const TOWER_ORDER = ['recruta','boxeador','drone','faca','sniper','metralhadora','lancachamas','glacial','bazuca','tesla','medico','defensor','comerciante','paradoxo'];
-
-function getMerchantCost() {
-  const aliveMerchants = towers.filter(t => t.isMerchant).length;
-  return 400 + aliveMerchants * 100;
-}
-function getCostForType(type) {
-  if (type === 'comerciante') return getMerchantCost();
-  return TOWER_TYPES[type].cost;
-}
-function speedToPixels(vel) { return ((vel / 20) * PPM) / 60; }
 
 const ENEMY_TYPES = {
   padrao:    { hp: 100, damage: 50,  speed: 100, size: 14, reward: 12, drawStyle: 'square' },
@@ -657,6 +868,7 @@ function getWaveComposition(wave) {
 function isBossWave(wave) { return wave > 0 && wave % 10 === 0; }
 function getBossHp(wave) { return Math.floor(5000 * Math.pow(1.5, (wave / 10) - 1)); }
 function getBossDamage(wave) { return Math.floor(200 * Math.pow(1.2, (wave / 10) - 1)); }
+function getBossCrystalReward(wave) { return 10 + (Math.floor(wave / 10) - 1) * 20; }
 
 function distToSegment(p, a, b) {
   const dx = b.x - a.x, dy = b.y - a.y;
@@ -749,6 +961,15 @@ function addMoneyPop(x, y, amount) {
     });
   }
 }
+function addCrystalPop(x, y, amount) {
+  crystalPops.push({ x, y, amount, life: 90, maxLife: 90, vy: -0.6, text: '💎+' + amount });
+  for (let i = 0; i < 12; i++) {
+    addParticle(x, y, {
+      vx: (Math.random() - 0.5) * 3, vy: -1.5 - Math.random() * 2,
+      life: 50, size: 3, color: CRYSTAL, friction: 0.94
+    });
+  }
+}
 function addFlameCone(x, y, angle, range) {
   flames.push({ x, y, angle, range, life: 6, maxLife: 6 });
 }
@@ -767,10 +988,7 @@ function addFireParticle(enemy) {
 }
 function addTeslaBolt(points) { teslaBolts.push({ points, life: 12, maxLife: 12 }); }
 function addAirTrail(x, y) {
-  airTrails.push({
-    x, y, life: 20, maxLife: 20,
-    vx: (Math.random() - 0.5) * 0.3, vy: 0.3 + Math.random() * 0.5
-  });
+  airTrails.push({ x, y, life: 20, maxLife: 20, vx: (Math.random() - 0.5) * 0.3, vy: 0.3 + Math.random() * 0.5 });
 }
 
 function damagePlayer(amount) {
@@ -821,6 +1039,11 @@ function updateUI() {
       costEl.classList.toggle('expensive', gold < cost);
     }
     btn.disabled = gold < cost;
+    const starBadge = btn.querySelector('.star-badge');
+    if (starBadge) {
+      const lvl = stars[type] || 0;
+      starBadge.textContent = lvl > 0 ? '⭐'.repeat(lvl) : '';
+    }
   });
 
   const bossBar = document.getElementById('bossHpBar');
@@ -856,12 +1079,16 @@ function tryPlace(x, y, type) {
   }
   const def = TOWER_TYPES[type];
   const actualCost = getCostForType(type);
+  const stats = getTowerStats(type);
+  const lvl = stars[type] || 0;
   towers.push({
     x, y, type,
-    cost: actualCost, range: def.range, damage: def.damage,
-    fireRate: def.fireRate, splash: def.splash || 0,
-    heal: def.heal || 0, isHealer: def.isHealer || false,
-    income: def.income || 0, isMerchant: def.isMerchant || false,
+    cost: actualCost,
+    starLevel: lvl,
+    range: stats.range, damage: stats.damage,
+    fireRate: stats.fireRate, splash: stats.splash,
+    heal: stats.heal, isHealer: def.isHealer || false,
+    income: stats.income, isMerchant: def.isMerchant || false,
     isFlamethrower: def.isFlamethrower || false,
     isGlacial: def.isGlacial || false,
     isTesla: def.isTesla || false,
@@ -870,13 +1097,19 @@ function tryPlace(x, y, type) {
     isBoxer: def.isBoxer || false,
     isDrone: def.isDrone || false,
     hitsAir: def.hitsAir || false,
-    chainRange: def.chainRange || 0,
-    maxChains: def.maxChains || 0,
-    hp: def.hp, maxHp: def.maxHp,
+    chainRange: stats.chainRange,
+    maxChains: stats.maxChains,
+    fireDmg: stats.fireDmg,
+    fireDur: stats.fireDur,
+    iceDur: stats.iceDur,
+    duration: stats.duration,
+    reduction: stats.reduction,
+    hp: stats.hp, maxHp: stats.maxHp,
     cooldown: 0, angle: 0,
     spawnAnim: 20, recoil: 0, healPulse: 0, incomePulse: 0,
     defensorPulse: 0, punchAnim: 0,
-    droneRotorAngle: 0
+    droneRotorAngle: 0,
+    merchantCrystalTimer: 0
   });
   gold -= actualCost;
   const col = def.isHealer ? GREEN_BRIGHT : def.isMerchant ? GOLD : def.isGlacial ? ICE : def.isTesla ? TESLA : def.isDefensor ? SHIELD : def.isParadox ? PURPLE : def.isFlamethrower ? FIRE : def.isBoxer ? BOXER : def.isDrone ? DRONE : GREEN;
@@ -963,6 +1196,33 @@ function showBanner(text, isBoss) {
   b.classList.add('show');
 }
 
+// ============ LIMPEZA DE CAMPO PELO BOSS ============
+function clearFieldForBoss() {
+  let crystalBonus = 0;
+  let goldBonus = 0;
+  const toRemove = [...enemies];
+  for (const e of toRemove) {
+    if (e.isBoss) continue; // não remove o próprio boss
+    const idx = enemies.indexOf(e);
+    if (idx === -1) continue;
+    // Ouro 10% (floor)
+    goldBonus += Math.floor(e.reward * 0.1);
+    // Explosão visual
+    burst(e.x, e.y - (e.airHeight || 0), 12, { speed: 5, life: 25, size: 3, color: OGRE });
+    addShockwave(e.x, e.y - (e.airHeight || 0), OGRE, 30, 18);
+    // Remove SEM disparar onDeath
+    enemies.splice(idx, 1);
+  }
+  gold += goldBonus;
+  if (goldBonus > 0) {
+    addText(canvas.width / 2, canvas.height / 2 - 40, 'LIMPEZA! +' + goldBonus + ' ouro', GOLD, 90, 26);
+  }
+  Sound.bigExplosion();
+  addFlash(0.5, '102,255,51');
+  addShake(10);
+  updateUI();
+}
+
 function spawnEnemy(typeKey, x, y, wp, overrideHp, overrideDmg) {
   const t = ENEMY_TYPES[typeKey];
   const hpScale = 1 + (waveNum - 1) * 0.15;
@@ -1027,8 +1287,12 @@ function startWave() {
     setTimeout(() => showBanner('👹 OGRO 👹', true), 150);
     const hp = getBossHp(waveNum);
     const dmg = getBossDamage(waveNum);
+    // 1.5s depois: LIMPA O CAMPO + SPAWNA BOSS
     setTimeout(() => {
-      spawnEnemy('ogro', undefined, undefined, undefined, hp, dmg);
+      clearFieldForBoss();
+      setTimeout(() => {
+        spawnEnemy('ogro', undefined, undefined, undefined, hp, dmg);
+      }, 300);
     }, 1500);
     spawnCooldown = 0;
     updateUI();
@@ -1081,7 +1345,7 @@ function ogroPound(x, y) {
   const inRange = towers.filter(t => Math.hypot(t.x - x, t.y - y) <= radius);
   for (const t of inRange) {
     let dmg = 75;
-    if (t.isProtected) dmg = Math.floor(dmg * 0.5);
+    if (t.isProtected) dmg = Math.floor(dmg * t.reduction ? dmg : 0.5);
     t.hp -= dmg;
     addText(t.x, t.y - 15, '-' + dmg, OGRE, 55, 18);
     if (t.hp <= 0) {
@@ -1121,8 +1385,12 @@ function bossFinalExplosion(x, y) {
   updateUI();
 }
 
-function damageEnemy(e, amount, fromX, fromY, isFire) {
-  const real = Math.max(1, amount - (e.armor || 0));
+function damageEnemy(e, amount, fromX, fromY, isFire, ignoreArmor) {
+  let dmg = amount;
+  if (isFire && e.isBoss) dmg = Math.floor(dmg * 0.5);
+  let real;
+  if (ignoreArmor) real = Math.max(1, dmg);
+  else real = Math.max(1, dmg - (e.armor || 0));
   e.hp -= real; e.hitFlash = 6;
   if (!isFire) burst(e.x, e.y - (e.airHeight || 0), 5, { speed: 2, life: 12, size: 1.5, color: e.isAir ? AIR : GREEN_BRIGHT });
   addText(e.x, e.y - (e.airHeight || 0) - e.size - 5, '-' + real, isFire ? FIRE_BRIGHT : (e.isAir ? AIR : GREEN_BRIGHT), 30, e.isBoss ? 18 : 14);
@@ -1139,20 +1407,22 @@ function damageEnemy(e, amount, fromX, fromY, isFire) {
   }
 }
 
-function applyFire(e) {
+function applyFire(e, fireDmg, fireDur) {
   if (e.isAir) return;
   if (e.isBoss && e.fireTimer > 0) return;
-  e.fireTimer = 5 * 60; e.fireTickTimer = 0;
+  e.fireTimer = fireDur || 300;
+  e.fireTickTimer = 0;
+  e.fireDmg = fireDmg || 10;
 }
-function applyIce(e) {
+function applyIce(e, iceDur) {
   if (e.isAir) return;
   if (e.isBoss) return;
   if (e.type === 'yeti') return;
-  if (e.type === 'blindado') { e.iceFrozen = 0.75 * 60; return; }
-  e.iceFrozen = 1.5 * 60;
+  if (e.type === 'blindado') { e.iceFrozen = Math.floor((iceDur || 90) * 0.5); return; }
+  e.iceFrozen = iceDur || 90;
 }
 
-function bazookaExplosion(x, y, damage, radius) {
+function bazookaExplosion(x, y, damage, radius, extraSplash) {
   addShockwave(x, y, ORANGE, radius, 22);
   addShockwave(x, y, YELLOW, radius * 0.7, 16);
   burst(x, y, 50, { speed: 7, life: 40, size: 3, gravity: 0.15, friction: 0.9 });
@@ -1164,6 +1434,19 @@ function bazookaExplosion(x, y, damage, radius) {
     const dist = Math.hypot(e.x - x, (e.y - (e.airHeight || 0)) - y);
     const falloff = 1 - (dist / radius) * 0.6;
     damageEnemy(e, Math.floor(damage * falloff));
+  }
+  // ⭐3: segundo míssil divide
+  if (extraSplash) {
+    const offsetX = x + (Math.random() - 0.5) * radius;
+    const offsetY = y + (Math.random() - 0.5) * radius;
+    setTimeout(() => {
+      addShockwave(offsetX, offsetY, ORANGE, radius * 0.7, 18);
+      burst(offsetX, offsetY, 25, { speed: 5, life: 30, size: 3, color: ORANGE });
+      const inRange2 = enemies.filter(e => Math.hypot(e.x - offsetX, (e.y - (e.airHeight || 0)) - offsetY) <= radius * 0.7);
+      for (const e of inRange2) {
+        damageEnemy(e, Math.floor(damage * 0.6));
+      }
+    }, 200);
   }
 }
 
@@ -1203,7 +1486,6 @@ function spawnFungusZone(x, y) {
 }
 
 let lastTime = 0;
-let lastSoundTick = 0;
 function loop(time) {
   requestAnimationFrame(loop);
   if (!gameMode) return;
@@ -1238,7 +1520,10 @@ function loop(time) {
     if (t.isDefensor) {
       t.defensorPulse = (t.defensorPulse || 0) + dt * 0.08;
       for (const o of towers) {
-        if (Math.hypot(o.x - t.x, o.y - t.y) <= t.range) o.isProtected = true;
+        if (Math.hypot(o.x - t.x, o.y - t.y) <= t.range) {
+          o.isProtected = true;
+          o.protReduction = t.reduction;
+        }
       }
     }
   }
@@ -1313,7 +1598,7 @@ function loop(time) {
       addFireParticle(e);
       if (e.fireTickTimer >= 60) {
         e.fireTickTimer -= 60;
-        damageEnemy(e, 10, undefined, undefined, true);
+        damageEnemy(e, e.fireDmg || 10, undefined, undefined, true, e.fireIgnoresArmor);
       }
       if (e.fireTimer <= 0) e.fireTimer = 0;
     }
@@ -1355,7 +1640,15 @@ function loop(time) {
         bossFinalExplosion(e.x, e.y);
         bossRef = null;
         healPlayer(50);
-        showMsg('> OGRO DERROTADO! +50 HP');
+        // CRISTAIS
+        const crystalReward = getBossCrystalReward(waveNum);
+        crystals += crystalReward;
+        runCrystalsEarned += crystalReward;
+        saveCrystals(crystals);
+        addCrystalPop(e.x, e.y - 40, crystalReward);
+        Sound.crystal();
+        showMsg('> OGRO DERROTADO! +' + crystalReward + ' 💎');
+        updateMenuCrystals();
       }
       enemies.splice(i, 1);
       updateUI();
@@ -1414,6 +1707,10 @@ function loop(time) {
             if (healed > 0) { addHealEffect(o.x, o.y, t.heal); healedAny = true; }
           }
         }
+        // ⭐3: médico cura jogador
+        if (t.starLevel >= 3) {
+          healPlayer(5);
+        }
         if (healedAny) { addShockwave(t.x, t.y, GREEN_BRIGHT, t.range, 30); t.healPulse = 1; Sound.heal(); updateUI(); }
         t.cooldown = t.fireRate;
       }
@@ -1430,14 +1727,41 @@ function loop(time) {
         Sound.coin();
         updateUI(); t.cooldown = t.fireRate;
       }
+      // ⭐3: cristal a cada 20s (limite 5 por partida por comerciante)
+      if (t.starLevel >= 3) {
+        t.merchantCrystalTimer = (t.merchantCrystalTimer || 0) + dt;
+        if (t.merchantCrystalTimer >= 1200 && (t.crystalsGiven || 0) < 5) {
+          t.merchantCrystalTimer = 0;
+          t.crystalsGiven = (t.crystalsGiven || 0) + 1;
+          crystals += 1;
+          runCrystalsEarned += 1;
+          saveCrystals(crystals);
+          addCrystalPop(t.x, t.y - 25, 1);
+          Sound.crystal();
+          updateMenuCrystals();
+        }
+      }
       continue;
     }
 
-    if (t.isDefensor) { t.cooldown = t.fireRate; continue; }
+    if (t.isDefensor) {
+      t.cooldown = t.fireRate;
+      // ⭐3: regenera tropas
+      if (t.starLevel >= 3) {
+        t.hp = Math.min(t.maxHp, t.hp + 5 * dt / 60);
+        for (const o of towers) {
+          if (o === t) continue;
+          if (Math.hypot(o.x - t.x, o.y - t.y) <= t.range) {
+            o.hp = Math.min(o.maxHp, o.hp + 1 * dt / 60);
+          }
+        }
+      }
+      continue;
+    }
 
     if (t.isParadox) {
       if (t.cooldown <= 0) {
-        paradoxZones.push({ x: t.x, y: t.y, radius: t.range, life: 3 * 60, maxLife: 3 * 60, pulse: 0 });
+        paradoxZones.push({ x: t.x, y: t.y, radius: t.range, life: t.duration, maxLife: t.duration, pulse: 0 });
         addShockwave(t.x, t.y, PURPLE, t.range, 30);
         addShockwave(t.x, t.y, WHITE, t.range * 0.7, 20);
         burst(t.x, t.y, 30, { speed: 4, life: 30, size: 3, color: PURPLE });
@@ -1449,20 +1773,16 @@ function loop(time) {
       continue;
     }
 
-    // ===== ENCONTRA ALVO =====
-    // DRONE: prioridade 100% em aéreos dentro do alcance
     let target = null, bestDist = Infinity;
-    
+
     if (t.isDrone) {
-      // Fase 1: procurar aéreos
       for (const e of enemies) {
         if (!e.isAir) continue;
         const d = Math.hypot(e.x - t.x, (e.y - (e.airHeight || 0)) - t.y);
         if (d < t.range && d < bestDist) { bestDist = d; target = e; }
       }
     }
-    
-    // Se não achou (ou não é drone), procura normalmente
+
     if (!target) {
       for (const e of enemies) {
         const d = Math.hypot(e.x - t.x, (e.y - (e.airHeight || 0)) - t.y);
@@ -1472,22 +1792,21 @@ function loop(time) {
         }
       }
     }
-    
+
     if (target) {
       const targetY = target.y - (target.airHeight || 0);
       t.angle = Math.atan2(targetY - t.y, target.x - t.x);
       if (t.cooldown <= 0) {
         const mx = t.x + Math.cos(t.angle) * 14;
         const my = t.y + Math.sin(t.angle) * 14;
-
-        // DRONE: 3x dano em aéreo
         let actualDamage = t.damage;
         if (t.isDrone && target.isAir) actualDamage = t.damage * 3;
 
         if (t.isFlamethrower) {
           addFlameCone(t.x, t.y, t.angle, t.range);
           damageEnemy(target, actualDamage, t.x, t.y);
-          applyFire(target);
+          applyFire(target, t.fireDmg, t.fireDur);
+          if (t.starLevel >= 3) target.fireIgnoresArmor = true;
           burst(mx, my, 6, { speed: 2.5, life: 15, size: 2, color: FIRE });
           t.recoil = 2;
           Sound.shootLanca();
@@ -1496,12 +1815,13 @@ function loop(time) {
           damageEnemy(target, actualDamage, t.x, t.y);
           burst(target.x, targetY, 8, { speed: 3, life: 15, size: 2, color: BOXER });
           addShockwave(target.x, targetY, BOXER, 18, 12);
+          if (t.starLevel >= 3) target.iceFrozen = 18; // atordoa 0.3s
           t.recoil = 4;
           Sound.shootBoxer();
         } else if (t.isGlacial) {
           burst(mx, my, 5, { speed: 2, life: 12, size: 2, color: ICE });
           addShockwave(mx, my, ICE, 10, 10);
-          bullets.push({ x: t.x, y: t.y, target, damage: actualDamage, speed: 8, type: 'glacial', angle: t.angle });
+          bullets.push({ x: t.x, y: t.y, target, damage: actualDamage, speed: 8, type: 'glacial', angle: t.angle, iceDur: t.iceDur, splashIce: t.starLevel >= 3 });
           t.recoil = 3;
           Sound.shootGlacial();
         } else if (t.isTesla) {
@@ -1510,6 +1830,7 @@ function loop(time) {
           let current = target; let currentY = targetY;
           let currentDmg = actualDamage;
           damageEnemy(current, currentDmg);
+          if (t.starLevel >= 3) current.iceFrozen = 12;
           currentDmg -= 5;
           let chainsLeft = t.maxChains;
           while (chainsLeft > 0) {
@@ -1525,6 +1846,7 @@ function loop(time) {
             if (!next) break;
             chainPoints.push({ x: next.x, y: nextY });
             damageEnemy(next, Math.max(15, currentDmg));
+            if (t.starLevel >= 3) next.iceFrozen = 12;
             hitEnemies.push(next);
             current = next; currentY = nextY;
             currentDmg -= 5; chainsLeft--;
@@ -1538,16 +1860,41 @@ function loop(time) {
         } else if (t.type === 'bazuca') {
           burst(mx, my, 8, { speed: 3, life: 14, size: 2, color: ORANGE });
           addShockwave(mx, my, ORANGE, 12, 12);
-          missiles.push({ x: t.x, y: t.y, target, damage: actualDamage, splash: t.splash, speed: 6, angle: t.angle, life: 300 });
+          missiles.push({ x: t.x, y: t.y, target, damage: actualDamage, splash: t.splash, speed: 6, angle: t.angle, life: 300, splitOnExplode: t.starLevel >= 3 });
           t.recoil = 6;
           Sound.fireBazuca();
+        } else if (t.type === 'sniper') {
+          // Sniper hitscan
+          damageEnemy(target, actualDamage, t.x, t.y);
+          addShockwave(target.x, targetY, CYAN, 15, 10);
+          burst(target.x, targetY, 8, { speed: 3, life: 15, size: 2, color: CYAN });
+          addFlash(0.08);
+          Sound.shootSniper();
+          // ⭐3: perfura — atinge próximo na linha
+          if (t.starLevel >= 3) {
+            const dirX = Math.cos(t.angle), dirY = Math.sin(t.angle);
+            let pierced = null, bestP = Infinity;
+            for (const e of enemies) {
+              if (e === target || e.hp <= 0) continue;
+              const ex = e.x, ey = e.y - (e.airHeight || 0);
+              const dx = ex - target.x, dy = ey - targetY;
+              const dist = Math.hypot(dx, dy);
+              if (dist > 12 * PPM) continue;
+              const dot = (dx * dirX + dy * dirY) / dist;
+              if (dot > 0.85 && dist < bestP) { bestP = dist; pierced = e; }
+            }
+            if (pierced) {
+              damageEnemy(pierced, Math.floor(actualDamage * 0.7));
+              addSpark(target.x, targetY, pierced.x, pierced.y - (pierced.airHeight || 0), CYAN);
+            }
+          }
+          t.recoil = 4;
         } else {
           burst(mx, my, 5, { speed: 2, life: 10, size: 1.5, color: t.isDrone ? DRONE : GREEN_BRIGHT });
           addShockwave(mx, my, t.isDrone ? DRONE : GREEN, 8, 8);
           t.recoil = 4;
           bullets.push({ x: t.x, y: t.y, target, damage: actualDamage, speed: 8, type: t.isDrone ? 'drone' : t.type, angle: t.angle });
           if (t.isDrone) Sound.shootDrone();
-          else if (t.type === 'sniper') Sound.shootSniper();
           else if (t.type === 'metralhadora') Sound.shootMetralhadora();
           else if (t.type === 'faca') Sound.shootFaca();
           else Sound.shootRecruta();
@@ -1566,7 +1913,7 @@ function loop(time) {
         life: 20, size: 2, color: ORANGE, friction: 0.95 });
     }
     if (!m.target || m.target.hp <= 0 || enemies.indexOf(m.target) === -1) {
-      bazookaExplosion(m.x, m.y, m.damage, m.splash); missiles.splice(i, 1); continue;
+      bazookaExplosion(m.x, m.y, m.damage, m.splash, m.splitOnExplode); missiles.splice(i, 1); continue;
     }
     const targetY = m.target.y - (m.target.airHeight || 0);
     const desiredAngle = Math.atan2(targetY - m.y, m.target.x - m.x);
@@ -1576,7 +1923,7 @@ function loop(time) {
     m.angle += Math.max(-0.12, Math.min(0.12, diff)) * dt;
     const dx = m.target.x - m.x, dy = targetY - m.y;
     const dist = Math.hypot(dx, dy);
-    if (dist < 12 || m.life <= 0) { bazookaExplosion(m.x, m.y, m.damage, m.splash); missiles.splice(i, 1); continue; }
+    if (dist < 12 || m.life <= 0) { bazookaExplosion(m.x, m.y, m.damage, m.splash, m.splitOnExplode); missiles.splice(i, 1); continue; }
     m.x += Math.cos(m.angle) * m.speed * dt;
     m.y += Math.sin(m.angle) * m.speed * dt;
   }
@@ -1589,12 +1936,6 @@ function loop(time) {
       burst(b.x, b.y, 4, { speed: 1.5, life: 10, size: 1.5 }); bullets.splice(i, 1); continue;
     }
     const targetY = b.target.y - (b.target.airHeight || 0);
-    if (b.type === 'sniper') {
-      damageEnemy(b.target, b.damage, b.x, b.y);
-      addShockwave(b.target.x, targetY, CYAN, 15, 10);
-      burst(b.target.x, targetY, 8, { speed: 3, life: 15, size: 2, color: CYAN });
-      addFlash(0.08); bullets.splice(i, 1); continue;
-    }
     const dx = b.target.x - b.x, dy = targetY - b.y;
     const dist = Math.hypot(dx, dy);
     if (dist < b.speed * dt) {
@@ -1604,9 +1945,17 @@ function loop(time) {
         burst(b.target.x, targetY, 12, { speed: 4, life: 18, size: 2.5 });
         addShockwave(b.target.x, targetY, GREEN, 18, 12); addShake(1.5);
       } else if (b.type === 'glacial') {
-        applyIce(b.target);
+        applyIce(b.target, b.iceDur);
         burst(b.target.x, targetY, 10, { speed: 3, life: 18, size: 2, color: ICE });
         addShockwave(b.target.x, targetY, ICE, 18, 14);
+        // ⭐3: splash gelo
+        if (b.splashIce) {
+          const inRange = enemies.filter(e => e !== b.target && Math.hypot(e.x - b.target.x, (e.y - (e.airHeight || 0)) - targetY) <= 1.5 * PPM);
+          for (const e of inRange) {
+            applyIce(e, Math.floor(b.iceDur * 0.7));
+            damageEnemy(e, Math.floor(b.damage * 0.5));
+          }
+        }
       } else if (b.type === 'metralhadora') {
         burst(b.target.x, targetY, 4, { speed: 2.5, life: 10, size: 1.5 });
       } else if (b.type === 'drone') {
@@ -1644,6 +1993,10 @@ function loop(time) {
     const mp = moneyPops[i]; mp.y += mp.vy * dt; mp.vy *= 0.97; mp.life -= dt;
     if (mp.life <= 0) moneyPops.splice(i, 1);
   }
+  for (let i = crystalPops.length - 1; i >= 0; i--) {
+    const cp = crystalPops[i]; cp.y += cp.vy * dt; cp.vy *= 0.97; cp.life -= dt;
+    if (cp.life <= 0) crystalPops.splice(i, 1);
+  }
   for (let i = flames.length - 1; i >= 0; i--) { flames[i].life -= dt; if (flames[i].life <= 0) flames.splice(i, 1); }
   for (let i = teslaBolts.length - 1; i >= 0; i--) { teslaBolts[i].life -= dt; if (teslaBolts[i].life <= 0) teslaBolts.splice(i, 1); }
   for (let i = explosions.length - 1; i >= 0; i--) { explosions[i].life -= dt; if (explosions[i].life <= 0) explosions.splice(i, 1); }
@@ -1655,7 +2008,7 @@ function loop(time) {
   if (bossActive) updateUI();
 }
 
-// ===== DESENHO (igual v16 + drone + cor distinta) =====
+// ===== DRAW (mesma lógica v17 + estrelas visuais) =====
 function draw() {
   ctx.save();
   if (shakeAmount > 0.1) {
@@ -1713,15 +2066,6 @@ function draw() {
     ctx.setLineDash([4, 8]);
     ctx.beginPath(); ctx.arc(z.x, z.y, z.radius * 0.7, Date.now()/500, Date.now()/500 + Math.PI * 2); ctx.stroke();
     ctx.setLineDash([]);
-    ctx.globalAlpha = 0.9 * p;
-    const s = 8;
-    ctx.strokeStyle = WHITE; ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.moveTo(z.x - s, z.y - s); ctx.lineTo(z.x + s, z.y - s);
-    ctx.lineTo(z.x, z.y); ctx.lineTo(z.x + s, z.y + s);
-    ctx.lineTo(z.x - s, z.y + s); ctx.lineTo(z.x, z.y);
-    ctx.lineTo(z.x - s, z.y - s);
-    ctx.stroke();
   }
   ctx.globalAlpha = 1;
 
@@ -1847,6 +2191,15 @@ function draw() {
       ctx.globalAlpha = 1;
     }
 
+    // ⭐ Borda dourada por estrela
+    if (t.starLevel > 0) {
+      ctx.strokeStyle = GOLD;
+      ctx.globalAlpha = 0.5 + t.starLevel * 0.15;
+      ctx.lineWidth = t.starLevel * 0.8;
+      ctx.strokeRect(t.x - 13, t.y - 13, 26, 26);
+      ctx.globalAlpha = 1;
+    }
+
     let punchOffset = 0;
     if (t.isBoxer && t.punchAnim > 0) {
       const punchPct = 1 - t.punchAnim;
@@ -1902,8 +2255,7 @@ function draw() {
       ctx.shadowBlur = t.incomePulse > 0 ? 15 : 6;
       ctx.fillText('$', t.x, t.y + 1); ctx.shadowBlur = 0;
     } else if (t.isBoxer) {
-      ctx.shadowColor = BOXER;
-      ctx.shadowBlur = t.punchAnim > 0 ? 12 : 6;
+      ctx.shadowColor = BOXER; ctx.shadowBlur = t.punchAnim > 0 ? 12 : 6;
       ctx.fillStyle = col;
       ctx.beginPath();
       ctx.arc(t.x + 2, t.y - 2, 6, 0, Math.PI * 2); ctx.fill();
@@ -1956,11 +2308,9 @@ function draw() {
       ctx.lineTo(t.x - s, t.y - s);
       ctx.stroke(); ctx.shadowBlur = 0;
     } else if (t.isDrone) {
-      // Hélices girando em cima
       ctx.shadowColor = DRONE; ctx.shadowBlur = 10;
       ctx.strokeStyle = col; ctx.lineWidth = 2;
       const rotAngle = t.droneRotorAngle;
-      // 2 hélices em X
       for (let i = 0; i < 2; i++) {
         const baseAngle = rotAngle + i * Math.PI;
         ctx.beginPath();
@@ -1968,11 +2318,9 @@ function draw() {
         ctx.lineTo(t.x - Math.cos(baseAngle) * 8, t.y - 6 - Math.sin(baseAngle) * 3);
         ctx.stroke();
       }
-      // Corpo central
       ctx.fillStyle = col;
       ctx.beginPath();
       ctx.arc(t.x, t.y, 4, 0, Math.PI * 2); ctx.fill();
-      // Antena
       ctx.beginPath();
       ctx.moveTo(t.x, t.y - 4); ctx.lineTo(t.x, t.y - 10);
       ctx.stroke();
@@ -1981,6 +2329,17 @@ function draw() {
       ctx.font = 'bold 13px VT323, monospace';
       const sym = t.type === 'recruta' ? 'R' : t.type === 'sniper' ? 'S' : t.type === 'faca' ? 'F' : t.type === 'metralhadora' ? 'M' : 'B';
       ctx.fillText(sym, t.x, t.y + 1);
+    }
+
+    // ⭐ Estrelinhas abaixo do quadrado
+    if (t.starLevel > 0) {
+      ctx.font = 'bold 10px VT323, monospace';
+      ctx.fillStyle = GOLD;
+      ctx.shadowColor = GOLD;
+      ctx.shadowBlur = 5;
+      const starsText = '⭐'.repeat(t.starLevel);
+      ctx.fillText(starsText, t.x, t.y - 18);
+      ctx.shadowBlur = 0;
     }
 
     if (isFrozenByYeti) {
@@ -2025,14 +2384,7 @@ function draw() {
 
   for (const b of bullets) {
     if (b.type === 'sniper') {
-      if (b.target) {
-        const targetY = b.target.y - (b.target.airHeight || 0);
-        const grad = ctx.createLinearGradient(b.x, b.y, b.target.x, targetY);
-        grad.addColorStop(0, 'rgba(51,255,255,0.9)');
-        grad.addColorStop(1, 'rgba(51,255,255,0.1)');
-        ctx.strokeStyle = grad; ctx.lineWidth = 2;
-        ctx.beginPath(); ctx.moveTo(b.x, b.y); ctx.lineTo(b.target.x, targetY); ctx.stroke();
-      }
+      // já foi desenhado dentro do sniper via spark
     } else if (b.type === 'metralhadora') {
       ctx.fillStyle = YELLOW; ctx.shadowColor = YELLOW; ctx.shadowBlur = 6;
       ctx.fillRect(b.x - 2, b.y - 2, 4, 4); ctx.shadowBlur = 0;
@@ -2116,18 +2468,28 @@ function draw() {
   }
   ctx.globalAlpha = 1;
 
+  for (const cp of crystalPops) {
+    const alpha = cp.life / cp.maxLife;
+    ctx.globalAlpha = alpha; ctx.fillStyle = CRYSTAL;
+    ctx.font = 'bold 22px VT323, monospace';
+    ctx.textAlign = 'center'; ctx.shadowColor = CRYSTAL; ctx.shadowBlur = 15;
+    ctx.fillText(cp.text, cp.x, cp.y); ctx.shadowBlur = 0;
+  }
+  ctx.globalAlpha = 1;
+
   if (dragging && dragging.overCanvas) {
     const d = dragging;
     const col = d.valid ? WHITE : RED;
     ctx.strokeStyle = col; ctx.globalAlpha = 0.5; ctx.lineWidth = 2;
     ctx.setLineDash([4, 6]);
-    ctx.beginPath(); ctx.arc(d.x, d.y, d.def.range || 30, 0, Math.PI * 2); ctx.stroke();
+    const dragRange = getTowerStats(d.type).range || 30;
+    ctx.beginPath(); ctx.arc(d.x, d.y, dragRange, 0, Math.PI * 2); ctx.stroke();
     ctx.setLineDash([]);
     ctx.globalAlpha = 0.08; ctx.fillStyle = col;
-    ctx.beginPath(); ctx.arc(d.x, d.y, d.def.range || 30, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(d.x, d.y, dragRange, 0, Math.PI * 2); ctx.fill();
     if (d.type === 'bazuca') {
       ctx.globalAlpha = 0.15; ctx.strokeStyle = ORANGE; ctx.setLineDash([2, 4]);
-      ctx.beginPath(); ctx.arc(d.x, d.y, d.def.splash, 0, Math.PI * 2); ctx.stroke();
+      ctx.beginPath(); ctx.arc(d.x, d.y, getTowerStats('bazuca').splash, 0, Math.PI * 2); ctx.stroke();
       ctx.setLineDash([]);
     }
     ctx.globalAlpha = 0.9; ctx.strokeStyle = col; ctx.lineWidth = 2;
@@ -2350,39 +2712,111 @@ function drawEnemy(e) {
     const sw = (w / segs) - 1;
     ctx.fillRect(bx + i * (w/segs), by, sw, h);
   }
+}
 
-  if (isBurning && !isAir) {
-    const fy = by - 6 + Math.sin(Date.now() / 100) * 1;
-    ctx.fillStyle = FIRE_BRIGHT;
-    ctx.shadowColor = FIRE; ctx.shadowBlur = 8;
-    ctx.beginPath();
-    ctx.moveTo(e.x, fy - 4); ctx.lineTo(e.x - 3, fy + 2); ctx.lineTo(e.x + 3, fy + 2);
-    ctx.closePath(); ctx.fill();
-    ctx.shadowBlur = 0;
-  }
-  if (isIceFrozen) {
-    const fy = by - 6;
-    ctx.strokeStyle = FROZEN; ctx.shadowColor = FROZEN; ctx.shadowBlur = 8;
-    ctx.lineWidth = 1;
-    ctx.beginPath(); ctx.arc(e.x, fy, 4, 0, Math.PI * 2); ctx.stroke();
-    ctx.beginPath();
-    ctx.moveTo(e.x - 4, fy); ctx.lineTo(e.x + 4, fy);
-    ctx.moveTo(e.x, fy - 4); ctx.lineTo(e.x, fy + 4);
-    ctx.stroke();
-    ctx.shadowBlur = 0;
+// ============ UI: MENU CRISTAIS ============
+function updateMenuCrystals() {
+  document.getElementById('menuCrystals').textContent = crystals;
+  const upgC = document.getElementById('upgradeCrystals');
+  if (upgC) upgC.textContent = crystals;
+}
+
+// ============ UI: UPGRADE SCREEN ============
+function buildUpgradeGrid() {
+  const grid = document.getElementById('upgradeGrid');
+  grid.innerHTML = '';
+  for (const type of TOWER_ORDER) {
+    const def = TOWER_TYPES[type];
+    const lvl = stars[type] || 0;
+    const card = document.createElement('div');
+    card.className = 'upgrade-card';
+    const cur = STAR_PROGRESSION[type][lvl];
+    const next = lvl < 3 ? STAR_PROGRESSION[type][lvl + 1] : null;
+    const starsText = '⭐'.repeat(lvl) + '☆'.repeat(3 - lvl);
+    let costTxt, btnTxt, btnDisabled;
+    if (lvl === 0) { costTxt = '20 💎'; btnTxt = '1 ESTRELA — 20💎'; btnDisabled = crystals < 20; }
+    else if (lvl === 1) { costTxt = '50 💎'; btnTxt = '2 ESTRELAS — 50💎'; btnDisabled = crystals < 50; }
+    else if (lvl === 2) { costTxt = '100 💎'; btnTxt = '3 ESTRELAS — 100💎'; btnDisabled = crystals < 100; }
+    else { costTxt = 'MAX'; btnTxt = '⭐ MAX ⭐'; btnDisabled = true; }
+
+    let statsHtml = `<div>HP: ${cur.hp}`;
+    if (next) statsHtml += ` <span class="next">→ ${next.hp}</span>`;
+    statsHtml += `</div>`;
+
+    if (def.isHealer) {
+      statsHtml += `<div>CURA: ${cur.heal}`;
+      if (next) statsHtml += ` <span class="next">→ ${next.heal}</span>`;
+      statsHtml += `</div>`;
+    } else if (def.isMerchant) {
+      statsHtml += `<div>OURO: +${cur.income}`;
+      if (next) statsHtml += ` <span class="next">→ +${next.income}</span>`;
+      statsHtml += `</div>`;
+    } else if (def.isDefensor) {
+      statsHtml += `<div>REDUÇÃO: ${Math.round(cur.reduction * 100)}%`;
+      if (next) statsHtml += ` <span class="next">→ ${Math.round(next.reduction * 100)}%</span>`;
+      statsHtml += `</div>`;
+    } else if (def.isParadox) {
+      statsHtml += `<div>DURAÇÃO: ${(cur.duration / 60).toFixed(1)}s`;
+      if (next) statsHtml += ` <span class="next">→ ${(next.duration / 60).toFixed(1)}s</span>`;
+      statsHtml += `</div>`;
+    } else if (cur.damage !== undefined) {
+      statsHtml += `<div>DANO: ${cur.damage}`;
+      if (next) statsHtml += ` <span class="next">→ ${next.damage}</span>`;
+      statsHtml += `</div>`;
+    }
+    statsHtml += `<div>ALC: ${(cur.range / 16).toFixed(1)}m`;
+    if (next) statsHtml += ` <span class="next">→ ${(next.range / 16).toFixed(1)}m</span>`;
+    statsHtml += `</div>`;
+
+    card.innerHTML = `
+      <div class="u-name">
+        <span>${def.name}</span>
+        <span class="u-stars">${starsText}</span>
+      </div>
+      <div class="u-stats">${statsHtml}</div>
+      <button class="u-btn${lvl === 3 ? ' max' : ''}" ${btnDisabled ? 'disabled' : ''}>${btnTxt}</button>
+    `;
+    if (lvl < 3) {
+      const btn = card.querySelector('.u-btn');
+      btn.addEventListener('click', () => {
+        const cost = lvl === 0 ? 20 : lvl === 1 ? 50 : 100;
+        if (crystals < cost) { Sound.error(); return; }
+        crystals -= cost;
+        stars[type] = lvl + 1;
+        saveCrystals(crystals);
+        saveStars(stars);
+        Sound.upgrade();
+        updateMenuCrystals();
+        buildUpgradeGrid();
+      });
+    }
+    grid.appendChild(card);
   }
 }
 
+function showUpgradeScreen() {
+  document.getElementById('menu').style.display = 'none';
+  document.getElementById('upgradeScreen').style.display = 'flex';
+  updateMenuCrystals();
+  buildUpgradeGrid();
+  Sound.select();
+}
+function hideUpgradeScreen() {
+  document.getElementById('upgradeScreen').style.display = 'none';
+}
+
+// ============ DECK ============
 function buildDeckGrid() {
   const grid = document.getElementById('deckGrid');
   grid.innerHTML = '';
   for (const type of TOWER_ORDER) {
     const def = TOWER_TYPES[type];
+    const lvl = stars[type] || 0;
     const card = document.createElement('button');
     card.className = 'deck-card';
     card.dataset.type = type;
     card.innerHTML = `
-      <div class="card-name">${def.name}</div>
+      <div class="card-name">${'⭐'.repeat(lvl)} ${def.name}</div>
       <div class="card-cost">💰 ${def.cost === 400 && type === 'comerciante' ? '400+' : def.cost}</div>
       <div class="card-stat">${def.desc}</div>
     `;
@@ -2396,7 +2830,7 @@ function toggleDeckCard(type, card) {
   if (idx >= 0) {
     selectedDeck.splice(idx, 1); card.classList.remove('selected');
   } else {
-    if (selectedDeck.length >= DECK_SIZE) { showMsg('> DECK CHEIO (' + DECK_SIZE + '/' + DECK_SIZE + ')'); Sound.error(); return; }
+    if (selectedDeck.length >= DECK_SIZE) { showMsg('> DECK CHEIO (8/8)'); Sound.error(); return; }
     selectedDeck.push(type); card.classList.add('selected');
   }
   Sound.select();
@@ -2426,10 +2860,12 @@ function buildTroopsShop() {
   grid.innerHTML = '';
   for (const type of selectedDeck) {
     const def = TOWER_TYPES[type];
+    const lvl = stars[type] || 0;
     const btn = document.createElement('button');
     btn.className = 'tower-btn';
     btn.dataset.type = type;
     btn.innerHTML = `
+      <span class="star-badge">${lvl > 0 ? '⭐'.repeat(lvl) : ''}</span>
       ${def.name} · <span class="cost-line" data-cost="${type}">${def.cost}</span>
       <div class="stat-line">${def.desc}</div>
     `;
@@ -2469,10 +2905,12 @@ function startGame(mode) {
 
   gold = 100; waveNum = 0; paused = false; gameOver = false;
   playerHp = PLAYER_MAX_HP;
+  runCrystalsEarned = 0;
   towers.length = 0; enemies.length = 0; bullets.length = 0;
   missiles.length = 0; explosions.length = 0; particles.length = 0;
   trails.length = 0; texts.length = 0; shockwaves.length = 0;
   sparks.length = 0; heals.length = 0; moneyPops.length = 0;
+  crystalPops.length = 0;
   healZones.length = 0; flames.length = 0; teslaBolts.length = 0;
   paradoxZones.length = 0; airTrails.length = 0;
   waveQueue = []; waveActive = false; waveDelay = 0;
@@ -2485,7 +2923,7 @@ function startGame(mode) {
   startWave();
 }
 
-// ===== SOM: botão mute =====
+// ============ EVENTOS ============
 const soundBtn = document.getElementById('soundBtn');
 soundBtn.addEventListener('click', () => {
   Sound.init();
@@ -2495,13 +2933,21 @@ soundBtn.addEventListener('click', () => {
   if (!muted) Sound.select();
 });
 
-// Inicializa áudio no primeiro toque
 document.addEventListener('pointerdown', () => { Sound.init(); Sound.resume(); }, { once: true });
 
 let pendingMode = null;
-document.querySelectorAll('.mode-btn').forEach(btn => {
+document.querySelectorAll('.mode-btn[data-mode]').forEach(btn => {
   btn.addEventListener('click', () => { pendingMode = btn.dataset.mode; showDeckScreen(); });
 });
+
+document.getElementById('btnOpenUpgrade').addEventListener('click', () => { showUpgradeScreen(); });
+document.getElementById('btnUpgradeBack').addEventListener('click', () => {
+  hideUpgradeScreen();
+  document.getElementById('menu').style.display = 'flex';
+  updateMenuCrystals();
+  Sound.select();
+});
+
 document.getElementById('btnDeckStart').addEventListener('click', () => {
   if (selectedDeck.length !== DECK_SIZE) return;
   startGame(pendingMode);
@@ -2524,8 +2970,10 @@ document.getElementById('btnMenu').addEventListener('click', () => {
   document.getElementById('mapInfoBar').style.display = 'none';
   document.getElementById('soundBtn').style.display = 'none';
   document.body.classList.remove('mode-pc', 'mode-mobile');
+  updateMenuCrystals();
 });
 
+updateMenuCrystals();
 requestAnimationFrame(loop);
 </script>
 </body>
