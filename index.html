@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>TOWER DEFENSE 1970 v19</title>
+<title>TOWER DEFENSE 1970 v20</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
@@ -15,11 +15,9 @@
   body { display: flex; justify-content: center; align-items: center; }
   body::before {
     content: ""; position: fixed; inset: 0;
-    background: repeating-linear-gradient(
-      to bottom,
+    background: repeating-linear-gradient(to bottom,
       rgba(0,0,0,0) 0px, rgba(0,0,0,0) 2px,
-      rgba(0,0,0,0.28) 3px, rgba(0,0,0,0.28) 4px
-    );
+      rgba(0,0,0,0.28) 3px, rgba(0,0,0,0.28) 4px);
     pointer-events: none; z-index: 9999; animation: flicker 0.15s infinite;
   }
   body::after {
@@ -29,519 +27,272 @@
   }
   @keyframes flicker { 0% { opacity: 0.94; } 50% { opacity: 1; } 100% { opacity: 0.96; } }
 
-  .screen {
-    position: fixed; inset: 0; background: #000;
-    display: none; flex-direction: column;
-    z-index: 10000; font-family: 'VT323', monospace;
-    padding: 15px; overflow-y: auto;
-  }
+  .screen { position: fixed; inset: 0; background: #000; display: none; flex-direction: column;
+    z-index: 10000; font-family: 'VT323', monospace; padding: 15px; overflow-y: auto; }
   .screen.active { display: flex; }
-
-  #menu {
-    justify-content: center; align-items: center; gap: 20px; padding: 20px;
-  }
-  #menu h1 {
-    font-size: 52px; color: #33ff33;
-    text-shadow: 0 0 20px #33ff33, 0 0 40px #33ff33;
-    letter-spacing: 6px; text-align: center;
-    animation: titlePulse 2s ease-in-out infinite;
-  }
+  #menu { justify-content: center; align-items: center; gap: 20px; padding: 20px; }
+  #menu h1 { font-size: 52px; color: #33ff33; text-shadow: 0 0 20px #33ff33, 0 0 40px #33ff33;
+    letter-spacing: 6px; text-align: center; animation: titlePulse 2s ease-in-out infinite; }
   @keyframes titlePulse {
     0%, 100% { text-shadow: 0 0 20px #33ff33, 0 0 40px #33ff33; }
     50% { text-shadow: 0 0 30px #33ff33, 0 0 60px #33ff33, 0 0 90px #33ff33; }
   }
   #menu .subtitle { color: #22aa22; font-size: 22px; letter-spacing: 6px; margin-top: -20px; }
-  #crystalDisplay {
-    color: #66ddff; font-size: 26px; letter-spacing: 3px;
-    text-shadow: 0 0 10px #66ddff;
-    border: 2px solid #66ddff; padding: 8px 20px;
-    background: #000;
-    box-shadow: 0 0 15px #66ddff, inset 0 0 10px rgba(102,221,255,0.2);
-  }
+  #crystalDisplay { color: #66ddff; font-size: 26px; letter-spacing: 3px; text-shadow: 0 0 10px #66ddff;
+    border: 2px solid #66ddff; padding: 8px 20px; background: #000;
+    box-shadow: 0 0 15px #66ddff, inset 0 0 10px rgba(102,221,255,0.2); }
   .menu-options { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
-  .mode-btn {
-    background: #000; border: 3px solid #33ff33; color: #33ff33;
+  .mode-btn { background: #000; border: 3px solid #33ff33; color: #33ff33;
     padding: 20px 30px; font-family: 'VT323', monospace; cursor: pointer;
     text-align: center; min-width: 180px; transition: all 0.15s;
     box-shadow: 0 0 20px #33ff33, inset 0 0 15px rgba(51,255,51,0.2);
-    user-select: none; touch-action: manipulation;
-  }
-  .mode-btn:active, .mode-btn:hover {
-    background: #33ff33; color: #000;
-    box-shadow: 0 0 40px #33ff33, 0 0 80px #33ff33; transform: scale(1.05);
-  }
+    user-select: none; touch-action: manipulation; }
+  .mode-btn:active, .mode-btn:hover { background: #33ff33; color: #000;
+    box-shadow: 0 0 40px #33ff33, 0 0 80px #33ff33; transform: scale(1.05); }
   .mode-btn:hover .mode-icon, .mode-btn:hover .mode-name, .mode-btn:hover .mode-desc,
   .mode-btn:active .mode-icon, .mode-btn:active .mode-name, .mode-btn:active .mode-desc {
-    color: #000; text-shadow: none;
-  }
+    color: #000; text-shadow: none; }
   .mode-icon { font-size: 50px; margin-bottom: 8px; line-height: 1; }
   .mode-name { font-size: 28px; letter-spacing: 5px; margin-bottom: 6px; text-shadow: 0 0 10px currentColor; }
   .mode-desc { font-size: 14px; letter-spacing: 2px; color: #22aa22; }
 
-  .screen h2 {
-    font-size: 32px; color: #33ff33;
-    text-shadow: 0 0 15px #33ff33;
-    letter-spacing: 5px; text-align: center;
-    margin-bottom: 8px;
-  }
-  .info-line {
-    text-align: center; color: #22aa22;
-    font-size: 18px; letter-spacing: 2px;
-    margin-bottom: 12px;
-  }
+  .screen h2 { font-size: 32px; color: #33ff33; text-shadow: 0 0 15px #33ff33;
+    letter-spacing: 5px; text-align: center; margin-bottom: 8px; }
+  .info-line { text-align: center; color: #22aa22; font-size: 18px; letter-spacing: 2px; margin-bottom: 12px; }
   .info-line strong { color: #ffd700; text-shadow: 0 0 8px #ffd700; }
   .info-line.full strong { color: #33ff33; }
 
-  #deckGrid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 8px; max-width: 1100px; margin: 0 auto; width: 100%;
-  }
-  .deck-card {
-    background: #000; border: 2px solid #33ff33; color: #33ff33;
-    padding: 8px; cursor: pointer;
-    font-family: 'VT323', monospace; text-align: left;
-    line-height: 1.2; transition: all 0.1s;
-    user-select: none; position: relative;
-  }
+  #deckGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 8px; max-width: 1100px; margin: 0 auto; width: 100%; }
+  .deck-card { background: #000; border: 2px solid #33ff33; color: #33ff33;
+    padding: 8px; cursor: pointer; font-family: 'VT323', monospace; text-align: left;
+    line-height: 1.2; transition: all 0.1s; user-select: none; position: relative; }
   .deck-card:hover { background: #062a06; }
-  .deck-card.selected {
-    background: #1a4a1a; border-color: #ffd700;
-    box-shadow: 0 0 15px #ffd700, inset 0 0 10px rgba(255,215,0,0.3);
-  }
-  .deck-card.selected::after {
-    content: "✓"; position: absolute; top: 4px; right: 8px;
-    color: #ffd700; font-size: 22px; text-shadow: 0 0 8px #ffd700;
-  }
+  .deck-card.selected { background: #1a4a1a; border-color: #ffd700;
+    box-shadow: 0 0 15px #ffd700, inset 0 0 10px rgba(255,215,0,0.3); }
+  .deck-card.selected::after { content: "✓"; position: absolute; top: 4px; right: 8px;
+    color: #ffd700; font-size: 22px; text-shadow: 0 0 8px #ffd700; }
   .deck-card .card-name { font-size: 16px; font-weight: bold; margin-bottom: 3px; }
   .deck-card .card-cost { font-size: 13px; color: #ffd700; margin-bottom: 4px; }
   .deck-card .card-stat { font-size: 11px; color: #22aa22; }
-  .deck-card.selected .card-stat { color: #88dd88; }
 
-  .actions-bar {
-    display: flex; gap: 12px; justify-content: center;
-    margin-top: 15px; flex-wrap: wrap; padding-bottom: 20px;
-  }
-  .action-btn {
-    background: #000; border: 2px solid #33ff33; color: #33ff33;
-    padding: 10px 22px; font-family: 'VT323', monospace;
-    font-size: 20px; cursor: pointer; letter-spacing: 2px;
-    box-shadow: 0 0 10px #33ff33; transition: all 0.15s; user-select: none;
-  }
+  .actions-bar { display: flex; gap: 12px; justify-content: center;
+    margin-top: 15px; flex-wrap: wrap; padding-bottom: 20px; }
+  .action-btn { background: #000; border: 2px solid #33ff33; color: #33ff33;
+    padding: 10px 22px; font-family: 'VT323', monospace; font-size: 20px;
+    cursor: pointer; letter-spacing: 2px; box-shadow: 0 0 10px #33ff33;
+    transition: all 0.15s; user-select: none; }
   .action-btn:hover:not(:disabled) { background: #33ff33; color: #000; box-shadow: 0 0 25px #33ff33; }
   .action-btn:disabled { opacity: 0.3; cursor: not-allowed; }
-  .action-btn.primary { border-color: #ffd700; color: #ffd700; box-shadow: 0 0 10px #ffd700; }
+  .action-btn.primary { border-color: #ffd700; color: #ffd700; }
   .action-btn.primary:hover:not(:disabled) { background: #ffd700; color: #000; box-shadow: 0 0 25px #ffd700; }
-  .action-btn.cyan { border-color: #66ddff; color: #66ddff; box-shadow: 0 0 10px #66ddff; }
+  .action-btn.cyan { border-color: #66ddff; color: #66ddff; }
   .action-btn.cyan:hover:not(:disabled) { background: #66ddff; color: #000; box-shadow: 0 0 25px #66ddff; }
-  .action-btn.red { border-color: #ff3333; color: #ff3333; box-shadow: 0 0 10px #ff3333; }
+  .action-btn.red { border-color: #ff3333; color: #ff3333; }
   .action-btn.red:hover:not(:disabled) { background: #ff3333; color: #000; box-shadow: 0 0 25px #ff3333; }
 
-  /* UPGRADE GRID */
-  #upgradeGrid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 10px; max-width: 1100px; margin: 0 auto; width: 100%;
-  }
-  .upgrade-card {
-    background: #000; border: 2px solid #66ddff; color: #66ddff;
-    padding: 10px; font-family: 'VT323', monospace;
-    line-height: 1.25; position: relative;
-  }
-  .upgrade-card .u-name {
-    font-size: 18px; font-weight: bold; margin-bottom: 5px;
-    text-shadow: 0 0 6px #66ddff;
-    display: flex; justify-content: space-between; align-items: center;
-  }
-  .upgrade-card .u-stars {
-    font-size: 18px; color: #ffd700;
-    text-shadow: 0 0 6px #ffd700;
-  }
-  .upgrade-card .u-stats {
-    font-size: 12px; color: #22aa22;
-    margin-bottom: 6px; line-height: 1.4;
-  }
+  #upgradeGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 10px; max-width: 1100px; margin: 0 auto; width: 100%; }
+  .upgrade-card { background: #000; border: 2px solid #66ddff; color: #66ddff;
+    padding: 10px; font-family: 'VT323', monospace; line-height: 1.25; position: relative; }
+  .upgrade-card .u-name { font-size: 18px; font-weight: bold; margin-bottom: 5px;
+    text-shadow: 0 0 6px #66ddff; display: flex; justify-content: space-between; align-items: center; }
+  .upgrade-card .u-stars { font-size: 18px; color: #ffd700; text-shadow: 0 0 6px #ffd700; }
+  .upgrade-card .u-stats { font-size: 12px; color: #22aa22; margin-bottom: 6px; line-height: 1.4; }
   .upgrade-card .u-stats .next { color: #88ff88; }
-  .upgrade-card .u-btn {
-    width: 100%; padding: 6px; margin-top: 4px;
+  .upgrade-card .u-btn { width: 100%; padding: 6px; margin-top: 4px;
     background: #000; border: 2px solid #66ddff; color: #66ddff;
-    font-family: 'VT323', monospace; font-size: 14px;
-    cursor: pointer; letter-spacing: 2px;
-    box-shadow: 0 0 8px #66ddff;
-    transition: all 0.15s;
-  }
-  .upgrade-card .u-btn:hover:not(:disabled) {
-    background: #66ddff; color: #000; box-shadow: 0 0 20px #66ddff;
-  }
+    font-family: 'VT323', monospace; font-size: 14px; cursor: pointer;
+    letter-spacing: 2px; box-shadow: 0 0 8px #66ddff; transition: all 0.15s; }
+  .upgrade-card .u-btn:hover:not(:disabled) { background: #66ddff; color: #000; }
   .upgrade-card .u-btn:disabled { opacity: 0.35; cursor: not-allowed; border-color: #555; color: #555; box-shadow: none; }
   .upgrade-card .u-btn.max { border-color: #ffd700; color: #ffd700; background: #1a1a00; cursor: default; }
-  .upgrade-card .u-btn.max:hover { background: #1a1a00; color: #ffd700; box-shadow: 0 0 8px #ffd700; }
 
-  /* MAP SELECTION */
-  #mapSelectGrid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 12px; max-width: 900px; margin: 0 auto; width: 100%;
-  }
-  .map-card {
-    background: #000; border: 2px solid #33ff33; color: #33ff33;
-    padding: 10px; cursor: pointer;
-    font-family: 'VT323', monospace; text-align: left;
-    transition: all 0.15s; position: relative;
-  }
+  #mapSelectGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 12px; max-width: 900px; margin: 0 auto; width: 100%; }
+  .map-card { background: #000; border: 2px solid #33ff33; color: #33ff33;
+    padding: 10px; cursor: pointer; font-family: 'VT323', monospace;
+    text-align: left; transition: all 0.15s; position: relative; }
   .map-card:hover { background: #062a06; }
-  .map-card.selected {
-    background: #1a4a1a; border-color: #ffd700;
-    box-shadow: 0 0 15px #ffd700;
-  }
-  .map-card.selected::after {
-    content: "✓"; position: absolute; top: 4px; right: 8px;
-    color: #ffd700; font-size: 22px; text-shadow: 0 0 8px #ffd700;
-  }
-  .map-card .map-preview {
-    width: 100%; height: 120px;
-    background: #0a3a0a; border: 1px solid #33ff33;
-    margin-bottom: 6px; position: relative;
-  }
+  .map-card.selected { background: #1a4a1a; border-color: #ffd700; box-shadow: 0 0 15px #ffd700; }
+  .map-card.selected::after { content: "✓"; position: absolute; top: 4px; right: 8px;
+    color: #ffd700; font-size: 22px; text-shadow: 0 0 8px #ffd700; }
+  .map-card .map-preview { width: 100%; height: 120px; background: #0a3a0a;
+    border: 1px solid #33ff33; margin-bottom: 6px; }
   .map-card .map-preview canvas { width: 100%; height: 100%; display: block; }
-  .map-card .map-name {
-    font-size: 18px; font-weight: bold; margin-bottom: 2px;
-    text-shadow: 0 0 6px #33ff33;
-  }
-  .map-card.selected .map-name { color: #ffd700; text-shadow: 0 0 6px #ffd700; }
+  .map-card .map-name { font-size: 18px; font-weight: bold; margin-bottom: 2px; text-shadow: 0 0 6px #33ff33; }
+  .map-card.selected .map-name { color: #ffd700; }
   .map-card .map-desc { font-size: 12px; color: #22aa22; }
 
-  .custom-map-box {
-    max-width: 900px; margin: 12px auto 0 auto;
-    border: 2px solid #66ddff; padding: 12px;
-    background: #000; box-shadow: 0 0 12px #66ddff;
-  }
-  .custom-map-box .box-title {
-    color: #66ddff; font-size: 20px;
-    letter-spacing: 3px; margin-bottom: 8px;
-    text-shadow: 0 0 8px #66ddff;
-  }
-  .custom-map-box textarea {
-    width: 100%; min-height: 60px;
-    background: #0a1a1a; border: 1px solid #66ddff;
-    color: #66ddff; font-family: 'VT323', monospace;
-    font-size: 14px; padding: 8px;
-    resize: vertical;
-  }
-  .custom-map-box .box-actions {
-    display: flex; gap: 10px; margin-top: 8px;
-  }
+  .custom-map-box { max-width: 900px; margin: 12px auto 0 auto;
+    border: 2px solid #66ddff; padding: 12px; background: #000; box-shadow: 0 0 12px #66ddff; }
+  .custom-map-box .box-title { color: #66ddff; font-size: 20px;
+    letter-spacing: 3px; margin-bottom: 8px; text-shadow: 0 0 8px #66ddff; }
+  .custom-map-box textarea { width: 100%; min-height: 60px;
+    background: #0a1a1a; border: 1px solid #66ddff; color: #66ddff;
+    font-family: 'VT323', monospace; font-size: 14px; padding: 8px; resize: vertical; }
+  .custom-map-box .box-actions { display: flex; gap: 10px; margin-top: 8px; }
 
-  /* SECRET ZONE */
-  #secretBtn {
-    position: fixed; bottom: 8px; right: 8px;
-    background: transparent; border: none;
-    color: #0a3a0a; font-size: 20px;
-    font-family: 'VT323', monospace;
-    cursor: pointer; z-index: 9000;
-    padding: 6px 10px;
-    opacity: 0.3;
-    transition: opacity 0.3s;
-    user-select: none;
-  }
+  #secretBtn { position: fixed; bottom: 8px; right: 8px;
+    background: transparent; border: none; color: #0a3a0a; font-size: 20px;
+    font-family: 'VT323', monospace; cursor: pointer; z-index: 9000;
+    padding: 6px 10px; opacity: 0.3; transition: opacity 0.3s; }
   #secretBtn:hover { opacity: 0.9; color: #33ff33; }
 
-  #secretModal, #customMapModal {
-    position: fixed; inset: 0;
-    background: rgba(0,0,0,0.9);
-    display: none; justify-content: center; align-items: center;
-    z-index: 20000; padding: 20px;
-  }
+  #secretModal, #customMapModal { position: fixed; inset: 0; background: rgba(0,0,0,0.9);
+    display: none; justify-content: center; align-items: center; z-index: 20000; padding: 20px; }
   #secretModal.active, #customMapModal.active { display: flex; }
-
-  .secret-box {
-    background: #000; border: 3px solid #ffd700;
-    box-shadow: 0 0 30px #ffd700;
-    padding: 25px; max-width: 400px; width: 100%;
-    font-family: 'VT323', monospace;
-  }
-  .secret-box h3 {
-    color: #ffd700; text-align: center; font-size: 26px;
-    letter-spacing: 4px; margin-bottom: 15px;
-    text-shadow: 0 0 10px #ffd700;
-  }
-  .secret-box input {
-    width: 100%; background: #000; border: 2px solid #ffd700;
-    color: #ffd700; font-family: 'VT323', monospace;
-    font-size: 22px; padding: 8px 12px;
-    letter-spacing: 6px; text-align: center;
-    margin-bottom: 12px;
-  }
-  .secret-box .secret-actions {
-    display: flex; gap: 8px;
-  }
-  .secret-box .secret-actions button {
-    flex: 1;
-    background: #000; border: 2px solid #ffd700; color: #ffd700;
-    font-family: 'VT323', monospace; font-size: 16px;
-    padding: 8px; cursor: pointer; letter-spacing: 2px;
-  }
+  .secret-box { background: #000; border: 3px solid #ffd700;
+    box-shadow: 0 0 30px #ffd700; padding: 25px; max-width: 400px; width: 100%;
+    font-family: 'VT323', monospace; }
+  .secret-box h3 { color: #ffd700; text-align: center; font-size: 26px;
+    letter-spacing: 4px; margin-bottom: 15px; text-shadow: 0 0 10px #ffd700; }
+  .secret-box input { width: 100%; background: #000; border: 2px solid #ffd700;
+    color: #ffd700; font-family: 'VT323', monospace; font-size: 22px;
+    padding: 8px 12px; letter-spacing: 6px; text-align: center; margin-bottom: 12px; }
+  .secret-box .secret-actions { display: flex; gap: 8px; }
+  .secret-box .secret-actions button { flex: 1; background: #000;
+    border: 2px solid #ffd700; color: #ffd700; font-family: 'VT323', monospace;
+    font-size: 16px; padding: 8px; cursor: pointer; letter-spacing: 2px; }
   .secret-box .secret-actions button:hover { background: #ffd700; color: #000; }
 
-  #adminPanel {
-    position: fixed; inset: 0;
-    background: rgba(0,0,0,0.95);
-    display: none; flex-direction: column;
-    z-index: 20000; padding: 20px;
-    overflow-y: auto;
-  }
+  #adminPanel { position: fixed; inset: 0; background: rgba(0,0,0,0.95);
+    display: none; flex-direction: column; z-index: 20000; padding: 20px; overflow-y: auto; }
   #adminPanel.active { display: flex; }
-  #adminPanel h2 {
-    color: #ffd700; text-shadow: 0 0 15px #ffd700;
-    text-align: center; font-size: 32px;
-    letter-spacing: 6px; margin-bottom: 8px;
-  }
-  #adminPanel .admin-sub {
-    text-align: center; color: #8a7a00;
-    font-size: 16px; letter-spacing: 3px;
-    margin-bottom: 25px;
-  }
-  .admin-actions {
-    display: flex; flex-direction: column; gap: 12px;
-    max-width: 500px; width: 100%; margin: 0 auto;
-  }
-  .admin-btn {
-    background: #000; border: 2px solid #ffd700; color: #ffd700;
-    padding: 14px 20px;
-    font-family: 'VT323', monospace; font-size: 20px;
-    cursor: pointer; letter-spacing: 3px;
-    box-shadow: 0 0 10px #ffd700;
-    transition: all 0.15s; text-align: center;
-  }
-  .admin-btn:hover { background: #ffd700; color: #000; box-shadow: 0 0 25px #ffd700; }
-  .admin-btn.warn { border-color: #ff3333; color: #ff3333; box-shadow: 0 0 10px #ff3333; }
-  .admin-btn.warn:hover { background: #ff3333; color: #000; box-shadow: 0 0 25px #ff3333; }
-  .admin-btn.cyan { border-color: #66ddff; color: #66ddff; box-shadow: 0 0 10px #66ddff; }
-  .admin-btn.cyan:hover { background: #66ddff; color: #000; box-shadow: 0 0 25px #66ddff; }
+  #adminPanel h2 { color: #ffd700; text-shadow: 0 0 15px #ffd700;
+    text-align: center; font-size: 32px; letter-spacing: 6px; margin-bottom: 8px; }
+  #adminPanel .admin-sub { text-align: center; color: #8a7a00;
+    font-size: 16px; letter-spacing: 3px; margin-bottom: 25px; }
+  .admin-actions { display: flex; flex-direction: column; gap: 12px;
+    max-width: 500px; width: 100%; margin: 0 auto; }
+  .admin-btn { background: #000; border: 2px solid #ffd700; color: #ffd700;
+    padding: 14px 20px; font-family: 'VT323', monospace; font-size: 20px;
+    cursor: pointer; letter-spacing: 3px; box-shadow: 0 0 10px #ffd700;
+    transition: all 0.15s; text-align: center; }
+  .admin-btn:hover { background: #ffd700; color: #000; }
+  .admin-btn.warn { border-color: #ff3333; color: #ff3333; }
+  .admin-btn.warn:hover { background: #ff3333; color: #000; }
+  .admin-btn.cyan { border-color: #66ddff; color: #66ddff; }
+  .admin-btn.cyan:hover { background: #66ddff; color: #000; }
 
-  /* EDITOR DE MAPA */
-  #editorScreen {
-    position: fixed; inset: 0; background: #000;
-    display: none; flex-direction: column;
-    z-index: 20000; padding: 10px;
-    overflow-y: auto;
-  }
+  #editorScreen { position: fixed; inset: 0; background: #000;
+    display: none; flex-direction: column; z-index: 20000;
+    padding: 10px; overflow-y: auto; }
   #editorScreen.active { display: flex; }
-  #editorScreen h2 {
-    color: #66ddff; text-shadow: 0 0 15px #66ddff;
-    text-align: center; font-size: 24px;
-    letter-spacing: 4px; margin-bottom: 8px;
-  }
-  .editor-layout {
-    display: flex; gap: 15px; flex: 1;
-    justify-content: center; align-items: flex-start;
-    flex-wrap: wrap;
-  }
-  #editorCanvas {
-    background: #0a1a0a; border: 2px solid #66ddff;
-    box-shadow: 0 0 20px #66ddff;
-    touch-action: none;
-    max-width: 100%;
-  }
-  .editor-tools {
-    display: flex; flex-direction: column; gap: 8px;
-    width: 220px;
-  }
-  .editor-tool {
-    background: #000; border: 2px solid #66ddff; color: #66ddff;
-    padding: 10px; cursor: pointer;
-    font-family: 'VT323', monospace; font-size: 16px;
-    letter-spacing: 2px; text-align: center;
-    transition: all 0.15s;
-  }
+  #editorScreen h2 { color: #66ddff; text-shadow: 0 0 15px #66ddff;
+    text-align: center; font-size: 24px; letter-spacing: 4px; margin-bottom: 8px; }
+  .editor-layout { display: flex; gap: 15px; flex: 1;
+    justify-content: center; align-items: flex-start; flex-wrap: wrap; }
+  #editorCanvas { background: #0a1a0a; border: 2px solid #66ddff;
+    box-shadow: 0 0 20px #66ddff; touch-action: none; max-width: 100%; }
+  .editor-tools { display: flex; flex-direction: column; gap: 8px; width: 220px; }
+  .editor-tool { background: #000; border: 2px solid #66ddff; color: #66ddff;
+    padding: 10px; cursor: pointer; font-family: 'VT323', monospace;
+    font-size: 16px; letter-spacing: 2px; text-align: center; transition: all 0.15s; }
   .editor-tool:hover { background: #0a2a3a; }
-  .editor-tool.active {
-    background: #66ddff; color: #000;
-    box-shadow: 0 0 15px #66ddff;
-  }
+  .editor-tool.active { background: #66ddff; color: #000; box-shadow: 0 0 15px #66ddff; }
   .editor-tool.start { border-color: #33ff33; color: #33ff33; }
-  .editor-tool.start:hover { background: #0a2a0a; }
-  .editor-tool.start.active { background: #33ff33; color: #000; box-shadow: 0 0 15px #33ff33; }
+  .editor-tool.start.active { background: #33ff33; color: #000; }
   .editor-tool.end { border-color: #ff3333; color: #ff3333; }
-  .editor-tool.end:hover { background: #2a0a0a; }
-  .editor-tool.end.active { background: #ff3333; color: #000; box-shadow: 0 0 15px #ff3333; }
+  .editor-tool.end.active { background: #ff3333; color: #000; }
   .editor-tool.warn { border-color: #ffaa00; color: #ffaa00; }
-  .editor-tool.warn:hover { background: #2a1a0a; }
   .editor-tool.danger { border-color: #ff3333; color: #ff3333; }
+  .editor-name-input { background: #000; border: 2px solid #66ddff;
+    color: #66ddff; font-family: 'VT323', monospace; font-size: 18px;
+    padding: 8px; width: 100%; margin-bottom: 8px; }
+  .editor-info { color: #88ff88; font-size: 14px; text-align: center;
+    padding: 6px; border: 1px dashed #66ddff; }
 
-  .editor-name-input {
-    background: #000; border: 2px solid #66ddff;
-    color: #66ddff; font-family: 'VT323', monospace;
-    font-size: 18px; padding: 8px;
-    width: 100%; margin-bottom: 8px;
-  }
-  .editor-info {
-    color: #88ff88; font-size: 14px;
-    text-align: center; padding: 6px;
-    border: 1px dashed #66ddff;
-  }
-
-  /* SOUND BUTTON */
-  #soundBtn {
-    position: fixed; top: 8px; left: 50%; transform: translateX(-50%);
+  #soundBtn { position: fixed; top: 8px; left: 50%; transform: translateX(-50%);
     background: #000; border: 2px solid #33ff33; color: #33ff33;
-    font-family: 'VT323', monospace; font-size: 14px;
-    padding: 4px 10px; cursor: pointer; letter-spacing: 2px;
-    box-shadow: 0 0 10px #33ff33; z-index: 100;
-    display: none;
-  }
+    font-family: 'VT323', monospace; font-size: 14px; padding: 4px 10px;
+    cursor: pointer; letter-spacing: 2px; box-shadow: 0 0 10px #33ff33;
+    z-index: 100; display: none; }
   #soundBtn:hover { background: #33ff33; color: #000; }
   #soundBtn.muted { border-color: #ff3333; color: #ff3333; }
-  #soundBtn.muted:hover { background: #ff3333; color: #000; }
 
-  /* BOSS BAR */
-  #bossHpBar {
-    position: fixed; top: 12px; left: 50%;
-    transform: translateX(-50%);
-    width: min(85vw, 520px);
-    background: #000; border: 3px solid #66ff33;
-    box-shadow: 0 0 25px #66ff33;
-    padding: 6px 10px; display: none; z-index: 1400;
-  }
-  #bossHpBar .boss-label {
-    font-size: 16px; color: #66ff33;
-    text-shadow: 0 0 10px #66ff33;
-    letter-spacing: 4px; text-align: center; margin-bottom: 3px;
-  }
-  #bossHpBar .boss-bar-outer {
-    width: 100%; height: 16px; background: #0a1a00;
-    border: 1px solid #66ff33; overflow: hidden;
-  }
-  #bossHpBar .boss-bar-inner {
-    height: 100%; width: 100%;
-    background: linear-gradient(90deg, #2a5a1a, #66ff33, #aaff66);
-    box-shadow: 0 0 12px #66ff33;
-  }
+  #bossHpBar { position: fixed; top: 12px; left: 50%; transform: translateX(-50%);
+    width: min(85vw, 520px); background: #000; border: 3px solid #66ff33;
+    box-shadow: 0 0 25px #66ff33; padding: 6px 10px; display: none; z-index: 1400; }
+  #bossHpBar .boss-label { font-size: 16px; color: #66ff33;
+    text-shadow: 0 0 10px #66ff33; letter-spacing: 4px; text-align: center; margin-bottom: 3px; }
+  #bossHpBar .boss-bar-outer { width: 100%; height: 16px; background: #0a1a00;
+    border: 1px solid #66ff33; overflow: hidden; }
+  #bossHpBar .boss-bar-inner { height: 100%; width: 100%;
+    background: linear-gradient(90deg, #2a5a1a, #66ff33, #aaff66); transition: width 0.2s linear; }
+  #bossHpBar .boss-bar-inner.low { animation: hpBlink 0.3s steps(2) infinite; }
+  @keyframes hpBlink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0.5; } }
 
-  /* GAME HUD */
   #game { display: flex; gap: 20px; z-index: 10; align-items: flex-start; }
-  #ui {
-    background: #000; padding: 15px; width: 260px;
-    border: 2px solid #33ff33;
-    box-shadow: 0 0 20px #33ff33;
-    font-size: 16px; letter-spacing: 1px;
-    max-height: 96vh; overflow-y: auto;
-  }
+  #ui { background: #000; padding: 15px; width: 260px; border: 2px solid #33ff33;
+    box-shadow: 0 0 20px #33ff33; font-size: 16px; letter-spacing: 1px;
+    max-height: 96vh; overflow-y: auto; }
   #ui::-webkit-scrollbar { width: 6px; }
   #ui::-webkit-scrollbar-track { background: #000; }
   #ui::-webkit-scrollbar-thumb { background: #33ff33; }
-  #ui h2 {
-    font-size: 18px; margin-bottom: 10px; color: #33ff33;
-    text-shadow: 0 0 8px #33ff33;
-    border-bottom: 1px dashed #33ff33;
-    padding-bottom: 5px; letter-spacing: 2px;
-    text-align: left;
-  }
+  #ui h2 { font-size: 18px; margin-bottom: 10px; color: #33ff33;
+    border-bottom: 1px dashed #33ff33; padding-bottom: 5px; letter-spacing: 2px;
+    text-align: left; text-shadow: 0 0 8px #33ff33; }
   .troops-grid { display: flex; flex-direction: column; gap: 4px; }
-  .tower-btn {
-    width: 100%; padding: 5px 8px;
-    background: #000; border: 2px solid #33ff33; color: #33ff33;
-    cursor: grab; text-align: left;
-    font-family: 'VT323', monospace; font-size: 14px;
-    letter-spacing: 1px; line-height: 1.25;
-    touch-action: none; position: relative;
-  }
+  .tower-btn { width: 100%; padding: 5px 8px; background: #000;
+    border: 2px solid #33ff33; color: #33ff33; cursor: grab; text-align: left;
+    font-family: 'VT323', monospace; font-size: 14px; letter-spacing: 1px;
+    line-height: 1.25; touch-action: none; position: relative; }
   .tower-btn:hover { background: #33ff33; color: #000; }
-  .tower-btn.selected {
-    background: #33ff33; color: #000;
-    animation: blink 0.6s steps(2) infinite;
-  }
+  .tower-btn.selected { background: #33ff33; color: #000;
+    animation: blink 0.6s steps(2) infinite; }
   .tower-btn:disabled { opacity: 0.3; cursor: not-allowed; }
-  .tower-btn.lord {
-    border-color: #ffd700; color: #ffd700;
-    box-shadow: 0 0 8px #ffd700;
-  }
+  .tower-btn.lord { border-color: #ffd700; color: #ffd700; box-shadow: 0 0 8px #ffd700; }
   .tower-btn.lord:hover { background: #ffd700; color: #000; }
   @keyframes blink {
     0%, 50% { background: #33ff33; }
     51%, 100% { background: #003300; color: #33ff33; }
   }
-  .tower-btn .star-badge {
-    position: absolute; top: 2px; right: 4px;
-    color: #ffd700; font-size: 12px;
-  }
+  .tower-btn .star-badge { position: absolute; top: 2px; right: 4px;
+    color: #ffd700; font-size: 12px; }
   .stat-line { font-size: 11px; color: #22aa22; margin-top: 1px; }
   .cost-line { color: #ffd700; font-weight: bold; }
   .cost-line.expensive { color: #ff3333; }
-  #stats {
-    margin-top: 10px; padding-top: 8px;
-    border-top: 1px dashed #33ff33; font-size: 16px;
-  }
+  #stats { margin-top: 10px; padding-top: 8px;
+    border-top: 1px dashed #33ff33; font-size: 16px; }
   #stats div { margin-bottom: 4px; }
-  #playerHpBox {
-    margin-top: 12px; padding: 10px 8px;
-    border: 2px solid #33ff33; background: #000;
-    box-shadow: 0 0 12px #33ff33;
-  }
-  #playerHpLabel {
-    font-size: 16px; letter-spacing: 2px; color: #33ff33;
-    margin-bottom: 5px;
-    display: flex; justify-content: space-between;
-  }
+  #playerHpBox { margin-top: 12px; padding: 10px 8px;
+    border: 2px solid #33ff33; background: #000; box-shadow: 0 0 12px #33ff33; }
+  #playerHpLabel { font-size: 16px; letter-spacing: 2px; color: #33ff33;
+    margin-bottom: 5px; display: flex; justify-content: space-between; }
   #playerHpLabel.low .num { color: #ff3333; }
-  #playerHpBarOuter {
-    width: 100%; height: 14px; background: #0a3a0a;
-    border: 1px solid #33ff33; overflow: hidden;
-  }
-  #playerHpBarInner {
-    height: 100%; width: 100%;
-    background: linear-gradient(90deg, #1a8a1a, #33ff33);
-    transition: width 0.15s linear;
-  }
+  #playerHpBarOuter { width: 100%; height: 14px; background: #0a3a0a;
+    border: 1px solid #33ff33; overflow: hidden; }
+  #playerHpBarInner { height: 100%; width: 100%;
+    background: linear-gradient(90deg, #1a8a1a, #33ff33); transition: width 0.15s linear; }
   #playerHpBarInner.mid { background: linear-gradient(90deg, #8a8a1a, #ffff33); }
-  #playerHpBarInner.low {
-    background: linear-gradient(90deg, #8a1a1a, #ff3333);
-    animation: hpBlink 0.4s steps(2) infinite;
-  }
-  @keyframes hpBlink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0.5; } }
-  canvas#canvas {
-    background: #000; border: 2px solid #33ff33;
-    box-shadow: 0 0 25px #33ff33;
-    image-rendering: pixelated; touch-action: none; display: block;
-  }
-  #msg {
-    position: fixed; top: 30px; left: 50%; transform: translateX(-50%);
+  #playerHpBarInner.low { background: linear-gradient(90deg, #8a1a1a, #ff3333);
+    animation: hpBlink 0.4s steps(2) infinite; }
+  canvas#canvas { background: #000; border: 2px solid #33ff33;
+    box-shadow: 0 0 25px #33ff33; image-rendering: pixelated;
+    touch-action: none; display: block; }
+  #msg { position: fixed; top: 30px; left: 50%; transform: translateX(-50%);
     background: #000; border: 2px solid #33ff33; color: #33ff33;
-    padding: 10px 24px; font-size: 22px;
-    letter-spacing: 2px; display: none; z-index: 1500;
-    box-shadow: 0 0 20px #33ff33; white-space: nowrap;
-  }
-  .title {
-    position: fixed; top: 8px; left: 20px;
-    font-size: 18px; color: #33ff33; letter-spacing: 3px; z-index: 10;
-  }
-  .map-info {
-    position: fixed; top: 8px; right: 20px;
-    font-size: 14px; color: #22aa22;
-    letter-spacing: 1px; z-index: 10; text-align: right;
-    line-height: 1.4;
-  }
+    padding: 10px 24px; font-size: 22px; letter-spacing: 2px;
+    display: none; z-index: 1500; box-shadow: 0 0 20px #33ff33; white-space: nowrap; }
+  .title { position: fixed; top: 8px; left: 20px; font-size: 18px;
+    color: #33ff33; letter-spacing: 3px; z-index: 10; }
+  .map-info { position: fixed; top: 8px; right: 20px; font-size: 14px;
+    color: #22aa22; letter-spacing: 1px; z-index: 10; text-align: right; line-height: 1.4; }
   .map-info .map-name { color: #33ff33; }
-  #btnMenu {
-    position: fixed; bottom: 10px; left: 10px;
+  #btnMenu { position: fixed; bottom: 10px; left: 10px;
     background: #000; border: 2px solid #33ff33; color: #33ff33;
-    font-family: 'VT323', monospace; font-size: 16px;
-    padding: 6px 12px; cursor: pointer; letter-spacing: 2px;
-    box-shadow: 0 0 10px #33ff33; z-index: 100;
-  }
+    font-family: 'VT323', monospace; font-size: 16px; padding: 6px 12px;
+    cursor: pointer; letter-spacing: 2px; box-shadow: 0 0 10px #33ff33; z-index: 100; }
   #btnMenu:hover { background: #33ff33; color: #000; }
 
-  #hordeBanner {
-    position: fixed; top: 40%; left: 50%;
-    transform: translate(-50%, -50%) scale(0);
-    font-size: 70px; color: #ff3333;
+  #hordeBanner { position: fixed; top: 40%; left: 50%;
+    transform: translate(-50%, -50%) scale(0); font-size: 70px; color: #ff3333;
     text-shadow: 0 0 30px #ff3333, 0 0 60px #ff3333;
-    letter-spacing: 8px; z-index: 1500;
-    pointer-events: none; opacity: 0;
-    white-space: nowrap;
-  }
+    letter-spacing: 8px; z-index: 1500; pointer-events: none; opacity: 0;
+    white-space: nowrap; }
   #hordeBanner.show { animation: hordeIntro 2.5s ease-out forwards; }
-  #hordeBanner.boss { color: #66ff33; text-shadow: 0 0 40px #66ff33, 0 0 80px #66ff33; }
+  #hordeBanner.boss { color: #ff2200; text-shadow: 0 0 40px #ff2200, 0 0 80px #ff2200; }
   @keyframes hordeIntro {
     0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
     15% { transform: translate(-50%, -50%) scale(1.3); opacity: 1; }
@@ -549,58 +300,14 @@
     80% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
     100% { transform: translate(-50%, -50%) scale(1.1); opacity: 0; }
   }
-
-  /* MOBILE */
-  body.mode-mobile {
-    flex-direction: column; justify-content: flex-start;
-    align-items: center; padding: 4px; gap: 4px;
-  }
-  body.mode-mobile #game {
-    flex-direction: column; gap: 6px; width: 100%; align-items: center;
-  }
-  body.mode-mobile canvas#canvas {
-    width: min(96vw, 96vh, 480px); height: auto; aspect-ratio: 1 / 1;
-  }
-  body.mode-mobile #ui {
-    width: min(96vw, 480px); max-height: 40vh;
-    padding: 8px; font-size: 14px; overflow-y: auto;
-  }
-  body.mode-mobile .troops-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; }
-  body.mode-mobile .tower-btn { font-size: 12px; padding: 6px 5px; }
-  body.mode-mobile .stat-line { font-size: 9px; }
-  body.mode-mobile .title { font-size: 13px; top: 4px; left: 8px; }
-  body.mode-mobile .map-info { font-size: 11px; top: 4px; right: 8px; }
-  body.mode-mobile #btnMenu {
-    position: static; margin: 6px auto 0 auto; display: block;
-    font-size: 14px; padding: 5px 10px;
-  }
-  body.mode-mobile #soundBtn { top: 26px; font-size: 12px; }
-  body.mode-mobile #hordeBanner { font-size: 44px; }
-  body.mode-mobile #msg { font-size: 16px; padding: 8px 16px; }
-  body.mode-mobile #deckGrid, body.mode-mobile #upgradeGrid {
-    grid-template-columns: repeat(2, 1fr); gap: 4px;
-  }
-  body.mode-mobile .deck-card, body.mode-mobile .upgrade-card { padding: 5px; }
-  body.mode-mobile .deck-card .card-name, body.mode-mobile .upgrade-card .u-name { font-size: 12px; }
-  body.mode-mobile .deck-card .card-cost { font-size: 10px; }
-  body.mode-mobile .deck-card .card-stat, body.mode-mobile .upgrade-card .u-stats { font-size: 9px; }
-  body.mode-mobile .screen h2 { font-size: 22px; }
-  body.mode-mobile .action-btn { font-size: 14px; padding: 8px 14px; }
-  body.mode-mobile #mapSelectGrid { grid-template-columns: repeat(2, 1fr); gap: 6px; }
-  body.mode-mobile .map-card .map-preview { height: 80px; }
-  body.mode-mobile .map-card .map-name { font-size: 14px; }
-  body.mode-mobile .map-card .map-desc { font-size: 10px; }
-  body.mode-mobile .editor-tools { width: 100%; flex-direction: row; flex-wrap: wrap; }
-  body.mode-mobile .editor-tool { flex: 1 1 30%; font-size: 12px; padding: 8px 4px; }
 </style>
 </head>
 <body>
 
-<!-- ============ SOM ============ -->
 <button id="soundBtn">🔊 SOM: ON</button>
 <button id="secretBtn">✱</button>
 
-<!-- ============ MENU ============ -->
+<!-- MENU -->
 <div id="menu" class="screen active">
   <h1>◄ TOWER DEFENSE ►</h1>
   <div class="subtitle">1 9 7 0</div>
@@ -619,7 +326,7 @@
   </div>
 </div>
 
-<!-- ============ DECK SCREEN ============ -->
+<!-- DECK -->
 <div id="deckScreen" class="screen">
   <h2>◄ ESCOLHA SEU DECK ►</h2>
   <div class="info-line" id="deckInfo">
@@ -635,7 +342,7 @@
   </div>
 </div>
 
-<!-- ============ UPGRADE SCREEN ============ -->
+<!-- UPGRADE -->
 <div id="upgradeScreen" class="screen">
   <h2 style="color:#66ddff;text-shadow:0 0 15px #66ddff;">⭐ APRIMORAMENTO ⭐</h2>
   <div class="info-line" style="color:#66ddff;">💎 <span id="upgradeCrystals">0</span> CRISTAIS DISPONÍVEIS</div>
@@ -645,7 +352,7 @@
   </div>
 </div>
 
-<!-- ============ MAP SELECT SCREEN ============ -->
+<!-- MAP SELECT -->
 <div id="mapSelectScreen" class="screen">
   <h2>🗺️ ESCOLHA O MAPA 🗺️</h2>
   <div class="info-line">Selecione o terreno da batalha</div>
@@ -663,7 +370,7 @@
   </div>
 </div>
 
-<!-- ============ SECRET MODAL ============ -->
+<!-- SECRET MODAL -->
 <div id="secretModal">
   <div class="secret-box">
     <h3>🔐 ACESSO RESTRITO</h3>
@@ -675,7 +382,7 @@
   </div>
 </div>
 
-<!-- ============ ADMIN PANEL ============ -->
+<!-- ADMIN PANEL -->
 <div id="adminPanel">
   <h2>🔐 ZONA SECRETA</h2>
   <div class="admin-sub">ACESSO RESTRITO · ADM</div>
@@ -691,7 +398,7 @@
   </div>
 </div>
 
-<!-- ============ MAP EDITOR ============ -->
+<!-- MAP EDITOR -->
 <div id="editorScreen">
   <h2>🗺️ EDITOR DE MAPAS</h2>
   <input type="text" class="editor-name-input" id="editorName" placeholder="Nome do mapa..." maxlength="30">
@@ -704,15 +411,14 @@
       <div class="editor-info" id="editorInfo">Pontos: 0</div>
       <button class="editor-tool warn" id="editorUndo">⏪ DESFAZER</button>
       <button class="editor-tool warn" id="editorClear">🗑️ LIMPAR</button>
-      <button class="editor-tool cyan" id="editorExport">📤 EXPORTAR</button>
-      <button class="editor-tool cyan" id="editorImport">📥 IMPORTAR</button>
-      <button class="editor-tool cyan" id="editorSave" style="border-color:#ffd700;color:#ffd700;">💾 SALVAR</button>
+      <button class="editor-tool cyan" id="editorExport" style="border-color:#66ddff;">📤 EXPORTAR</button>
+      <button class="editor-tool cyan" id="editorImport" style="border-color:#66ddff;">📥 IMPORTAR</button>
+      <button class="editor-tool" id="editorSave" style="border-color:#ffd700;color:#ffd700;">💾 SALVAR</button>
       <button class="editor-tool danger" id="editorClose">◄ SAIR</button>
     </div>
   </div>
 </div>
 
-<!-- ============ CUSTOM MAP MODAL (dentro do editor) ============ -->
 <div id="customMapModal">
   <div class="secret-box" style="border-color:#66ddff;">
     <h3 style="color:#66ddff;text-shadow:0 0 10px #66ddff;">📋 CÓDIGO DO MAPA</h3>
@@ -724,8 +430,8 @@
   </div>
 </div>
 
-<!-- ============ GAME ============ -->
-<div class="title" id="titleBar" style="display:none;">◄ TOWER DEFENSE · v19 ►</div>
+<!-- GAME -->
+<div class="title" id="titleBar" style="display:none;">◄ TOWER DEFENSE · v20 ►</div>
 <div class="map-info" id="mapInfoBar" style="display:none;">
   MAPA: <span class="map-name" id="mapName">---</span><br>
   30m × 30m · 1m = 16px<br>
@@ -735,7 +441,7 @@
 <div id="hordeBanner">⚠ HORDA ⚠</div>
 
 <div id="bossHpBar">
-  <div class="boss-label">👹 OGRO</div>
+  <div class="boss-label" id="bossLabel">👹 BOSS</div>
   <div class="boss-bar-outer">
     <div class="boss-bar-inner" id="bossBarInner"></div>
   </div>
@@ -827,6 +533,14 @@ const Sound = (() => {
     explosion() { noise(0.35, 0.25, 600); tone(60, 0.35, 'sawtooth', 0.2, 20); },
     bigExplosion() { noise(0.6, 0.35, 500); tone(40, 0.6, 'sawtooth', 0.3, 10); },
     ogroPound() { noise(0.4, 0.4, 300); tone(50, 0.5, 'square', 0.3, 15); },
+    spiderWeb() { tone(1800, 0.15, 'sine', 0.15, 400); },
+    poisonCloud() { noise(0.6, 0.2, 200); },
+    earthquake() { noise(0.3, 0.3, 150); tone(40, 0.4, 'square', 0.25, 20); },
+    starkShot() { tone(400, 0.1, 'square', 0.2, 600); },
+    barrilWarning() { tone(200, 0.15, 'triangle', 0.25); },
+    barrilExplode() { noise(0.4, 0.35, 500); tone(80, 0.4, 'sawtooth', 0.25, 20); },
+    medusaGaze() { tone(300, 0.2, 'sine', 0.2, 100); },
+    stoneShatter() { noise(0.3, 0.25, 800); tone(150, 0.3, 'square', 0.2, 60); },
     enemyHit() { tone(400, 0.03, 'square', 0.08, 200); },
     enemyDeath() { tone(300, 0.08, 'square', 0.15, 100); },
     playerHit() { tone(200, 0.3, 'sawtooth', 0.3, 60); noise(0.2, 0.2, 400); },
@@ -835,6 +549,7 @@ const Sound = (() => {
     coin() { tone(800, 0.08, 'square', 0.2, 1200); tone(1200, 0.08, 'square', 0.15, 1600); },
     newWave() { tone(400, 0.1, 'square', 0.15); setTimeout(() => tone(600, 0.1, 'square', 0.15), 100); setTimeout(() => tone(800, 0.15, 'square', 0.2), 200); },
     bossAlert() { tone(80, 0.3, 'sawtooth', 0.3, 40); setTimeout(() => tone(60, 0.3, 'sawtooth', 0.3, 30), 350); setTimeout(() => tone(40, 0.5, 'sawtooth', 0.35, 20), 700); },
+    bossSpawn() { tone(120, 0.4, 'sawtooth', 0.3, 60); noise(0.5, 0.3, 300); },
     gameOver() { tone(400, 0.4, 'square', 0.3, 200); setTimeout(() => tone(200, 0.4, 'square', 0.3, 100), 400); setTimeout(() => tone(100, 0.8, 'square', 0.3, 40), 800); },
     error() { tone(150, 0.15, 'square', 0.2, 100); },
     select() { tone(1000, 0.03, 'square', 0.1); },
@@ -856,6 +571,7 @@ const YELLOW = '#ffff33';
 const CYAN = '#33ffff';
 const ICE = '#88ddff';
 const FROZEN = '#66ccff';
+const STONE = '#8a8a8a';
 const RED = '#ff3333';
 const FIRE = '#ff6600';
 const FIRE_BRIGHT = '#ffaa33';
@@ -863,6 +579,7 @@ const WHITE = '#ffffff';
 const ORANGE = '#ffaa33';
 const GOLD = '#ffd700';
 const TOXIC = '#66ff33';
+const POISON = '#88dd44';
 const PURPLE = '#aa66ff';
 const SHIELD = '#66ddff';
 const TESLA = '#ffff66';
@@ -870,46 +587,37 @@ const BOXER = '#ff6644';
 const AIR = '#88ffee';
 const DRONE = '#66eeff';
 const CRYSTAL = '#66ddff';
-const OGRE = '#66ff33';
-const OGRE_DARK = '#2a5a1a';
+const OGRE_COL = '#66ff33';
+const SPIDER_COL = '#aa66ff';
+const CENTAUR_COL = '#8b5a2b';
+const STARK_COL = '#ff4444';
+const MEDUSA_COL = '#66ff66';
 const LORD_GOLD = '#ffd700';
 const LORD_PURPLE = '#aa66ff';
 
 // ============ 3 MAPAS OFICIAIS ============
 const OFFICIAL_MAPS = [
-  {
-    id: 'zigue',
-    name: 'ZIGUE-ZAGUE',
-    desc: 'Clássico · Equilibrado',
+  { id: 'zigue', name: 'ZIGUE-ZAGUE', desc: 'Clássico · Equilibrado',
     path: [
       {x: 0, y: 64}, {x: 120, y: 64}, {x: 120, y: 180},
       {x: 300, y: 180}, {x: 300, y: 90}, {x: 420, y: 90},
       {x: 420, y: 300}, {x: 150, y: 300}, {x: 150, y: 240},
       {x: 480, y: 240}
-    ]
-  },
-  {
-    id: 'espiral',
-    name: 'ESPIRAL',
-    desc: 'Longo · Defesa profunda',
+    ]},
+  { id: 'espiral', name: 'ESPIRAL', desc: 'Longo · Defesa profunda',
     path: [
       {x: 0, y: 48}, {x: 432, y: 48}, {x: 432, y: 432},
       {x: 48, y: 432}, {x: 48, y: 128}, {x: 336, y: 128},
       {x: 336, y: 336}, {x: 144, y: 336}, {x: 144, y: 240},
       {x: 240, y: 240}
-    ]
-  },
-  {
-    id: 'labirinto',
-    name: 'LABIRINTO',
-    desc: 'Curto · Difícil',
+    ]},
+  { id: 'labirinto', name: 'LABIRINTO', desc: 'Curto · Difícil',
     path: [
       {x: 0, y: 48}, {x: 320, y: 48}, {x: 320, y: 128},
       {x: 80, y: 128}, {x: 80, y: 208}, {x: 400, y: 208},
       {x: 400, y: 288}, {x: 80, y: 288}, {x: 80, y: 368},
       {x: 400, y: 368}, {x: 400, y: 440}, {x: 480, y: 440}
-    ]
-  }
+    ]}
 ];
 
 // ============ PROGRESSÃO DE ESTRELAS ============
@@ -998,7 +706,6 @@ const STAR_PROGRESSION = {
     { hp: 220, range: 6 * PPM, duration: 240, fireRate: 660 },
     { hp: 350, range: 7 * PPM, duration: 300, fireRate: 480 }
   ],
-  // LORD — personagem ADM, não tem estrelas (sempre nível máximo)
   lord: [
     { hp: 500, damage: 1000, range: 15 * PPM, fireRate: 120, isLord: true, healPerSec: 50, splash: 3 * PPM }
   ]
@@ -1028,32 +735,15 @@ const TOWER_ORDER = ['recruta','boxeador','drone','faca','sniper','metralhadora'
 function loadCrystals() { try { return parseInt(localStorage.getItem('td_crystals')) || 0; } catch(e) { return 0; } }
 function saveCrystals(n) { try { localStorage.setItem('td_crystals', n.toString()); } catch(e) {} }
 function loadStars() {
-  try {
-    const s = localStorage.getItem('td_stars');
-    if (s) return JSON.parse(s);
-  } catch(e) {}
-  const empty = {};
-  for (const t of TOWER_ORDER) empty[t] = 0;
-  return empty;
+  try { const s = localStorage.getItem('td_stars'); if (s) return JSON.parse(s); } catch(e) {}
+  const empty = {}; for (const t of TOWER_ORDER) empty[t] = 0; return empty;
 }
 function saveStars(s) { try { localStorage.setItem('td_stars', JSON.stringify(s)); } catch(e) {} }
 function loadLordUnlocked() { try { return localStorage.getItem('td_lord') === '1'; } catch(e) { return false; } }
 function saveLordUnlocked(v) { try { localStorage.setItem('td_lord', v ? '1' : '0'); } catch(e) {} }
-function loadCustomMaps() {
-  try {
-    const s = localStorage.getItem('td_custom_maps');
-    if (s) return JSON.parse(s);
-  } catch(e) {}
-  return [];
-}
+function loadCustomMaps() { try { const s = localStorage.getItem('td_custom_maps'); if (s) return JSON.parse(s); } catch(e) {} return []; }
 function saveCustomMaps(maps) { try { localStorage.setItem('td_custom_maps', JSON.stringify(maps)); } catch(e) {} }
-function loadDeck() {
-  try {
-    const saved = localStorage.getItem('td_deck');
-    if (saved) return JSON.parse(saved) || [];
-  } catch(e) {}
-  return [];
-}
+function loadDeck() { try { const s = localStorage.getItem('td_deck'); if (s) return JSON.parse(s); } catch(e) {} return []; }
 function saveDeck() { try { localStorage.setItem('td_deck', JSON.stringify(selectedDeck)); } catch(e) {} }
 
 let crystals = loadCrystals();
@@ -1078,12 +768,15 @@ let pathWidth = 32;
 let playerHp = PLAYER_MAX_HP;
 let bossActive = false;
 let bossRef = null;
+let currentBossType = null;
 let dragging = null;
 let selectedTowerType = null;
 let pointerDownInfo = null;
 let shakeAmount = 0;
 let screenFlash = 0;
 let screenFlashColor = '51,255,51';
+let waveComplete = false; // flag pra controlar transição
+let waveTransitionTimer = 0;
 
 const towers = [];
 const enemies = [];
@@ -1104,6 +797,11 @@ const teslaBolts = [];
 const paradoxZones = [];
 const airTrails = [];
 const lordAuras = [];
+const webProjectiles = [];   // Aracnídeo
+const poisonClouds = [];      // Aracnídeo
+const barrils = [];           // Stark
+const petrifyCones = [];      // Medusa visual
+const medusaWaves = [];       // Medusa
 
 function getTowerStats(type) {
   const level = type === 'lord' ? 0 : (stars[type] || 0);
@@ -1126,17 +824,11 @@ function getTowerStats(type) {
     healPerSec: prog.healPerSec || 0
   };
 }
-
-function getMerchantCost() {
-  const aliveMerchants = towers.filter(t => t.isMerchant).length;
-  return 400 + aliveMerchants * 100;
-}
-function getCostForType(type) {
-  if (type === 'comerciante') return getMerchantCost();
-  return TOWER_TYPES[type].cost;
-}
+function getMerchantCost() { return 400 + towers.filter(t => t.isMerchant).length * 100; }
+function getCostForType(type) { return type === 'comerciante' ? getMerchantCost() : TOWER_TYPES[type].cost; }
 function speedToPixels(vel) { return ((vel / 20) * PPM) / 60; }
 
+// ============ INIMIGOS ============
 const ENEMY_TYPES = {
   padrao:    { hp: 100, damage: 50,  speed: 100, size: 14, reward: 12, drawStyle: 'square' },
   ofensivo:  { hp: 90,  damage: 150, speed: 90,  size: 14, reward: 20, drawStyle: 'triangle' },
@@ -1148,13 +840,29 @@ const ENEMY_TYPES = {
   clone:     { hp: 120, damage: 60,  speed: 120, size: 14, reward: 18, drawStyle: 'diamond', onDeath: 'clone' },
   minion:    { hp: 50,  damage: 10,  speed: 80,  size: 9,  reward: 4,  drawStyle: 'dot' },
   yeti:      { hp: 500, damage: 50,  speed: 40,  size: 20, reward: 35, armor: 5, drawStyle: 'yeti', aura: 4 * PPM },
-  ogro:      { hp: 5000, damage: 200, speed: 30, size: 50, reward: 500, drawStyle: 'ogro', isBoss: true }
+  // BOSSES
+  ogro:      { hp: 5000, damage: 200, speed: 30, size: 50, reward: 500, drawStyle: 'ogro', isBoss: true, bossName: 'OGRO' },
+  aracnideo: { hp: 4000, damage: 200, speed: 40, size: 45, reward: 600, drawStyle: 'spider', isBoss: true, bossName: 'ARACNÍDEO' },
+  centauro:  { hp: 4800, damage: 210, speed: 50, size: 45, reward: 700, drawStyle: 'centaur', isBoss: true, bossName: 'CENTAURO' },
+  stark:     { hp: 5500, damage: 225, speed: 40, size: 45, reward: 800, drawStyle: 'stark', isBoss: true, bossName: 'CAPITÃO STARK' },
+  medusa:    { hp: 6000, damage: 250, speed: 40, size: 45, reward: 900, drawStyle: 'medusa', isBoss: true, bossName: 'MEDUSA' }
 };
 
 const UNLOCK_WAVE = {
   padrao: 1, ofensivo: 3, velocista: 5, aereo: 7,
   blindado: 8, explosivo: 12, fungo: 15, clone: 20, yeti: 22
 };
+
+// Bosses por onda
+const BOSS_BY_WAVE = {
+  10: 'ogro', 20: 'aracnideo', 30: 'centauro', 40: 'stark', 50: 'medusa'
+  // v21: 60: 'dracula', 70: 'omega', 80: 'blackknight', 90: 'colossos'
+  // v22: 100: 'azazel'
+};
+
+function isBossWave(wave) { return wave in BOSS_BY_WAVE; }
+function getBossType(wave) { return BOSS_BY_WAVE[wave]; }
+function getBossCrystalReward(wave) { return 10 + (Math.floor(wave / 10) - 1) * 10; }
 
 // ============ UTILS ============
 function distToSegment(p, a, b) {
@@ -1213,7 +921,6 @@ function addHealEffect(x, y, amount) {
 }
 function addEnemyHealEffect(x, y, amount) {
   addText(x, y - 15, '+' + amount, TOXIC, 35);
-  for (let i = 0; i < 3; i++) addParticle(x + (Math.random() - 0.5) * 12, y + (Math.random() - 0.5) * 12, { vx: 0, vy: -0.8 - Math.random() * 0.5, life: 30, size: 2, color: TOXIC, friction: 0.97 });
 }
 function addMoneyPop(x, y, amount) { moneyPops.push({ x, y, amount, life: 60, maxLife: 60, vy: -1.2, text: '+$' + amount }); }
 function addCrystalPop(x, y, amount) {
@@ -1228,32 +935,6 @@ function addTeslaBolt(points) { teslaBolts.push({ points, life: 12, maxLife: 12 
 function addAirTrail(x, y) { airTrails.push({ x, y, life: 20, maxLife: 20, vx: (Math.random() - 0.5) * 0.3, vy: 0.3 + Math.random() * 0.5 }); }
 function addLordAura(x, y, range) { lordAuras.push({ x, y, range, life: 8, maxLife: 8 }); }
 
-// ============ UI HELPERS ============
-function showMsg(text) {
-  const m = document.getElementById('msg');
-  m.textContent = text; m.style.display = 'block';
-  clearTimeout(m._t);
-  m._t = setTimeout(() => m.style.display = 'none', 1300);
-}
-function showBanner(text, isBoss) {
-  const b = document.getElementById('hordeBanner');
-  b.textContent = text;
-  b.classList.remove('show');
-  b.classList.toggle('boss', !!isBoss);
-  void b.offsetWidth;
-  b.classList.add('show');
-}
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  if (id) document.getElementById(id).classList.add('active');
-}
-function updateMenuCrystals() {
-  document.getElementById('menuCrystals').textContent = crystals;
-  const upgC = document.getElementById('upgradeCrystals');
-  if (upgC) upgC.textContent = crystals;
-}
-
-// ============ DAMAGE ============
 function damagePlayer(amount) {
   playerHp -= amount;
   if (playerHp < 0) playerHp = 0;
@@ -1278,7 +959,7 @@ function healPlayer(amount) {
 function updateGameUI() {
   document.getElementById('gold').textContent = gold;
   document.getElementById('wave').textContent = waveNum;
-  document.getElementById('playerHpNum').textContent = playerHp;
+  document.getElementById('playerHpNum').textContent = Math.round(playerHp);
 
   const pct = playerHp / PLAYER_MAX_HP;
   const bar = document.getElementById('playerHpBarInner');
@@ -1289,8 +970,8 @@ function updateGameUI() {
   else if (pct <= 0.5) { bar.classList.add('mid'); }
 
   const hordeInd = document.getElementById('hordeIndicator');
-  if (bossActive) hordeInd.textContent = '👹 OGRO ATIVO';
-  else if (waveNum > 0 && (waveNum + 1) % 10 === 0) hordeInd.textContent = 'PRÓXIMA: OGRO';
+  if (bossActive && bossRef) hordeInd.textContent = '👹 ' + (bossRef.bossName || 'BOSS') + ' ATIVO';
+  else if (waveNum > 0 && isBossWave(waveNum + 1)) hordeInd.textContent = 'PRÓXIMA: BOSS';
   else hordeInd.textContent = '';
 
   document.querySelectorAll('.tower-btn').forEach(btn => {
@@ -1316,6 +997,8 @@ function updateGameUI() {
     const inner = document.getElementById('bossBarInner');
     inner.style.width = (bp * 100) + '%';
     inner.classList.toggle('low', bp < 0.3);
+    const label = document.getElementById('bossLabel');
+    label.textContent = '👹 ' + (bossRef.bossName || 'BOSS');
   } else {
     bossBar.style.display = 'none';
   }
@@ -1346,9 +1029,7 @@ function tryPlace(x, y, type) {
   const stats = getTowerStats(type);
   const lvl = type === 'lord' ? 3 : (stars[type] || 0);
   towers.push({
-    x, y, type,
-    cost: actualCost,
-    starLevel: lvl,
+    x, y, type, cost: actualCost, starLevel: lvl,
     range: stats.range, damage: stats.damage,
     fireRate: stats.fireRate, splash: stats.splash,
     heal: stats.heal, isHealer: def.isHealer || false,
@@ -1382,7 +1063,6 @@ function tryPlace(x, y, type) {
   return true;
 }
 
-// ============ INPUT ============
 document.addEventListener('pointermove', e => {
   if (pointerDownInfo && pointerDownInfo.source === 'button' && !dragging) {
     const dx = e.clientX - pointerDownInfo.x;
@@ -1443,6 +1123,21 @@ document.addEventListener('keydown', e => {
   }
 });
 
+function showMsg(text) {
+  const m = document.getElementById('msg');
+  m.textContent = text; m.style.display = 'block';
+  clearTimeout(m._t);
+  m._t = setTimeout(() => m.style.display = 'none', 1300);
+}
+function showBanner(text, isBoss) {
+  const b = document.getElementById('hordeBanner');
+  b.textContent = text;
+  b.classList.remove('show');
+  b.classList.toggle('boss', !!isBoss);
+  void b.offsetWidth;
+  b.classList.add('show');
+}
+
 // ============ SPAWN ============
 function spawnEnemy(typeKey, x, y, wp, overrideHp, overrideDmg) {
   const t = ENEMY_TYPES[typeKey];
@@ -1459,7 +1154,7 @@ function spawnEnemy(typeKey, x, y, wp, overrideHp, overrideDmg) {
     type: typeKey, x: ex, y: ey, wp: startWp,
     hp, maxHp: hp, damage: dmg,
     speed: speedToPixels(t.speed), baseSpeed: speedToPixels(t.speed),
-    frozen: 0, iceFrozen: 0,
+    frozen: 0, iceFrozen: 0, petrified: 0,
     reward: t.reward, size: t.size, armor: t.armor || 0,
     drawStyle: t.drawStyle, onDeath: t.onDeath || null,
     aura: t.aura || 0,
@@ -1468,16 +1163,25 @@ function spawnEnemy(typeKey, x, y, wp, overrideHp, overrideDmg) {
     fireTimer: 0, fireTickTimer: 0,
     spawnAnim: t.isBoss ? 40 : 15, hitFlash: 0, lastTrailTime: 0, lastHealTick: 0,
     isBoss: t.isBoss || false,
+    bossName: t.bossName || '',
     stepTimer: 0, crackLevel: 0,
-    lastPoundHp: hp, poundThreshold: 1000
+    // Boss-specific
+    specialTimer: 0,        // usado por vários bosses
+    specialTimer2: 0,       // timer 2
+    poisonWaveFired: false, // aracnídeo
+    barrilCounter: 0,       // stark
+    medusaWaveFired: false  // medusa
   };
   enemies.push(enemy);
   if (t.isBoss) {
-    bossActive = true; bossRef = enemy;
-    addShockwave(ex, ey, OGRE, 120, 45);
-    burst(ex, ey, 50, { speed: 6, life: 40, size: 4, color: OGRE });
-    addFlash(0.5, '102,255,51'); addShake(12);
+    bossActive = true; bossRef = enemy; currentBossType = typeKey;
+    const bossCol = typeKey === 'ogro' ? OGRE_COL : typeKey === 'aracnideo' ? SPIDER_COL : typeKey === 'centauro' ? CENTAUR_COL : typeKey === 'stark' ? STARK_COL : MEDUSA_COL;
+    addShockwave(ex, ey, bossCol, 120, 45);
+    burst(ex, ey, 50, { speed: 6, life: 40, size: 4, color: bossCol });
+    addFlash(0.5, '255,51,51');
+    addShake(12);
     Sound.bossAlert();
+    setTimeout(() => Sound.bossSpawn(), 500);
   } else if (t.isAir) {
     addShockwave(ex, ey - t.airHeight, AIR, 25, 15);
     burst(ex, ey - t.airHeight, 10, { speed: 2.5, life: 20, size: 2, color: AIR });
@@ -1514,12 +1218,10 @@ function getWaveComposition(wave) {
   }
   return queue;
 }
-function isBossWave(wave) { return wave > 0 && wave % 10 === 0; }
-function getBossHp(wave) { return Math.floor(5000 * Math.pow(1.5, (wave / 10) - 1)); }
-function getBossDamage(wave) { return Math.floor(200 * Math.pow(1.2, (wave / 10) - 1)); }
-function getBossCrystalReward(wave) { return 10 + (Math.floor(wave / 10) - 1) * 20; }
 
-// ============ CLEAR FIELD ============
+function getBossHp(wave) { return Math.floor(5000 * Math.pow(1.5, (wave / 10) - 1)); }
+
+// ============ LIMPAR CAMPO ============
 function clearFieldForBoss() {
   let goldBonus = 0;
   const toRemove = [...enemies];
@@ -1528,18 +1230,18 @@ function clearFieldForBoss() {
     const idx = enemies.indexOf(e);
     if (idx === -1) continue;
     goldBonus += Math.floor(e.reward * 0.1);
-    burst(e.x, e.y - (e.airHeight || 0), 12, { speed: 5, life: 25, size: 3, color: OGRE });
-    addShockwave(e.x, e.y - (e.airHeight || 0), OGRE, 30, 18);
+    burst(e.x, e.y - (e.airHeight || 0), 12, { speed: 5, life: 25, size: 3, color: RED });
+    addShockwave(e.x, e.y - (e.airHeight || 0), RED, 30, 18);
     enemies.splice(idx, 1);
   }
   gold += goldBonus;
   if (goldBonus > 0) addText(canvas.width / 2, canvas.height / 2 - 40, 'LIMPEZA! +' + goldBonus + ' ouro', GOLD, 90, 26);
   Sound.bigExplosion();
-  addFlash(0.5, '102,255,51'); addShake(10);
+  addFlash(0.5, '255,51,51'); addShake(10);
   updateGameUI();
 }
 
-// ============ WAVE START ============
+// ============ WAVE FLOW ============
 let waveQueue = [];
 let spawnCooldown = 0;
 let waveDelay = 0;
@@ -1547,17 +1249,28 @@ let waveActive = false;
 
 function startWave() {
   waveNum++;
-  bossActive = false; bossRef = null;
+  bossActive = false; bossRef = null; currentBossType = null;
+  waveComplete = false;
+  waveTransitionTimer = 0;
+
+  // Limpar listas de boss
+  webProjectiles.length = 0;
+  poisonClouds.length = 0;
+  barrils.length = 0;
+  petrifyCones.length = 0;
+  medusaWaves.length = 0;
 
   if (isBossWave(waveNum)) {
+    const bossType = getBossType(waveNum);
+    const bossDef = ENEMY_TYPES[bossType];
     waveQueue = []; waveActive = true;
-    showBanner('👹 OGRO 👹', true);
-    addFlash(0.6, '102,255,51'); addShake(15);
-    const hp = getBossHp(waveNum);
-    const dmg = getBossDamage(waveNum);
+    showBanner('👹 ' + bossDef.bossName + ' 👹', true);
+    addFlash(0.6, '255,51,51'); addShake(15);
+    const hp = bossDef.hp;
+    const dmg = bossDef.damage;
     setTimeout(() => {
       clearFieldForBoss();
-      setTimeout(() => spawnEnemy('ogro', undefined, undefined, undefined, hp, dmg), 300);
+      setTimeout(() => spawnEnemy(bossType, undefined, undefined, undefined, hp, dmg), 300);
     }, 1500);
     spawnCooldown = 0;
     updateGameUI();
@@ -1574,9 +1287,7 @@ function startWave() {
 // ============ COMBAT HELPERS ============
 function areaExplosion(x, y, damage, radius) {
   addShockwave(x, y, GREEN, radius, 25);
-  addShockwave(x, y, YELLOW, radius * 0.6, 18);
   burst(x, y, 40, { speed: 6, life: 40, size: 3, gravity: 0.2, friction: 0.92 });
-  burst(x, y, 20, { speed: 9, life: 25, size: 2, color: YELLOW, friction: 0.9 });
   addFlash(0.5); addShake(8);
   Sound.bigExplosion();
   const inRange = towers.filter(t => Math.hypot(t.x - x, t.y - y) <= radius);
@@ -1596,55 +1307,8 @@ function areaExplosion(x, y, damage, radius) {
   updateGameUI();
 }
 
-function ogroPound(x, y) {
-  const radius = 5 * PPM;
-  addShockwave(x, y, OGRE, radius, 30);
-  addShockwave(x, y, YELLOW, radius * 1.2, 40);
-  burst(x, y, 40, { speed: 6, life: 40, size: 4, gravity: 0.3, friction: 0.9, color: OGRE });
-  burst(x, y, 25, { speed: 3, life: 50, size: 3, gravity: 0.4, color: '#6b4c2a' });
-  addShake(12); addFlash(0.35, '102,255,51');
-  addText(x, y - 30, 'PISÃO!', OGRE, 70, 24);
-  Sound.ogroPound();
-  const inRange = towers.filter(t => Math.hypot(t.x - x, t.y - y) <= radius);
-  for (const t of inRange) {
-    let dmg = 75;
-    if (t.isProtected) dmg = Math.floor(dmg * (t.protReduction || 0.5));
-    t.hp -= dmg;
-    addText(t.x, t.y - 15, '-' + dmg, OGRE, 55, 18);
-    if (t.hp <= 0) {
-      addShockwave(t.x, t.y, OGRE, 60, 30);
-      burst(t.x, t.y, 30, { speed: 5, life: 35, size: 3, color: OGRE });
-      const idx = towers.indexOf(t);
-      if (idx >= 0) towers.splice(idx, 1);
-      if (t.isHealer) healPlayer(5);
-    }
-  }
-  updateGameUI();
-}
-
-function bossFinalExplosion(x, y) {
-  addShockwave(x, y, OGRE, 128, 35);
-  addShockwave(x, y, YELLOW, 96, 25);
-  burst(x, y, 80, { speed: 8, life: 50, size: 4, gravity: 0.2, friction: 0.9, color: OGRE });
-  addFlash(0.7, '102,255,51'); addShake(18);
-  Sound.bigExplosion();
-  const radius = 8 * PPM;
-  const inRange = towers.filter(t => Math.hypot(t.x - x, t.y - y) <= radius);
-  for (const t of inRange) {
-    let dmg = 100;
-    if (t.isProtected) dmg = Math.floor(dmg * (t.protReduction || 0.5));
-    t.hp -= dmg;
-    addText(t.x, t.y - 15, '-' + dmg, OGRE, 55, 22);
-    if (t.hp <= 0) {
-      const idx = towers.indexOf(t);
-      if (idx >= 0) towers.splice(idx, 1);
-      if (t.isHealer) healPlayer(5);
-    }
-  }
-  updateGameUI();
-}
-
 function damageEnemy(e, amount, fromX, fromY, isFire, ignoreArmor) {
+  if (e.petrified > 0) return; // Petrificado não toma dano? Não... ele toma dano, só não se move
   let dmg = amount;
   if (isFire && e.isBoss) dmg = Math.floor(dmg * 0.5);
   const real = ignoreArmor ? Math.max(1, dmg) : Math.max(1, dmg - (e.armor || 0));
@@ -1652,15 +1316,81 @@ function damageEnemy(e, amount, fromX, fromY, isFire, ignoreArmor) {
   if (!isFire) burst(e.x, e.y - (e.airHeight || 0), 5, { speed: 2, life: 12, size: 1.5, color: e.isAir ? AIR : GREEN_BRIGHT });
   addText(e.x, e.y - (e.airHeight || 0) - e.size - 5, '-' + real, isFire ? FIRE_BRIGHT : (e.isAir ? AIR : GREEN_BRIGHT), 30, e.isBoss ? 18 : 14);
   if (fromX !== undefined && fromY !== undefined) addSpark(fromX, fromY, e.x, e.y - (e.airHeight || 0), e.isAir ? AIR : GREEN_BRIGHT);
-  if (e.isBoss && e.type === 'ogro') {
+
+  // Ogro: pisão a cada 1000 HP
+  if (e.type === 'ogro' && e.isBoss) {
     const hpLost = e.maxHp - e.hp;
-    const poundsExpected = Math.floor(hpLost / e.poundThreshold);
-    const poundsDone = Math.floor((e.maxHp - e.lastPoundHp) / e.poundThreshold);
+    const poundsExpected = Math.floor(hpLost / 1000);
+    const poundsDone = Math.floor((e.maxHp - (e.lastPoundHp || e.maxHp)) / 1000);
     if (poundsExpected > poundsDone) {
-      e.lastPoundHp = e.maxHp - poundsExpected * e.poundThreshold;
+      e.lastPoundHp = e.maxHp - poundsExpected * 1000;
       ogroPound(e.x, e.y);
     }
   }
+  // Stark: barril a cada 1000 HP
+  if (e.type === 'stark' && e.isBoss) {
+    const hpLost = e.maxHp - e.hp;
+    const expected = Math.floor(hpLost / 1000);
+    const done = e.barrilCounter || 0;
+    if (expected > done) {
+      e.barrilCounter = expected;
+      spawnBarril(e.x, e.y);
+    }
+  }
+}
+
+function ogroPound(x, y) {
+  const radius = 5 * PPM;
+  addShockwave(x, y, OGRE_COL, radius, 30);
+  addShockwave(x, y, YELLOW, radius * 1.2, 40);
+  burst(x, y, 40, { speed: 6, life: 40, size: 4, gravity: 0.3, friction: 0.9, color: OGRE_COL });
+  burst(x, y, 25, { speed: 3, life: 50, size: 3, gravity: 0.4, color: '#6b4c2a' });
+  addShake(12); addFlash(0.35, '102,255,51');
+  addText(x, y - 30, 'PISÃO!', OGRE_COL, 70, 24);
+  Sound.ogroPound();
+  const inRange = towers.filter(t => Math.hypot(t.x - x, t.y - y) <= radius);
+  for (const t of inRange) {
+    let dmg = 75;
+    if (t.isProtected) dmg = Math.floor(dmg * (t.protReduction || 0.5));
+    t.hp -= dmg;
+    addText(t.x, t.y - 15, '-' + dmg, OGRE_COL, 55, 18);
+    if (t.hp <= 0) {
+      addShockwave(t.x, t.y, OGRE_COL, 60, 30);
+      burst(t.x, t.y, 30, { speed: 5, life: 35, size: 3, color: OGRE_COL });
+      const idx = towers.indexOf(t);
+      if (idx >= 0) towers.splice(idx, 1);
+      if (t.isHealer) healPlayer(5);
+    }
+  }
+  updateGameUI();
+}
+
+function spawnBarril(x, y) {
+  barrils.push({ x, y, life: 180, maxLife: 180, exploded: false });
+  addShockwave(x, y, STARK_COL, 20, 15);
+  Sound.barrilWarning();
+}
+
+function barrilExplode(x, y) {
+  const radius = 6 * PPM;
+  addShockwave(x, y, STARK_COL, radius, 25);
+  addShockwave(x, y, YELLOW, radius * 0.7, 18);
+  burst(x, y, 40, { speed: 6, life: 35, size: 3, gravity: 0.2, friction: 0.92, color: FIRE });
+  addFlash(0.5); addShake(10);
+  Sound.barrilExplode();
+  const inRange = towers.filter(t => Math.hypot(t.x - x, t.y - y) <= radius);
+  for (const t of inRange) {
+    let dmg = 150;
+    if (t.isProtected) dmg = Math.floor(dmg * (t.protReduction || 0.5));
+    t.hp -= dmg;
+    addText(t.x, t.y - 15, '-' + dmg, FIRE, 55, 18);
+    if (t.hp <= 0) {
+      const idx = towers.indexOf(t);
+      if (idx >= 0) towers.splice(idx, 1);
+      if (t.isHealer) healPlayer(5);
+    }
+  }
+  updateGameUI();
 }
 
 function applyFire(e, fireDmg, fireDur) {
@@ -1674,58 +1404,104 @@ function applyIce(e, iceDur) {
   if (e.type === 'blindado') { e.iceFrozen = Math.floor((iceDur || 90) * 0.5); return; }
   e.iceFrozen = iceDur || 90;
 }
-
-function bazookaExplosion(x, y, damage, radius, split) {
-  addShockwave(x, y, ORANGE, radius, 22);
-  burst(x, y, 50, { speed: 7, life: 40, size: 3, gravity: 0.15, friction: 0.9 });
-  addFlash(0.55); addShake(9);
-  Sound.explosion();
-  const inRange = enemies.filter(e => Math.hypot(e.x - x, (e.y - (e.airHeight || 0)) - y) <= radius);
-  for (const e of inRange) {
-    const dist = Math.hypot(e.x - x, (e.y - (e.airHeight || 0)) - y);
-    const falloff = 1 - (dist / radius) * 0.6;
-    damageEnemy(e, Math.floor(damage * falloff));
-  }
-  if (split) {
-    const ox = x + (Math.random() - 0.5) * radius;
-    const oy = y + (Math.random() - 0.5) * radius;
-    setTimeout(() => {
-      addShockwave(ox, oy, ORANGE, radius * 0.7, 18);
-      burst(ox, oy, 25, { speed: 5, life: 30, size: 3, color: ORANGE });
-      const r2 = enemies.filter(e => Math.hypot(e.x - ox, (e.y - (e.airHeight || 0)) - oy) <= radius * 0.7);
-      for (const e of r2) damageEnemy(e, Math.floor(damage * 0.6));
-    }, 200);
-  }
+function applyPetrify(e, dur) {
+  if (e.isBoss) return;
+  e.petrified = dur;
 }
 
-function findCorrectWaypointForPosition(x, y) {
-  let bestSegIdx = 0, bestDist = Infinity;
-  for (let i = 0; i < path.length - 1; i++) {
-    const d = distToSegment({x, y}, path[i], path[i+1]);
-    if (d < bestDist) { bestDist = d; bestSegIdx = i; }
+// ============ BOSS SKILLS ============
+function aracnideoShootWeb(boss) {
+  // Acha tropa mais próxima dentro de 6m
+  const range = 6 * PPM;
+  let best = null, bestDist = Infinity;
+  for (const t of towers) {
+    const d = Math.hypot(t.x - boss.x, t.y - boss.y);
+    if (d < range && d < bestDist) { bestDist = d; best = t; }
   }
-  return Math.min(bestSegIdx + 1, path.length - 1);
-}
-function spawnCloneMinions(x, y, parentWp) {
-  const parentAngle = parentWp < path.length ? Math.atan2(path[parentWp].y - path[parentWp - 1].y, path[parentWp].x - path[parentWp - 1].x) : 0;
-  for (let i = 0; i < 5; i++) {
-    const spreadAngle = (Math.PI * 2 / 5) * i;
-    const offsetAngle = parentAngle + Math.PI / 2;
-    const perpX = Math.cos(offsetAngle) * 18 * Math.cos(spreadAngle);
-    const perpY = Math.sin(offsetAngle) * 18 * Math.cos(spreadAngle);
-    const fwdX = Math.cos(parentAngle) * 18 * Math.sin(spreadAngle);
-    const fwdY = Math.sin(parentAngle) * 18 * Math.sin(spreadAngle);
-    const mx = x + perpX + fwdX, my = y + perpY + fwdY;
-    const wp = findCorrectWaypointForPosition(mx, my);
-    spawnEnemy('minion', mx, my, wp);
+  if (best) {
+    webProjectiles.push({
+      x: boss.x, y: boss.y, target: best, speed: 6,
+      life: 120
+    });
+    Sound.spiderWeb();
   }
-  addShockwave(x, y, CYAN, 40, 22);
-  burst(x, y, 20, { speed: 4, life: 30, color: CYAN, size: 2 });
 }
-function spawnFungusZone(x, y) {
-  healZones.push({ x, y, radius: 8 * PPM, life: 4 * 60, maxLife: 4 * 60, pulse: 0 });
-  addShockwave(x, y, TOXIC, 8 * PPM, 45);
-  burst(x, y, 25, { speed: 4, life: 40, size: 3, color: TOXIC, gravity: 0.05 });
+
+function aracnideoPoisonWave(boss) {
+  const radius = 8 * PPM;
+  poisonClouds.push({
+    x: boss.x, y: boss.y, radius: radius,
+    life: 5 * 60, maxLife: 5 * 60, tickTimer: 0
+  });
+  addShockwave(boss.x, boss.y, POISON, radius, 40);
+  burst(boss.x, boss.y, 40, { speed: 4, life: 40, size: 3, color: POISON, gravity: 0.05 });
+  addText(boss.x, boss.y - 40, 'VENENO!', POISON, 70, 24);
+  Sound.poisonCloud();
+}
+
+function centauroEarthquake(boss) {
+  // Aura contínua (aplicada por frame em updateEnemies)
+  // Aqui só efeito visual esporádico
+  if (Math.random() < 0.15) {
+    addShockwave(boss.x, boss.y, CENTAUR_COL, 5 * PPM, 15);
+    burst(boss.x + (Math.random() - 0.5) * 80, boss.y + (Math.random() - 0.5) * 80, 8, {
+      speed: 3, life: 25, size: 2, color: '#6b4c2a', gravity: 0.3
+    });
+  }
+}
+
+function starkShoot(boss) {
+  const range = 10 * PPM;
+  let best = null, bestDist = Infinity;
+  for (const t of towers) {
+    const d = Math.hypot(t.x - boss.x, t.y - boss.y);
+    if (d < range && d < bestDist) { bestDist = d; best = t; }
+  }
+  if (best) {
+    bullets.push({
+      x: boss.x, y: boss.y, target: best, damage: 75,
+      speed: 7, type: 'stark', angle: 0
+    });
+    Sound.starkShot();
+  }
+}
+
+function medusaPetrifyWave(boss) {
+  const radius = 20 * PPM;
+  medusaWaves.push({ x: boss.x, y: boss.y, radius: radius, life: 40, maxLife: 40 });
+  addShockwave(boss.x, boss.y, MEDUSA_COL, radius, 45);
+  addShockwave(boss.x, boss.y, STONE, radius * 0.8, 35);
+  addText(boss.x, boss.y - 50, 'PETRIFICAÇÃO!', MEDUSA_COL, 80, 26);
+  addFlash(0.5, '136,255,136');
+  addShake(10);
+  Sound.medusaGaze();
+  // Aplica petrificação em todas as tropas no raio
+  for (const t of towers) {
+    if (Math.hypot(t.x - boss.x, t.y - boss.y) <= radius) {
+      t.petrified = 3 * 60;
+      t.petrifyTimer = 3 * 60;
+    }
+  }
+}
+
+function medusaConeCheck(boss) {
+  // Cone de 3m na frente
+  const coneRange = 3 * PPM;
+  const coneAngle = boss.angle || 0;
+  const spread = Math.PI / 4; // 45 graus
+  for (const t of towers) {
+    const dx = t.x - boss.x, dy = t.y - boss.y;
+    const dist = Math.hypot(dx, dy);
+    if (dist > coneRange) continue;
+    const angle = Math.atan2(dy, dx);
+    let diff = angle - coneAngle;
+    while (diff > Math.PI) diff -= Math.PI * 2;
+    while (diff < -Math.PI) diff += Math.PI * 2;
+    if (Math.abs(diff) < spread) {
+      // Tá no cone
+      t.inMedusaCone = true;
+    }
+  }
 }
 
 // ============ LOOP ============
@@ -1737,25 +1513,43 @@ function loop(time) {
   lastTime = time;
   if (paused || gameOver) { draw(); return; }
 
-  // Waves
+  // Spawn de inimigos comuns
   if (waveActive && waveQueue.length > 0) {
     spawnCooldown -= dt;
     if (spawnCooldown <= 0) {
       spawnEnemy(waveQueue.shift());
       spawnCooldown = 45;
     }
-  } else if (waveActive && waveQueue.length === 0 && enemies.length === 0 && !isBossWave(waveNum)) {
-    waveActive = false; waveDelay = 90;
-  } else if (waveActive && isBossWave(waveNum) && enemies.length === 0) {
-    waveActive = false; bossActive = false; bossRef = null; waveDelay = 120;
+  } else if (waveActive && waveQueue.length === 0 && enemies.length === 0) {
+    // Wave normal completa
+    if (!waveComplete) {
+      waveComplete = true;
+      waveTransitionTimer = 90;
+    }
   }
-  if (waveDelay > 0) { waveDelay -= dt; if (waveDelay <= 0) startWave(); }
 
+  // Transição de wave
+  if (waveComplete && waveTransitionTimer > 0) {
+    waveTransitionTimer -= dt;
+    if (waveTransitionTimer <= 0) {
+      waveActive = false;
+      startWave();
+    }
+  }
+
+  // Tropas: reset
   for (const t of towers) {
     t.frozenByYeti = false; t.isProtected = false; t.protReduction = 0.5;
     if (t.punchAnim > 0) t.punchAnim -= dt * 2;
     if (t.isDrone) t.droneRotorAngle += dt * 0.8;
+    if (t.petrifyTimer > 0) t.petrifyTimer -= dt;
+    // Medusa cone - reset por frame
+    // (aplicado em check abaixo)
   }
+  // Medusa cone: reset
+  for (const t of towers) t.inMedusaCone = false;
+
+  // Defensor protection
   for (const t of towers) {
     if (t.isDefensor) {
       t.defensorPulse = (t.defensorPulse || 0) + dt * 0.08;
@@ -1768,25 +1562,31 @@ function loop(time) {
     }
   }
 
-  // LORD Auras
+  // Lord aura
   for (const t of towers) {
     if (t.isLord) {
       if (Math.random() < 0.3) addLordAura(t.x, t.y, t.range);
       for (const o of towers) {
         if (o === t) continue;
         if (Math.hypot(o.x - t.x, o.y - t.y) <= t.range) {
-          const heal = t.healPerSec * dt / 60;
-          o.hp = Math.min(o.maxHp, o.hp + heal);
+          o.hp = Math.min(o.maxHp, o.hp + t.healPerSec * dt / 60);
         }
       }
     }
   }
 
-  // Enemies
+  // ====== ENEMIES ======
   for (let i = enemies.length - 1; i >= 0; i--) {
     const e = enemies[i];
     if (e.spawnAnim > 0) e.spawnAnim -= dt;
     if (e.hitFlash > 0) e.hitFlash -= dt;
+
+    // Petrification (medusa) — não anda, mas toma dano
+    if (e.petrified > 0) {
+      e.petrified -= dt;
+      continue;
+    }
+
     if (e.iceFrozen > 0) {
       e.iceFrozen -= dt;
       if (Math.random() < 0.3) addParticle(e.x + (Math.random() - 0.5) * e.size, e.y + (Math.random() - 0.5) * e.size, { vx: 0, vy: -0.4, life: 20, size: 2, color: FROZEN, friction: 0.97 });
@@ -1796,60 +1596,117 @@ function loop(time) {
     for (const z of paradoxZones) {
       if (Math.hypot(e.x - z.x, e.y - z.y) <= z.radius) { frozenByParadox = true; break; }
     }
+
+    // ====== BOSS SKILLS ======
     if (e.isBoss) {
-      e.stepTimer -= dt;
-      if (e.stepTimer <= 0) {
-        e.stepTimer = 120; addShake(0.8);
-        for (let k = 0; k < 6; k++) addParticle(e.x + (Math.random() - 0.5) * e.size, e.y + e.size/2 + Math.random() * 6, { vx: (Math.random() - 0.5) * 1, vy: -0.5 - Math.random() * 0.5, life: 60, size: 3, color: Math.random() < 0.5 ? OGRE : ORANGE, friction: 0.95 });
+      // Ogro: passos pesados
+      if (e.type === 'ogro') {
+        e.stepTimer -= dt;
+        if (e.stepTimer <= 0) {
+          e.stepTimer = 120; addShake(0.8);
+          for (let k = 0; k < 6; k++) addParticle(e.x + (Math.random() - 0.5) * e.size, e.y + e.size/2 + Math.random() * 6, { vx: (Math.random() - 0.5) * 1, vy: -0.5 - Math.random() * 0.5, life: 60, size: 3, color: Math.random() < 0.5 ? OGRE_COL : ORANGE, friction: 0.95 });
+        }
+      }
+      // Aracnídeo: teia + veneno
+      if (e.type === 'aracnideo') {
+        e.specialTimer = (e.specialTimer || 0) - dt;
+        if (e.specialTimer <= 0) {
+          e.specialTimer = 300;
+          aracnideoShootWeb(e);
+        }
+        // Veneno aos 50%
+        if (!e.poisonWaveFired && e.hp <= e.maxHp * 0.5) {
+          e.poisonWaveFired = true;
+          aracnideoPoisonWave(e);
+        }
+      }
+      // Centauro: terremoto contínuo
+      if (e.type === 'centauro') {
+        centauroEarthquake(e);
+        // Dano contínuo em tropas próximas
+        const auraR = 5 * PPM;
+        for (const t of towers) {
+          if (Math.hypot(t.x - e.x, t.y - e.y) <= auraR) {
+            let dmg = 50 * dt / 60;
+            if (t.isProtected) dmg *= (1 - t.protReduction);
+            t.hp -= dmg;
+            if (t.hp <= 0) {
+              addShockwave(t.x, t.y, CENTAUR_COL, 60, 30);
+              burst(t.x, t.y, 30, { speed: 5, life: 35, size: 3, color: CENTAUR_COL });
+              const idx = towers.indexOf(t);
+              if (idx >= 0) towers.splice(idx, 1);
+              if (t.isHealer) healPlayer(5);
+            }
+          }
+        }
+      }
+      // Stark: tiro
+      if (e.type === 'stark') {
+        e.specialTimer = (e.specialTimer || 0) - dt;
+        if (e.specialTimer <= 0) {
+          e.specialTimer = 300;
+          starkShoot(e);
+        }
+      }
+      // Medusa: cone + onda
+      if (e.type === 'medusa') {
+        medusaConeCheck(e);
+        if (!e.medusaWaveFired && e.hp <= e.maxHp * 0.5) {
+          e.medusaWaveFired = true;
+          medusaPetrifyWave(e);
+        }
       }
     }
+
+    // ====== MOVIMENTO ======
+    if (!frozenByParadox) {
+      const target = path[e.wp];
+      if (!target) {
+        // Chegou ao fim
+        damagePlayer(e.damage);
+        burst(e.x, e.y - (e.airHeight || 0), 14, { speed: 4, life: 22, size: 2, color: RED });
+        addShockwave(e.x, e.y - (e.airHeight || 0), RED, 30, 18);
+        if (e.isBoss) { addShake(10); addFlash(0.5, '255,51,51'); }
+        enemies.splice(i, 1); continue;
+      }
+      // Atualiza angle do boss (Medusa usa)
+      const dx = target.x - e.x, dy = target.y - e.y;
+      e.angle = Math.atan2(dy, dx);
+      e.lastTrailTime -= dt;
+      if (e.lastTrailTime <= 0 && e.baseSpeed > 0.5 && !e.isAir) {
+        const trailCol = e.isBoss ? (e.type === 'ogro' ? OGRE_COL : e.type === 'aracnideo' ? SPIDER_COL : e.type === 'centauro' ? CENTAUR_COL : e.type === 'stark' ? STARK_COL : MEDUSA_COL) : GREEN;
+        addTrail(e.x, e.y, trailCol, e.size * 0.5, 10);
+        e.lastTrailTime = 4;
+      }
+      const dist = Math.hypot(dx, dy);
+      if (dist < e.speed * dt) { e.x = target.x; e.y = target.y; e.wp++; }
+      else { e.x += (dx/dist) * e.speed * dt; e.y += (dy/dist) * e.speed * dt; }
+    }
+
+    // Queimadura
+    if (e.fireTimer > 0) {
+      e.fireTimer -= dt; e.fireTickTimer += dt; addFireParticle(e);
+      if (e.fireTickTimer >= 60) {
+        e.fireTickTimer -= 60;
+        damageEnemy(e, e.fireDmg || 10, undefined, undefined, true);
+      }
+      if (e.fireTimer <= 0) e.fireTimer = 0;
+    }
+
+    // Aéreo propulsion
     if (e.isAir) {
       e.airBob += dt * 0.1;
       e.airPropTimer -= dt;
       if (e.airPropTimer <= 0 && !frozenByParadox) {
         e.airPropTimer = 4;
         addAirTrail(e.x, e.y - 2);
-        if (Math.random() < 0.5) addParticle(e.x + (Math.random() - 0.5) * 8, e.y - 2, { vx: (Math.random() - 0.5) * 0.3, vy: 1 + Math.random() * 0.5, life: 15, size: 2, color: AIR, friction: 0.97 });
       }
     }
-    if (e.aura > 0) {
-      for (const t of towers) {
-        if (t.isGlacial) continue;
-        if (Math.hypot(t.x - e.x, t.y - e.y) <= e.aura) t.frozenByYeti = true;
-      }
-      if (Math.random() < 0.15) {
-        const angle = Math.random() * Math.PI * 2;
-        const r = e.aura * (0.5 + Math.random() * 0.5);
-        addParticle(e.x + Math.cos(angle) * r, e.y + Math.sin(angle) * r, { vx: (Math.random() - 0.5) * 0.5, vy: -0.5 - Math.random() * 0.5, life: 30, size: 2, color: ICE, friction: 0.97 });
-      }
-    }
-    if (e.fireTimer > 0) {
-      e.fireTimer -= dt; e.fireTickTimer += dt; addFireParticle(e);
-      if (e.fireTickTimer >= 60) { e.fireTickTimer -= 60; damageEnemy(e, e.fireDmg || 10, undefined, undefined, true); }
-      if (e.fireTimer <= 0) e.fireTimer = 0;
-    }
-    if (!frozenByParadox) {
-      const target = path[e.wp];
-      if (!target) {
-        damagePlayer(e.damage);
-        burst(e.x, e.y - (e.airHeight || 0), 14, { speed: 4, life: 22, size: 2, color: RED });
-        addShockwave(e.x, e.y - (e.airHeight || 0), RED, 30, 18);
-        if (e.isBoss) { addShake(10); addFlash(0.5, '102,255,51'); }
-        enemies.splice(i, 1); continue;
-      }
-      e.lastTrailTime -= dt;
-      if (e.lastTrailTime <= 0 && e.baseSpeed > 0.5 && !e.isAir) {
-        addTrail(e.x, e.y, e.isBoss ? OGRE : GREEN, e.size * 0.5, 10);
-        e.lastTrailTime = 4;
-      }
-      const dx = target.x - e.x, dy = target.y - e.y;
-      const dist = Math.hypot(dx, dy);
-      if (dist < e.speed * dt) { e.x = target.x; e.y = target.y; e.wp++; }
-      else { e.x += (dx/dist) * e.speed * dt; e.y += (dy/dist) * e.speed * dt; }
-    }
+
+    // Morte
     if (e.hp <= 0) {
       gold += e.reward;
-      const deathCol = e.isBoss ? OGRE : (e.type === 'yeti' ? ICE : (e.isAir ? AIR : GREEN));
+      const deathCol = e.isBoss ? (e.type === 'ogro' ? OGRE_COL : e.type === 'aracnideo' ? SPIDER_COL : e.type === 'centauro' ? CENTAUR_COL : e.type === 'stark' ? STARK_COL : MEDUSA_COL) : (e.isAir ? AIR : GREEN);
       addShockwave(e.x, e.y - (e.airHeight || 0), deathCol, 25, 15);
       burst(e.x, e.y - (e.airHeight || 0), e.isBoss ? 40 : 12, { speed: 3, life: 22, size: e.isBoss ? 4 : 2, color: deathCol });
       addText(e.x, e.y - (e.airHeight || 0) - e.size - 5, '+' + e.reward, YELLOW, 40, e.isBoss ? 26 : 14);
@@ -1857,21 +1714,85 @@ function loop(time) {
       if (e.onDeath === 'clone') spawnCloneMinions(e.x, e.y, e.wp);
       else if (e.onDeath === 'explode') areaExplosion(e.x, e.y, 50, 4 * PPM);
       else if (e.onDeath === 'fungusZone') spawnFungusZone(e.x, e.y);
+
       if (e.isBoss) {
-        bossFinalExplosion(e.x, e.y);
+        // Explosão final padrão dos bosses
+        bossFinalExplosion(e.x, e.y, deathCol);
         bossRef = null;
-        healPlayer(50);
+        healPlayer(50 + (Math.floor(waveNum / 10) - 1) * 25);
         const crystalReward = getBossCrystalReward(waveNum);
         crystals += crystalReward;
         saveCrystals(crystals);
         addCrystalPop(e.x, e.y - 40, crystalReward);
         Sound.crystal();
-        showMsg('> OGRO DERROTADO! +' + crystalReward + ' 💎');
+        showMsg('> ' + e.bossName + ' DERROTADO!');
         updateMenuCrystals();
       }
       enemies.splice(i, 1);
       updateGameUI();
     }
+  }
+
+  // Poison clouds
+  for (let i = poisonClouds.length - 1; i >= 0; i--) {
+    const pc = poisonClouds[i];
+    pc.life -= dt;
+    pc.tickTimer += dt;
+    if (pc.life <= 0) { poisonClouds.splice(i, 1); continue; }
+    // 40 dano/s → 40/60 por frame
+    if (pc.tickTimer >= 1) {
+      pc.tickTimer -= 1;
+      for (const t of towers) {
+        if (Math.hypot(t.x - pc.x, t.y - pc.y) <= pc.radius) {
+          let dmg = 40 / 60;
+          if (t.isProtected) dmg *= (1 - t.protReduction);
+          t.hp -= dmg;
+          if (t.hp <= 0) {
+            const idx = towers.indexOf(t);
+            if (idx >= 0) towers.splice(idx, 1);
+          }
+        }
+      }
+    }
+  }
+
+  // Web projectiles
+  for (let i = webProjectiles.length - 1; i >= 0; i--) {
+    const wp = webProjectiles[i];
+    wp.life -= dt;
+    if (!wp.target || towers.indexOf(wp.target) === -1 || wp.life <= 0) {
+      webProjectiles.splice(i, 1); continue;
+    }
+    const dx = wp.target.x - wp.x, dy = wp.target.y - wp.y;
+    const dist = Math.hypot(dx, dy);
+    if (dist < wp.speed * dt) {
+      // Acertou!
+      wp.target.petrified = 3 * 60; // paralisada 3s
+      wp.target.petrifyTimer = 3 * 60;
+      addShockwave(wp.target.x, wp.target.y, SPIDER_COL, 20, 15);
+      burst(wp.target.x, wp.target.y, 12, { speed: 4, life: 20, size: 2, color: SPIDER_COL });
+      webProjectiles.splice(i, 1);
+    } else {
+      wp.x += (dx/dist) * wp.speed * dt;
+      wp.y += (dy/dist) * wp.speed * dt;
+    }
+  }
+
+  // Barrils
+  for (let i = barrils.length - 1; i >= 0; i--) {
+    const b = barrils[i];
+    b.life -= dt;
+    if (b.life <= 0) {
+      barrilExplode(b.x, b.y);
+      barrils.splice(i, 1);
+    }
+  }
+
+  // Medusa waves (visual)
+  for (let i = medusaWaves.length - 1; i >= 0; i--) {
+    const mw = medusaWaves[i];
+    mw.life -= dt;
+    if (mw.life <= 0) medusaWaves.splice(i, 1);
   }
 
   // Fungus heal zones
@@ -1888,6 +1809,8 @@ function loop(time) {
       }
     }
   }
+
+  // Paradox
   for (let i = paradoxZones.length - 1; i >= 0; i--) {
     paradoxZones[i].life -= dt;
     if (paradoxZones[i].life <= 0) paradoxZones.splice(i, 1);
@@ -1897,12 +1820,16 @@ function loop(time) {
     if (lordAuras[i].life <= 0) lordAuras.splice(i, 1);
   }
 
-  // Towers
+  // ====== TOWERS ======
   for (const t of towers) {
     if (t.spawnAnim > 0) t.spawnAnim -= dt;
     if (t.recoil > 0) t.recoil -= dt * 3;
     if (t.healPulse > 0) t.healPulse -= dt * 2;
     if (t.incomePulse > 0) t.incomePulse -= dt * 2;
+
+    // Petrified ou em cone da Medusa = não faz nada
+    if (t.petrified > 0) { t.petrified -= dt; continue; }
+    if (t.inMedusaCone) continue;
 
     let cooldownSpeed = 1;
     if (t.frozenByYeti) {
@@ -1971,7 +1898,6 @@ function loop(time) {
       if (t.cooldown <= 0) {
         paradoxZones.push({ x: t.x, y: t.y, radius: t.range, life: t.duration, maxLife: t.duration, pulse: 0 });
         addShockwave(t.x, t.y, PURPLE, t.range, 30);
-        addShockwave(t.x, t.y, WHITE, t.range * 0.7, 20);
         burst(t.x, t.y, 30, { speed: 4, life: 30, size: 3, color: PURPLE });
         addFlash(0.35, '170,102,255'); addShake(4);
         Sound.shootGlacial();
@@ -1998,7 +1924,6 @@ function loop(time) {
         }
       }
     }
-
     if (target) {
       const targetY = target.y - (target.airHeight || 0);
       t.angle = Math.atan2(targetY - t.y, target.x - t.x);
@@ -2009,13 +1934,8 @@ function loop(time) {
         if (t.isDrone && target.isAir) actualDamage = t.damage * 3;
 
         if (t.isLord) {
-          // LORD: vórtice de caos
           addShockwave(target.x, targetY, LORD_PURPLE, 40, 25);
-          addShockwave(target.x, targetY, LORD_GOLD, 25, 18);
           burst(target.x, targetY, 40, { speed: 6, life: 35, size: 4, color: LORD_PURPLE });
-          burst(target.x, targetY, 20, { speed: 8, life: 25, size: 3, color: LORD_GOLD });
-          addFlash(0.4, '255,215,0'); addShake(5);
-          // Splash 3m + dano principal
           const inRange = enemies.filter(e => Math.hypot(e.x - target.x, (e.y - (e.airHeight || 0)) - targetY) <= t.splash);
           for (const e of inRange) {
             const dist = Math.hypot(e.x - target.x, (e.y - (e.airHeight || 0)) - targetY);
@@ -2036,13 +1956,11 @@ function loop(time) {
           t.punchAnim = 1;
           damageEnemy(target, actualDamage, t.x, t.y);
           burst(target.x, targetY, 8, { speed: 3, life: 15, size: 2, color: BOXER });
-          addShockwave(target.x, targetY, BOXER, 18, 12);
           if (t.starLevel >= 3) target.iceFrozen = 18;
           t.recoil = 4;
           Sound.shootBoxer();
         } else if (t.isGlacial) {
           burst(mx, my, 5, { speed: 2, life: 12, size: 2, color: ICE });
-          addShockwave(mx, my, ICE, 10, 10);
           bullets.push({ x: t.x, y: t.y, target, damage: actualDamage, speed: 8, type: 'glacial', angle: t.angle, iceDur: t.iceDur, splashIce: t.starLevel >= 3 });
           t.recoil = 3;
           Sound.shootGlacial();
@@ -2057,8 +1975,7 @@ function loop(time) {
           while (chainsLeft > 0) {
             let next = null, nextDist = Infinity, nextY = 0;
             for (const e of enemies) {
-              if (hitEnemies.indexOf(e) !== -1) continue;
-              if (e.hp <= 0) continue;
+              if (hitEnemies.indexOf(e) !== -1 || e.hp <= 0) continue;
               if (e.isAir && !t.hitsAir) continue;
               const ey = e.y - (e.airHeight || 0);
               const d = Math.hypot(e.x - current.x, ey - currentY);
@@ -2067,55 +1984,30 @@ function loop(time) {
             if (!next) break;
             chainPoints.push({ x: next.x, y: nextY });
             damageEnemy(next, Math.max(15, currentDmg));
-            if (t.starLevel >= 3) next.iceFrozen = 12;
             hitEnemies.push(next);
             current = next; currentY = nextY; currentDmg -= 5; chainsLeft--;
           }
           addTeslaBolt(chainPoints);
-          addShockwave(target.x, targetY, TESLA, 15, 12);
-          burst(target.x, targetY, 8, { speed: 3, life: 15, size: 2, color: TESLA });
-          addFlash(0.08, '255,255,102');
-          t.recoil = 3;
           Sound.shootTesla();
+          t.recoil = 3;
         } else if (t.type === 'bazuca') {
           burst(mx, my, 8, { speed: 3, life: 14, size: 2, color: ORANGE });
-          addShockwave(mx, my, ORANGE, 12, 12);
           missiles.push({ x: t.x, y: t.y, target, damage: actualDamage, splash: t.splash, speed: 6, angle: t.angle, life: 300, splitOnExplode: t.starLevel >= 3 });
           t.recoil = 6;
           Sound.fireBazuca();
         } else if (t.type === 'sniper') {
           damageEnemy(target, actualDamage, t.x, t.y);
           addShockwave(target.x, targetY, CYAN, 15, 10);
-          burst(target.x, targetY, 8, { speed: 3, life: 15, size: 2, color: CYAN });
-          addFlash(0.08);
           Sound.shootSniper();
-          if (t.starLevel >= 3) {
-            const dirX = Math.cos(t.angle), dirY = Math.sin(t.angle);
-            let pierced = null, bestP = Infinity;
-            for (const e of enemies) {
-              if (e === target || e.hp <= 0) continue;
-              const ex = e.x, ey = e.y - (e.airHeight || 0);
-              const dx = ex - target.x, dy = ey - targetY;
-              const dist = Math.hypot(dx, dy);
-              if (dist > 12 * PPM) continue;
-              const dot = (dx * dirX + dy * dirY) / dist;
-              if (dot > 0.85 && dist < bestP) { bestP = dist; pierced = e; }
-            }
-            if (pierced) {
-              damageEnemy(pierced, Math.floor(actualDamage * 0.7));
-              addSpark(target.x, targetY, pierced.x, pierced.y - (pierced.airHeight || 0), CYAN);
-            }
-          }
           t.recoil = 4;
         } else {
           burst(mx, my, 5, { speed: 2, life: 10, size: 1.5, color: t.isDrone ? DRONE : GREEN_BRIGHT });
-          addShockwave(mx, my, t.isDrone ? DRONE : GREEN, 8, 8);
-          t.recoil = 4;
           bullets.push({ x: t.x, y: t.y, target, damage: actualDamage, speed: 8, type: t.isDrone ? 'drone' : t.type, angle: t.angle });
           if (t.isDrone) Sound.shootDrone();
           else if (t.type === 'metralhadora') Sound.shootMetralhadora();
           else if (t.type === 'faca') Sound.shootFaca();
           else Sound.shootRecruta();
+          t.recoil = 4;
         }
         t.cooldown = t.fireRate;
       }
@@ -2127,7 +2019,6 @@ function loop(time) {
     const m = missiles[i];
     m.life -= dt;
     addTrail(m.x, m.y, ORANGE, 4, 14);
-    if (Math.random() < 0.5) addParticle(m.x, m.y, { vx: (Math.random() - 0.5) * 0.5, vy: (Math.random() - 0.5) * 0.5, life: 20, size: 2, color: ORANGE, friction: 0.95 });
     if (!m.target || m.target.hp <= 0 || enemies.indexOf(m.target) === -1) {
       bazookaExplosion(m.x, m.y, m.damage, m.splash, m.splitOnExplode);
       missiles.splice(i, 1); continue;
@@ -2140,7 +2031,10 @@ function loop(time) {
     m.angle += Math.max(-0.12, Math.min(0.12, diff)) * dt;
     const dx = m.target.x - m.x, dy = targetY - m.y;
     const dist = Math.hypot(dx, dy);
-    if (dist < 12 || m.life <= 0) { bazookaExplosion(m.x, m.y, m.damage, m.splash, m.splitOnExplode); missiles.splice(i, 1); continue; }
+    if (dist < 12 || m.life <= 0) {
+      bazookaExplosion(m.x, m.y, m.damage, m.splash, m.splitOnExplode);
+      missiles.splice(i, 1); continue;
+    }
     m.x += Math.cos(m.angle) * m.speed * dt;
     m.y += Math.sin(m.angle) * m.speed * dt;
   }
@@ -2148,43 +2042,36 @@ function loop(time) {
   // Bullets
   for (let i = bullets.length - 1; i >= 0; i--) {
     const b = bullets[i];
-    const trailCol = b.type === 'sniper' ? CYAN : b.type === 'glacial' ? ICE : (b.type === 'drone' ? DRONE : GREEN);
-    addTrail(b.x, b.y, trailCol, b.type === 'faca' ? 3 : 2, 10);
     if (!b.target || b.target.hp <= 0 || enemies.indexOf(b.target) === -1) {
-      burst(b.x, b.y, 4, { speed: 1.5, life: 10, size: 1.5 });
       bullets.splice(i, 1); continue;
     }
     const targetY = b.target.y - (b.target.airHeight || 0);
     const dx = b.target.x - b.x, dy = targetY - b.y;
     const dist = Math.hypot(dx, dy);
     if (dist < b.speed * dt) {
-      damageEnemy(b.target, b.damage, b.x, b.y);
-      Sound.enemyHit();
-      if (b.type === 'faca') {
-        burst(b.target.x, targetY, 12, { speed: 4, life: 18, size: 2.5 });
-        addShockwave(b.target.x, targetY, GREEN, 18, 12);
-      } else if (b.type === 'glacial') {
-        applyIce(b.target, b.iceDur);
-        burst(b.target.x, targetY, 10, { speed: 3, life: 18, size: 2, color: ICE });
-        addShockwave(b.target.x, targetY, ICE, 18, 14);
-        if (b.splashIce) {
-          const inRange = enemies.filter(e => e !== b.target && Math.hypot(e.x - b.target.x, (e.y - (e.airHeight || 0)) - targetY) <= 1.5 * PPM);
-          for (const e of inRange) {
-            applyIce(e, Math.floor(b.iceDur * 0.7));
-            damageEnemy(e, Math.floor(b.damage * 0.5));
-          }
+      if (b.type === 'stark') {
+        // Dano direto em tropa
+        let dmg = b.damage;
+        if (b.target.isProtected) dmg = Math.floor(dmg * (1 - b.target.protReduction));
+        b.target.hp -= dmg;
+        addText(b.target.x, b.target.y - 15, '-' + dmg, STARK_COL, 45);
+        if (b.target.hp <= 0) {
+          const idx = towers.indexOf(b.target);
+          if (idx >= 0) towers.splice(idx, 1);
         }
-      } else if (b.type === 'metralhadora') {
-        burst(b.target.x, targetY, 4, { speed: 2.5, life: 10, size: 1.5 });
-      } else if (b.type === 'drone') {
-        burst(b.target.x, targetY, 6, { speed: 3, life: 15, size: 2, color: DRONE });
-        addShockwave(b.target.x, targetY, DRONE, 14, 10);
+      } else {
+        damageEnemy(b.target, b.damage, b.x, b.y);
+        Sound.enemyHit();
+        if (b.type === 'glacial') applyIce(b.target, b.iceDur);
       }
       bullets.splice(i, 1);
-    } else { b.x += (dx/dist) * b.speed * dt; b.y += (dy/dist) * b.speed * dt; }
+    } else {
+      b.x += (dx/dist) * b.speed * dt;
+      b.y += (dy/dist) * b.speed * dt;
+    }
   }
 
-  // Cleanup
+  // Partículas, trails, etc.
   for (let i = particles.length - 1; i >= 0; i--) {
     const p = particles[i];
     p.x += p.vx * dt; p.y += p.vy * dt;
@@ -2218,7 +2105,6 @@ function loop(time) {
   }
   for (let i = flames.length - 1; i >= 0; i--) { flames[i].life -= dt; if (flames[i].life <= 0) flames.splice(i, 1); }
   for (let i = teslaBolts.length - 1; i >= 0; i--) { teslaBolts[i].life -= dt; if (teslaBolts[i].life <= 0) teslaBolts.splice(i, 1); }
-  for (let i = explosions.length - 1; i >= 0; i--) { explosions[i].life -= dt; if (explosions[i].life <= 0) explosions.splice(i, 1); }
 
   shakeAmount *= 0.9; if (shakeAmount < 0.1) shakeAmount = 0;
   screenFlash *= 0.88; if (screenFlash < 0.01) screenFlash = 0;
@@ -2226,7 +2112,7 @@ function loop(time) {
   draw();
 }
 
-// ============ DRAW (resumido — mesma lógica, mais compacto) ============
+// ============ DRAW ============
 function draw() {
   if (!path) return;
   ctx.save();
@@ -2238,6 +2124,7 @@ function draw() {
   ctx.fillStyle = BLACK;
   ctx.fillRect(-20, -20, canvas.width + 40, canvas.height + 40);
 
+  // Grid
   ctx.strokeStyle = 'rgba(51,255,51,0.06)';
   ctx.lineWidth = 1;
   for (let x = 0; x <= canvas.width; x += PPM) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke(); }
@@ -2246,7 +2133,33 @@ function draw() {
   for (let x = 0; x <= canvas.width; x += PPM * 5) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke(); }
   for (let y = 0; y <= canvas.height; y += PPM * 5) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke(); }
 
-  // Heal zones
+  // Poison clouds
+  for (const pc of poisonClouds) {
+    const p = pc.life / pc.maxLife;
+    ctx.globalAlpha = 0.35 * p;
+    ctx.fillStyle = POISON;
+    ctx.beginPath(); ctx.arc(pc.x, pc.y, pc.radius * (1 + (1 - p) * 0.1), 0, Math.PI * 2); ctx.fill();
+    ctx.globalAlpha = 0.7 * p;
+    ctx.strokeStyle = POISON; ctx.lineWidth = 2;
+    ctx.setLineDash([6, 4]);
+    ctx.beginPath(); ctx.arc(pc.x, pc.y, pc.radius, 0, Math.PI * 2); ctx.stroke();
+    ctx.setLineDash([]);
+  }
+  ctx.globalAlpha = 1;
+
+  // Medusa waves
+  for (const mw of medusaWaves) {
+    const p = mw.life / mw.maxLife;
+    ctx.globalAlpha = p * 0.5;
+    ctx.strokeStyle = MEDUSA_COL; ctx.lineWidth = 4;
+    ctx.beginPath(); ctx.arc(mw.x, mw.y, mw.radius * (1 - p), 0, Math.PI * 2); ctx.stroke();
+    ctx.globalAlpha = p * 0.3;
+    ctx.strokeStyle = STONE; ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.arc(mw.x, mw.y, mw.radius * (1 - p) * 0.8, 0, Math.PI * 2); ctx.stroke();
+  }
+  ctx.globalAlpha = 1;
+
+  // Fungus zones
   for (const z of healZones) {
     const p = z.life / z.maxLife;
     ctx.globalAlpha = 0.15 * p + Math.sin(z.pulse) * 0.05;
@@ -2259,23 +2172,7 @@ function draw() {
   }
   ctx.globalAlpha = 1;
 
-  // Enemies auras
-  for (const e of enemies) {
-    if (e.aura > 0) {
-      const pulse = 0.6 + Math.sin(Date.now() / 300) * 0.2;
-      ctx.globalAlpha = 0.12 * pulse;
-      ctx.fillStyle = ICE;
-      ctx.beginPath(); ctx.arc(e.x, e.y, e.aura, 0, Math.PI * 2); ctx.fill();
-      ctx.globalAlpha = 0.5 * pulse;
-      ctx.strokeStyle = ICE; ctx.lineWidth = 2;
-      ctx.setLineDash([4, 4]);
-      ctx.beginPath(); ctx.arc(e.x, e.y, e.aura, 0, Math.PI * 2); ctx.stroke();
-      ctx.setLineDash([]);
-      ctx.globalAlpha = 1;
-    }
-  }
-
-  // Paradox zones
+  // Paradox
   for (const z of paradoxZones) {
     const p = z.life / z.maxLife;
     ctx.globalAlpha = 0.25 * p;
@@ -2283,10 +2180,10 @@ function draw() {
     ctx.beginPath(); ctx.arc(z.x, z.y, z.radius, 0, Math.PI * 2); ctx.fill();
     ctx.globalAlpha = 0.7 * p; ctx.strokeStyle = PURPLE; ctx.lineWidth = 3;
     ctx.beginPath(); ctx.arc(z.x, z.y, z.radius, 0, Math.PI * 2); ctx.stroke();
-    ctx.globalAlpha = 1;
   }
+  ctx.globalAlpha = 1;
 
-  // Lord auras
+  // Lord aura
   for (const a of lordAuras) {
     const p = a.life / a.maxLife;
     ctx.globalAlpha = p * 0.2;
@@ -2295,12 +2192,12 @@ function draw() {
     ctx.globalAlpha = p * 0.6;
     ctx.strokeStyle = LORD_GOLD; ctx.lineWidth = 2;
     ctx.beginPath(); ctx.arc(a.x, a.y, a.range * (1 - p * 0.3), 0, Math.PI * 2); ctx.stroke();
-    ctx.globalAlpha = 1;
   }
+  ctx.globalAlpha = 1;
 
   // Path
   const pathPulse = 0.15 + Math.sin(Date.now() / 400) * 0.03;
-  ctx.strokeStyle = bossActive ? OGRE : GREEN;
+  ctx.strokeStyle = bossActive ? RED : GREEN;
   ctx.lineWidth = pathWidth; ctx.lineCap = 'square'; ctx.lineJoin = 'miter';
   ctx.globalAlpha = bossActive ? 0.4 : pathPulse;
   ctx.beginPath();
@@ -2310,7 +2207,7 @@ function draw() {
   ctx.globalAlpha = 1;
   ctx.lineWidth = 2; ctx.setLineDash([6, 5]); ctx.stroke(); ctx.setLineDash([]);
 
-  // Enemy shadows
+  // Enemy shadows (air)
   for (const e of enemies) {
     if (e.isAir) {
       ctx.fillStyle = 'rgba(0,0,0,0.4)';
@@ -2320,6 +2217,7 @@ function draw() {
     }
   }
 
+  // Air trails
   for (const at of airTrails) {
     const p = at.life / at.maxLife;
     ctx.globalAlpha = p * 0.7;
@@ -2328,6 +2226,7 @@ function draw() {
   }
   ctx.globalAlpha = 1;
 
+  // Trails
   for (const tr of trails) {
     const p = tr.life / tr.maxLife;
     ctx.globalAlpha = p * 0.7; ctx.fillStyle = tr.color;
@@ -2335,6 +2234,7 @@ function draw() {
   }
   ctx.globalAlpha = 1;
 
+  // Flames
   for (const f of flames) {
     const p = f.life / f.maxLife;
     ctx.save();
@@ -2357,48 +2257,42 @@ function draw() {
   // Towers
   for (const t of towers) {
     const isFrozenByYeti = t.frozenByYeti;
+    const isPetrified = t.petrified > 0 || t.inMedusaCone;
 
-    if (t.isLord) {
-      // Aura dourada do LORD
-      const pulse = 0.15 + Math.sin(Date.now() / 400) * 0.05;
-      ctx.globalAlpha = pulse;
-      ctx.fillStyle = LORD_PURPLE;
-      ctx.beginPath(); ctx.arc(t.x, t.y, t.range, 0, Math.PI * 2); ctx.fill();
-      ctx.globalAlpha = pulse * 2;
-      ctx.strokeStyle = LORD_GOLD; ctx.lineWidth = 2;
-      ctx.setLineDash([8, 4]);
-      ctx.beginPath(); ctx.arc(t.x, t.y, t.range, 0, Math.PI * 2); ctx.stroke();
-      ctx.setLineDash([]);
-      ctx.globalAlpha = 1;
-    } else if (t.isDefensor) {
-      const pulse = 0.3 + Math.sin(t.defensorPulse) * 0.15;
-      ctx.strokeStyle = SHIELD; ctx.globalAlpha = pulse; ctx.lineWidth = 3;
-      ctx.setLineDash([8, 6]);
-      ctx.beginPath(); ctx.arc(t.x, t.y, t.range, 0, Math.PI * 2); ctx.stroke();
-      ctx.setLineDash([]);
-      ctx.globalAlpha = 0.08; ctx.fillStyle = SHIELD;
-      ctx.beginPath(); ctx.arc(t.x, t.y, t.range, 0, Math.PI * 2); ctx.fill();
-      ctx.globalAlpha = 1;
-    } else if (t.isHealer) {
-      const healAlpha = t.healPulse > 0 ? 0.4 : 0.15;
-      ctx.strokeStyle = isFrozenByYeti ? ICE : GREEN_BRIGHT;
-      ctx.globalAlpha = healAlpha; ctx.lineWidth = 2;
-      ctx.beginPath(); ctx.arc(t.x, t.y, t.range, 0, Math.PI * 2); ctx.stroke();
-      ctx.globalAlpha = 1;
-    } else if (t.isMerchant) {
-      ctx.strokeStyle = GOLD; ctx.globalAlpha = 0.2; ctx.lineWidth = 2;
-      ctx.beginPath(); ctx.arc(t.x, t.y, 25, 0, Math.PI * 2); ctx.stroke();
-      ctx.globalAlpha = 1;
-    } else {
-      ctx.strokeStyle = t.isDrone ? 'rgba(102,238,255,0.3)' : 'rgba(51,255,51,0.25)';
-      ctx.lineWidth = 1; ctx.setLineDash([3, 5]);
-      ctx.beginPath(); ctx.arc(t.x, t.y, t.range, 0, Math.PI * 2); ctx.stroke();
-      ctx.setLineDash([]);
+    if (!isPetrified) {
+      if (t.isLord) {
+        const pulse = 0.15 + Math.sin(Date.now() / 400) * 0.05;
+        ctx.globalAlpha = pulse;
+        ctx.fillStyle = LORD_PURPLE;
+        ctx.beginPath(); ctx.arc(t.x, t.y, t.range, 0, Math.PI * 2); ctx.fill();
+        ctx.globalAlpha = pulse * 2;
+        ctx.strokeStyle = LORD_GOLD; ctx.lineWidth = 2;
+        ctx.setLineDash([8, 4]);
+        ctx.beginPath(); ctx.arc(t.x, t.y, t.range, 0, Math.PI * 2); ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.globalAlpha = 1;
+      } else if (t.isDefensor) {
+        ctx.strokeStyle = SHIELD; ctx.globalAlpha = 0.3; ctx.lineWidth = 3;
+        ctx.setLineDash([8, 6]);
+        ctx.beginPath(); ctx.arc(t.x, t.y, t.range, 0, Math.PI * 2); ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.globalAlpha = 1;
+      } else if (t.isHealer) {
+        ctx.strokeStyle = GREEN_BRIGHT; ctx.globalAlpha = 0.15; ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.arc(t.x, t.y, t.range, 0, Math.PI * 2); ctx.stroke();
+        ctx.globalAlpha = 1;
+      } else if (t.isDrone) {
+        ctx.strokeStyle = 'rgba(102,238,255,0.3)'; ctx.lineWidth = 1;
+        ctx.setLineDash([3, 5]);
+        ctx.beginPath(); ctx.arc(t.x, t.y, t.range, 0, Math.PI * 2); ctx.stroke();
+        ctx.setLineDash([]);
+      }
     }
 
     const hpPct = t.hp / t.maxHp;
     let col = GREEN;
-    if (isFrozenByYeti) col = ICE;
+    if (isPetrified) col = STONE;
+    else if (isFrozenByYeti) col = ICE;
     else if (t.isHealer) col = GREEN_BRIGHT;
     else if (t.isMerchant) col = GOLD;
     else if (t.isFlamethrower) col = FIRE;
@@ -2413,18 +2307,11 @@ function draw() {
     let scale = 1;
     if (t.spawnAnim > 0) scale = 0.5 + (1 - t.spawnAnim / 20) * 0.5;
 
-    // Borda dourada por estrela (exceto LORD que já é dourado)
-    if (t.starLevel > 0 && !t.isLord) {
+    if (t.starLevel > 0 && !t.isLord && !isPetrified) {
       ctx.strokeStyle = GOLD;
       ctx.globalAlpha = 0.5 + t.starLevel * 0.15;
       ctx.lineWidth = t.starLevel * 0.8;
       ctx.strokeRect(t.x - 13, t.y - 13, 26, 26);
-      ctx.globalAlpha = 1;
-    }
-    if (t.isLord) {
-      ctx.strokeStyle = LORD_GOLD;
-      ctx.globalAlpha = 0.9; ctx.lineWidth = 3;
-      ctx.strokeRect(t.x - 14, t.y - 14, 28, 28);
       ctx.globalAlpha = 1;
     }
 
@@ -2444,20 +2331,14 @@ function draw() {
     ctx.stroke();
     ctx.restore();
 
-    // Símbolo/desenho
     ctx.fillStyle = col;
     ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
 
     if (t.isLord) {
-      // Coroa + olho brilhante
       ctx.shadowColor = LORD_GOLD; ctx.shadowBlur = 20;
       ctx.font = 'bold 20px VT323, monospace';
       ctx.fillText('👑', t.x, t.y - 4);
       ctx.shadowBlur = 0;
-      // Aura roxa
-      ctx.fillStyle = LORD_PURPLE; ctx.globalAlpha = 0.7;
-      ctx.beginPath(); ctx.arc(t.x, t.y + 6, 4, 0, Math.PI * 2); ctx.fill();
-      ctx.globalAlpha = 1;
     } else if (t.isHealer) {
       ctx.fillRect(t.x - 2, t.y - 8, 4, 16);
       ctx.fillRect(t.x - 8, t.y - 2, 16, 4);
@@ -2517,17 +2398,21 @@ function draw() {
         ctx.stroke();
       }
       ctx.beginPath(); ctx.arc(t.x, t.y, 4, 0, Math.PI * 2); ctx.fill();
-      ctx.beginPath();
-      ctx.moveTo(t.x, t.y - 4); ctx.lineTo(t.x, t.y - 10);
-      ctx.stroke();
     } else {
       ctx.font = 'bold 13px VT323, monospace';
       const sym = t.type === 'recruta' ? 'R' : t.type === 'sniper' ? 'S' : t.type === 'faca' ? 'F' : t.type === 'metralhadora' ? 'M' : 'B';
       ctx.fillText(sym, t.x, t.y + 1);
     }
 
-    // Estrelas
-    if (t.starLevel > 0 && !t.isLord) {
+    if (isPetrified) {
+      ctx.fillStyle = STONE; ctx.globalAlpha = 0.6;
+      ctx.beginPath(); ctx.arc(t.x, t.y, 16, 0, Math.PI * 2); ctx.fill();
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = '#555'; ctx.font = 'bold 14px VT323, monospace';
+      ctx.fillText('🪨', t.x, t.y);
+    }
+
+    if (t.starLevel > 0 && !t.isLord && !isPetrified) {
       ctx.font = 'bold 10px VT323, monospace';
       ctx.fillStyle = GOLD;
       ctx.fillText('⭐'.repeat(t.starLevel), t.x, t.y - 18);
@@ -2557,12 +2442,15 @@ function draw() {
 
   // Bullets
   for (const b of bullets) {
-    if (b.type === 'metralhadora') {
-      ctx.fillStyle = YELLOW; ctx.fillRect(b.x - 2, b.y - 2, 4, 4);
+    if (b.type === 'stark') {
+      ctx.fillStyle = STARK_COL; ctx.shadowColor = STARK_COL; ctx.shadowBlur = 8;
+      ctx.fillRect(b.x - 3, b.y - 3, 6, 6); ctx.shadowBlur = 0;
     } else if (b.type === 'glacial') {
       ctx.fillStyle = ICE; ctx.beginPath(); ctx.arc(b.x, b.y, 4, 0, Math.PI * 2); ctx.fill();
     } else if (b.type === 'drone') {
       ctx.fillStyle = DRONE; ctx.fillRect(b.x - 2, b.y - 2, 4, 4);
+    } else if (b.type === 'metralhadora') {
+      ctx.fillStyle = YELLOW; ctx.fillRect(b.x - 2, b.y - 2, 4, 4);
     } else {
       ctx.fillStyle = GREEN_BRIGHT;
       const s = b.type === 'faca' ? 5 : 3;
@@ -2580,7 +2468,38 @@ function draw() {
     ctx.restore();
   }
 
-  // Tesla
+  // Web projectiles
+  for (const wp of webProjectiles) {
+    ctx.fillStyle = SPIDER_COL;
+    ctx.beginPath(); ctx.arc(wp.x, wp.y, 5, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = WHITE; ctx.lineWidth = 1;
+    for (let k = 0; k < 3; k++) {
+      const ang = (Math.PI / 3) * k;
+      ctx.beginPath();
+      ctx.moveTo(wp.x - Math.cos(ang) * 6, wp.y - Math.sin(ang) * 6);
+      ctx.lineTo(wp.x + Math.cos(ang) * 6, wp.y + Math.sin(ang) * 6);
+      ctx.stroke();
+    }
+  }
+
+  // Barrils
+  for (const b of barrils) {
+    const p = b.life / b.maxLife;
+    ctx.fillStyle = '#8b5a2b';
+    ctx.fillRect(b.x - 10, b.y - 10, 20, 20);
+    ctx.strokeStyle = '#4a2a0a'; ctx.lineWidth = 2;
+    ctx.strokeRect(b.x - 10, b.y - 10, 20, 20);
+    // Pavio aceso
+    ctx.fillStyle = FIRE_BRIGHT;
+    const spark = Math.sin(Date.now() / 100) * 2;
+    ctx.beginPath(); ctx.arc(b.x, b.y - 12 + spark, 4, 0, Math.PI * 2); ctx.fill();
+    // Contagem
+    ctx.fillStyle = WHITE; ctx.font = 'bold 12px VT323, monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText(Math.ceil(b.life / 60), b.x, b.y + 4);
+  }
+
+  // Tesla bolts
   for (const tb of teslaBolts) {
     const p = tb.life / tb.maxLife;
     ctx.strokeStyle = TESLA; ctx.globalAlpha = p; ctx.lineWidth = 3;
@@ -2603,6 +2522,7 @@ function draw() {
   }
   ctx.globalAlpha = 1;
 
+  // Heals
   for (const h of heals) {
     const p = h.life / h.maxLife;
     const size = 6 + (1 - p) * 4;
@@ -2612,8 +2532,10 @@ function draw() {
   }
   ctx.globalAlpha = 1;
 
+  // Enemies
   for (const e of enemies) drawEnemy(e);
 
+  // Texts
   for (const tx of texts) {
     const alpha = tx.life / tx.maxLife;
     ctx.globalAlpha = alpha; ctx.fillStyle = tx.color;
@@ -2623,6 +2545,7 @@ function draw() {
   }
   ctx.globalAlpha = 1;
 
+  // Money pops
   for (const mp of moneyPops) {
     const alpha = mp.life / mp.maxLife;
     ctx.globalAlpha = alpha; ctx.fillStyle = GOLD;
@@ -2632,6 +2555,7 @@ function draw() {
   }
   ctx.globalAlpha = 1;
 
+  // Crystal pops
   for (const cp of crystalPops) {
     const alpha = cp.life / cp.maxLife;
     ctx.globalAlpha = alpha; ctx.fillStyle = CRYSTAL;
@@ -2665,8 +2589,8 @@ function draw() {
   if (bossActive) {
     const pulseAmount = 0.2 + Math.sin(Date.now() / 250) * 0.15;
     const grad = ctx.createRadialGradient(240, 240, 150, 240, 240, 340);
-    grad.addColorStop(0, 'rgba(102,255,51,0)');
-    grad.addColorStop(1, `rgba(102,255,51,${pulseAmount})`);
+    grad.addColorStop(0, 'rgba(255,51,51,0)');
+    grad.addColorStop(1, `rgba(255,51,51,${pulseAmount})`);
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
   }
@@ -2698,18 +2622,25 @@ function draw() {
 function drawEnemy(e) {
   const s = e.size;
   const isHit = e.hitFlash > 0;
-  const isYeti = e.type === 'yeti';
   const isBoss = e.isBoss;
   const isBurning = e.fireTimer > 0;
   const isIceFrozen = e.iceFrozen > 0;
   const isAir = e.isAir;
+  const isPetrified = e.petrified > 0;
 
   let color;
-  if (isHit) color = '#ffffff';
+  if (isPetrified) color = STONE;
+  else if (isHit) color = '#ffffff';
   else if (isIceFrozen) color = FROZEN;
   else if (isBurning) color = FIRE_BRIGHT;
-  else if (isYeti) color = ICE;
-  else if (isBoss) color = OGRE;
+  else if (isBoss) {
+    if (e.type === 'ogro') color = OGRE_COL;
+    else if (e.type === 'aracnideo') color = SPIDER_COL;
+    else if (e.type === 'centauro') color = CENTAUR_COL;
+    else if (e.type === 'stark') color = STARK_COL;
+    else if (e.type === 'medusa') color = MEDUSA_COL;
+    else color = RED;
+  }
   else if (isAir) color = AIR;
   else if (e.type === 'fungo') color = TOXIC;
   else color = GREEN;
@@ -2732,7 +2663,7 @@ function drawEnemy(e) {
     case 'square':
       ctx.fillRect(-s/2, -s/2, s, s); ctx.strokeRect(-s/2, -s/2, s, s);
       ctx.fillStyle = color;
-      if (!isIceFrozen) { ctx.fillRect(-3, -3, 2, 2); ctx.fillRect(1, -3, 2, 2); }
+      if (!isIceFrozen && !isPetrified) { ctx.fillRect(-3, -3, 2, 2); ctx.fillRect(1, -3, 2, 2); }
       break;
     case 'tank':
       ctx.fillRect(-s/2, -s/2 + 2, s, s - 4); ctx.strokeRect(-s/2, -s/2 + 2, s, s - 4);
@@ -2767,16 +2698,11 @@ function drawEnemy(e) {
       ctx.strokeRect(-3, -s/2 + 4, 6, s/2 + 2);
       ctx.beginPath(); ctx.arc(0, -s/2 + 4, s/2, Math.PI, 0); ctx.closePath();
       ctx.fill(); ctx.stroke();
-      ctx.fillStyle = color;
-      ctx.beginPath(); ctx.arc(-4, -s/2 + 1, 1.5, 0, Math.PI * 2); ctx.fill();
-      ctx.beginPath(); ctx.arc(3, -s/2 - 1, 1.5, 0, Math.PI * 2); ctx.fill();
       break;
     case 'yeti':
       ctx.fillStyle = isHit ? color : BLACK;
       ctx.fillRect(-s/2, -s/2, s, s);
       ctx.strokeRect(-s/2, -s/2, s, s);
-      ctx.fillStyle = color;
-      ctx.fillRect(-4, -4, 2, 2); ctx.fillRect(2, -4, 2, 2);
       break;
     case 'air':
       ctx.fillStyle = isHit ? color : '#0a2a2a';
@@ -2786,47 +2712,223 @@ function drawEnemy(e) {
       ctx.beginPath();
       ctx.arc(0, -3, s/3, Math.PI, 0);
       ctx.closePath(); ctx.fill(); ctx.stroke();
-      ctx.fillStyle = color;
-      const blink = Math.floor(Date.now() / 200) % 2 === 0;
-      ctx.beginPath(); ctx.arc(-s/2 + 2, 2, 1.8, 0, Math.PI * 2); ctx.fill();
-      ctx.beginPath(); ctx.arc(s/2 - 2, 2, 1.8, 0, Math.PI * 2); ctx.fill();
-      if (blink) { ctx.beginPath(); ctx.arc(0, 2, 2.2, 0, Math.PI * 2); ctx.fill(); }
       break;
     case 'ogro':
       ctx.fillStyle = isHit ? color : '#1a3a0a';
       ctx.fillRect(-s/2, -s/2, s, s);
       ctx.strokeStyle = color; ctx.strokeRect(-s/2, -s/2, s, s);
       ctx.fillStyle = color;
-      ctx.beginPath();
-      ctx.moveTo(-15, -s/2); ctx.lineTo(-10, -s/2 - 12); ctx.lineTo(-5, -s/2);
-      ctx.closePath(); ctx.fill();
-      ctx.beginPath();
-      ctx.moveTo(5, -s/2); ctx.lineTo(10, -s/2 - 12); ctx.lineTo(15, -s/2);
-      ctx.closePath(); ctx.fill();
+      // Chifres
+      ctx.beginPath(); ctx.moveTo(-15, -s/2); ctx.lineTo(-10, -s/2 - 12); ctx.lineTo(-5, -s/2); ctx.closePath(); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(5, -s/2); ctx.lineTo(10, -s/2 - 12); ctx.lineTo(15, -s/2); ctx.closePath(); ctx.fill();
+      // Punhos
       ctx.beginPath(); ctx.arc(-s/2 - 4, 5, 7, 0, Math.PI * 2); ctx.fill();
       ctx.beginPath(); ctx.arc(s/2 + 4, 5, 7, 0, Math.PI * 2); ctx.fill();
-      ctx.fillStyle = '#ffff33'; ctx.shadowColor = '#ffff33'; ctx.shadowBlur = 15;
-      const eyeBlink = Math.floor(Date.now() / 300) % 4 === 0;
-      if (!eyeBlink) { ctx.fillRect(-11, -6, 6, 6); ctx.fillRect(5, -6, 6, 6); }
-      else { ctx.fillRect(-11, -2, 6, 2); ctx.fillRect(5, -2, 6, 2); }
+      // Olhos
+      ctx.fillStyle = '#ffff33';
+      ctx.fillRect(-11, -6, 6, 6); ctx.fillRect(5, -6, 6, 6);
+      break;
+    case 'spider':
+      // Corpo de aranha
+      ctx.fillStyle = isHit ? color : '#1a0a2a';
+      ctx.beginPath(); ctx.arc(0, 0, s/2 - 4, 0, Math.PI * 2); ctx.fill();
+      ctx.strokeStyle = color; ctx.stroke();
+      // 8 patas
+      ctx.strokeStyle = color; ctx.lineWidth = 2;
+      for (let k = 0; k < 4; k++) {
+        const side = k < 2 ? -1 : 1;
+        const idx = k % 2;
+        const baseAngle = side === -1 ? Math.PI + (idx === 0 ? -0.5 : 0.3) : (idx === 0 ? 0.5 : -0.3);
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(Math.cos(baseAngle) * (s/2 + 8), Math.sin(baseAngle) * (s/2 + 8));
+        ctx.stroke();
+      }
+      // Olhos vermelhos
+      ctx.fillStyle = '#ff3333';
+      ctx.beginPath(); ctx.arc(-4, -3, 2, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(4, -3, 2, 0, Math.PI * 2); ctx.fill();
+      break;
+    case 'centaur':
+      // Corpo de cavalo (baixo)
+      ctx.fillStyle = isHit ? color : '#5a3a1a';
+      ctx.fillRect(-s/2, 0, s, s/2);
+      ctx.strokeStyle = color; ctx.strokeRect(-s/2, 0, s, s/2);
+      // Torso humano (cima)
+      ctx.fillStyle = isHit ? color : '#c19a6b';
+      ctx.fillRect(-s/4, -s/2, s/2, s/2);
+      ctx.strokeRect(-s/4, -s/2, s/2, s/2);
+      // Cabeça
+      ctx.fillStyle = '#c19a6b';
+      ctx.beginPath(); ctx.arc(0, -s/2 - 3, s/6, 0, Math.PI * 2); ctx.fill();
+      ctx.strokeStyle = color; ctx.stroke();
+      // Lança
+      ctx.strokeStyle = GOLD; ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.moveTo(s/2, -s/2); ctx.lineTo(s/2 + 20, -s/2 - 20); ctx.stroke();
+      break;
+    case 'stark':
+      // Corpo militar
+      ctx.fillStyle = isHit ? color : '#2a2a5a';
+      ctx.fillRect(-s/2, -s/2, s, s);
+      ctx.strokeStyle = color; ctx.strokeRect(-s/2, -s/2, s, s);
+      // Bandana vermelha
+      ctx.fillStyle = RED;
+      ctx.fillRect(-s/2, -s/2 + 5, s, 4);
+      // Olhos
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(-7, -5, 4, 4); ctx.fillRect(3, -5, 4, 4);
+      // Fuzil
+      ctx.fillStyle = '#333'; ctx.fillRect(-3, -s/2 - 8, 6, 20);
+      break;
+    case 'medusa':
+      // Corpo
+      ctx.fillStyle = isHit ? color : '#2a5a2a';
+      ctx.beginPath(); ctx.arc(0, 0, s/2, 0, Math.PI * 2); ctx.fill();
+      ctx.strokeStyle = color; ctx.stroke();
+      // Cabelos de serpente
+      ctx.strokeStyle = '#33ff33'; ctx.lineWidth = 3;
+      for (let k = 0; k < 6; k++) {
+        const ang = -Math.PI + (Math.PI / 5) * k;
+        const wobble = Math.sin(Date.now() / 200 + k) * 4;
+        ctx.beginPath();
+        ctx.moveTo(0, -s/2 + 4);
+        ctx.lineTo(Math.cos(ang) * (s/2 + 8), -s/2 + 4 + Math.sin(ang) * 8 + wobble);
+        ctx.stroke();
+      }
+      // Olhos brilhantes
+      ctx.fillStyle = '#88ff88';
+      ctx.shadowColor = '#88ff88'; ctx.shadowBlur = 10;
+      ctx.beginPath(); ctx.arc(-5, -2, 3, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(5, -2, 3, 0, Math.PI * 2); ctx.fill();
       ctx.shadowBlur = 0;
       break;
   }
+
+  // Medusa cone visual
+  if (e.isBoss && e.type === 'medusa' && e.angle !== undefined) {
+    ctx.save();
+    ctx.rotate(e.angle);
+    const coneRange = 3 * PPM;
+    const spread = Math.PI / 4;
+    ctx.globalAlpha = 0.25;
+    const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, coneRange);
+    grad.addColorStop(0, MEDUSA_COL);
+    grad.addColorStop(1, 'rgba(102,255,102,0)');
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.arc(0, 0, coneRange, -spread, spread);
+    ctx.closePath(); ctx.fill();
+    ctx.globalAlpha = 1;
+    ctx.restore();
+  }
+
   ctx.shadowBlur = 0;
   ctx.restore();
 
+  // HP bar
   const barY = e.y + yOffset - s/2 - (isBoss ? 15 : 7);
   const w = isBoss ? 50 : 20, h = isBoss ? 6 : 3;
   ctx.fillStyle = GREEN_DARK; ctx.fillRect(e.x - w/2, barY, w, h);
   const segs = isBoss ? 10 : 5;
   const filled = Math.max(0, Math.ceil((e.hp / e.maxHp) * segs));
-  ctx.fillStyle = isBoss ? OGRE : (isYeti ? ICE : (isAir ? AIR : (isIceFrozen ? FROZEN : (isBurning ? FIRE : GREEN))));
+  ctx.fillStyle = color;
   for (let i = 0; i < filled; i++) {
     ctx.fillRect(e.x - w/2 + i * (w/segs), barY, (w / segs) - 1, h);
   }
+  if (isPetrified) {
+    ctx.fillStyle = STONE;
+    ctx.font = 'bold 12px VT323, monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('🪨', e.x, barY - 5);
+  }
 }
 
-// ============ DECK UI ============
+// ============ FUNÇÕES AUX ============
+function bazookaExplosion(x, y, damage, radius, split) {
+  addShockwave(x, y, ORANGE, radius, 22);
+  burst(x, y, 50, { speed: 7, life: 40, size: 3, gravity: 0.15, friction: 0.9 });
+  addFlash(0.55); addShake(9);
+  Sound.explosion();
+  const inRange = enemies.filter(e => Math.hypot(e.x - x, (e.y - (e.airHeight || 0)) - y) <= radius);
+  for (const e of inRange) {
+    const dist = Math.hypot(e.x - x, (e.y - (e.airHeight || 0)) - y);
+    const falloff = 1 - (dist / radius) * 0.6;
+    damageEnemy(e, Math.floor(damage * falloff));
+  }
+}
+function findCorrectWaypointForPosition(x, y) {
+  let bestSegIdx = 0, bestDist = Infinity;
+  for (let i = 0; i < path.length - 1; i++) {
+    const d = distToSegment({x, y}, path[i], path[i+1]);
+    if (d < bestDist) { bestDist = d; bestSegIdx = i; }
+  }
+  return Math.min(bestSegIdx + 1, path.length - 1);
+}
+function spawnCloneMinions(x, y, parentWp) {
+  const parentAngle = parentWp < path.length ? Math.atan2(path[parentWp].y - path[parentWp - 1].y, path[parentWp].x - path[parentWp - 1].x) : 0;
+  for (let i = 0; i < 5; i++) {
+    const spreadAngle = (Math.PI * 2 / 5) * i;
+    const offsetAngle = parentAngle + Math.PI / 2;
+    const perpX = Math.cos(offsetAngle) * 18 * Math.cos(spreadAngle);
+    const perpY = Math.sin(offsetAngle) * 18 * Math.cos(spreadAngle);
+    const fwdX = Math.cos(parentAngle) * 18 * Math.sin(spreadAngle);
+    const fwdY = Math.sin(parentAngle) * 18 * Math.sin(spreadAngle);
+    const mx = x + perpX + fwdX, my = y + perpY + fwdY;
+    const wp = findCorrectWaypointForPosition(mx, my);
+    spawnEnemy('minion', mx, my, wp);
+  }
+}
+function spawnFungusZone(x, y) {
+  healZones.push({ x, y, radius: 8 * PPM, life: 4 * 60, maxLife: 4 * 60, pulse: 0 });
+  addShockwave(x, y, TOXIC, 8 * PPM, 45);
+  burst(x, y, 25, { speed: 4, life: 40, size: 3, color: TOXIC, gravity: 0.05 });
+}
+function bossFinalExplosion(x, y, color) {
+  addShockwave(x, y, color, 128, 35);
+  addShockwave(x, y, YELLOW, 96, 25);
+  burst(x, y, 80, { speed: 8, life: 50, size: 4, gravity: 0.2, friction: 0.9, color: color });
+  burst(x, y, 40, { speed: 12, life: 35, size: 3, color: YELLOW, friction: 0.88 });
+  addFlash(0.7, '255,255,255'); addShake(18);
+  Sound.bigExplosion();
+  const radius = 8 * PPM;
+  const inRange = towers.filter(t => Math.hypot(t.x - x, t.y - y) <= radius);
+  for (const t of inRange) {
+    let dmg = 100;
+    if (t.isProtected) dmg = Math.floor(dmg * (t.protReduction || 0.5));
+    t.hp -= dmg;
+    addText(t.x, t.y - 15, '-' + dmg, color, 55, 22);
+    if (t.hp <= 0) {
+      const idx = towers.indexOf(t);
+      if (idx >= 0) towers.splice(idx, 1);
+      if (t.isHealer) healPlayer(5);
+    }
+  }
+  updateGameUI();
+}
+
+// ============ UI SCREENS ============
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  if (id) document.getElementById(id).classList.add('active');
+}
+function updateMenuCrystals() {
+  document.getElementById('menuCrystals').textContent = crystals;
+  const upgC = document.getElementById('upgradeCrystals');
+  if (upgC) upgC.textContent = crystals;
+}
+function showMenu() {
+  document.getElementById('game').style.display = 'none';
+  document.getElementById('titleBar').style.display = 'none';
+  document.getElementById('mapInfoBar').style.display = 'none';
+  document.getElementById('soundBtn').style.display = 'none';
+  document.body.classList.remove('mode-pc', 'mode-mobile');
+  gameMode = null;
+  updateMenuCrystals();
+  showScreen('menu');
+}
+
+// ============ DECK ============
 function buildDeckGrid() {
   const grid = document.getElementById('deckGrid');
   grid.innerHTML = '';
@@ -2854,7 +2956,6 @@ function toggleDeckCard(type, card) {
   if (idx >= 0) {
     selectedDeck.splice(idx, 1); card.classList.remove('selected');
   } else {
-    // LORD não ocupa slot
     if (type !== 'lord') {
       const nonLordCount = selectedDeck.filter(t => t !== 'lord').length;
       if (nonLordCount >= DECK_SIZE) { showMsg('> DECK CHEIO (8/8)'); Sound.error(); return; }
@@ -2872,8 +2973,16 @@ function updateDeckUI() {
   else info.classList.remove('full');
   document.getElementById('btnDeckStart').disabled = nonLordCount !== DECK_SIZE;
 }
+function showDeck() {
+  showScreen('deckScreen');
+  selectedDeck = loadDeck();
+  if (selectedDeck.length > DECK_SIZE + 1) selectedDeck = selectedDeck.slice(0, DECK_SIZE);
+  buildDeckGrid();
+  updateDeckUI();
+  Sound.select();
+}
 
-// ============ UPGRADE UI ============
+// ============ UPGRADE ============
 function buildUpgradeGrid() {
   const grid = document.getElementById('upgradeGrid');
   grid.innerHTML = '';
@@ -2894,7 +3003,6 @@ function buildUpgradeGrid() {
     let statsHtml = `<div>HP: ${cur.hp}`;
     if (next) statsHtml += ` <span class="next">→ ${next.hp}</span>`;
     statsHtml += `</div>`;
-
     if (def.isHealer) {
       statsHtml += `<div>CURA: ${cur.heal}`;
       if (next) statsHtml += ` <span class="next">→ ${next.heal}</span>`;
@@ -2908,9 +3016,7 @@ function buildUpgradeGrid() {
       if (next) statsHtml += ` <span class="next">→ ${Math.round(next.reduction * 100)}%</span>`;
       statsHtml += `</div>`;
     } else if (def.isParadox) {
-      statsHtml += `<div>DURAÇÃO: ${(cur.duration / 60).toFixed(1)}s`;
-      if (next) statsHtml += ` <span class="next">→ ${(next.duration / 60).toFixed(1)}s</span>`;
-      statsHtml += `</div>`;
+      statsHtml += `<div>DURAÇÃO: ${(cur.duration / 60).toFixed(1)}s</div>`;
     } else if (cur.damage !== undefined) {
       statsHtml += `<div>DANO: ${cur.damage}`;
       if (next) statsHtml += ` <span class="next">→ ${next.damage}</span>`;
@@ -2921,10 +3027,7 @@ function buildUpgradeGrid() {
     statsHtml += `</div>`;
 
     card.innerHTML = `
-      <div class="u-name">
-        <span>${def.name}</span>
-        <span class="u-stars">${starsText}</span>
-      </div>
+      <div class="u-name"><span>${def.name}</span><span class="u-stars">${starsText}</span></div>
       <div class="u-stats">${statsHtml}</div>
       <button class="u-btn${lvl === 3 ? ' max' : ''}" ${btnDisabled ? 'disabled' : ''}>${btnTxt}</button>
     `;
@@ -2943,8 +3046,14 @@ function buildUpgradeGrid() {
     grid.appendChild(card);
   }
 }
+function showUpgrade() {
+  showScreen('upgradeScreen');
+  updateMenuCrystals();
+  buildUpgradeGrid();
+  Sound.select();
+}
 
-// ============ MAP SELECT UI ============
+// ============ MAP SELECT ============
 function buildMapSelect() {
   const grid = document.getElementById('mapSelectGrid');
   grid.innerHTML = '';
@@ -2953,46 +3062,34 @@ function buildMapSelect() {
     card.className = 'map-card';
     card.dataset.id = map.id;
     if (selectedMap && selectedMap.id === map.id) card.classList.add('selected');
-
     const previewDiv = document.createElement('div');
     previewDiv.className = 'map-preview';
     const pv = document.createElement('canvas');
     pv.width = 240; pv.height = 120;
     previewDiv.appendChild(pv);
-
     card.appendChild(previewDiv);
     const nameEl = document.createElement('div');
-    nameEl.className = 'map-name';
-    nameEl.textContent = map.name;
+    nameEl.className = 'map-name'; nameEl.textContent = map.name;
     card.appendChild(nameEl);
     const descEl = document.createElement('div');
-    descEl.className = 'map-desc';
-    descEl.textContent = map.desc;
+    descEl.className = 'map-desc'; descEl.textContent = map.desc;
     card.appendChild(descEl);
-
     card.addEventListener('click', () => {
       selectedMap = map;
       Sound.select();
       buildMapSelect();
       updateMapSelectUI();
     });
-
     grid.appendChild(card);
-
-    // Draw preview
     requestAnimationFrame(() => drawMapPreview(pv, map.path));
   }
 }
 function drawMapPreview(pv, pathPoints) {
   const pctx = pv.getContext('2d');
-  const scaleX = pv.width / 480;
-  const scaleY = pv.height / 480;
-  pctx.fillStyle = '#0a3a0a';
-  pctx.fillRect(0, 0, pv.width, pv.height);
-  pctx.strokeStyle = '#33ff33';
-  pctx.lineWidth = 3;
-  pctx.lineCap = 'round';
-  pctx.lineJoin = 'round';
+  const scaleX = pv.width / 480, scaleY = pv.height / 480;
+  pctx.fillStyle = '#0a3a0a'; pctx.fillRect(0, 0, pv.width, pv.height);
+  pctx.strokeStyle = '#33ff33'; pctx.lineWidth = 3;
+  pctx.lineCap = 'round'; pctx.lineJoin = 'round';
   pctx.beginPath();
   for (let i = 0; i < pathPoints.length; i++) {
     const p = pathPoints[i];
@@ -3004,37 +3101,6 @@ function drawMapPreview(pv, pathPoints) {
 function updateMapSelectUI() {
   document.getElementById('btnMapSelectStart').disabled = !selectedMap;
 }
-
-// ============ GAME FLOW ============
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  if (id) document.getElementById(id).classList.add('active');
-}
-
-function showMenu() {
-  document.getElementById('game').style.display = 'none';
-  document.getElementById('titleBar').style.display = 'none';
-  document.getElementById('mapInfoBar').style.display = 'none';
-  document.getElementById('soundBtn').style.display = 'none';
-  document.body.classList.remove('mode-pc', 'mode-mobile');
-  gameMode = null;
-  updateMenuCrystals();
-  showScreen('menu');
-}
-function showDeck() {
-  showScreen('deckScreen');
-  selectedDeck = loadDeck();
-  if (selectedDeck.length > DECK_SIZE + 1) selectedDeck = selectedDeck.slice(0, DECK_SIZE);
-  buildDeckGrid();
-  updateDeckUI();
-  Sound.select();
-}
-function showUpgrade() {
-  showScreen('upgradeScreen');
-  updateMenuCrystals();
-  buildUpgradeGrid();
-  Sound.select();
-}
 function showMapSelect() {
   showScreen('mapSelectScreen');
   if (!selectedMap) selectedMap = OFFICIAL_MAPS[0];
@@ -3043,6 +3109,7 @@ function showMapSelect() {
   Sound.select();
 }
 
+// ============ GAME START ============
 function startGame() {
   if (!selectedMap) return;
   currentMap = selectedMap;
@@ -3065,9 +3132,11 @@ function startGame() {
   sparks.length = 0; heals.length = 0; moneyPops.length = 0;
   crystalPops.length = 0; healZones.length = 0; flames.length = 0;
   teslaBolts.length = 0; paradoxZones.length = 0; airTrails.length = 0;
-  lordAuras.length = 0;
+  lordAuras.length = 0; webProjectiles.length = 0; poisonClouds.length = 0;
+  barrils.length = 0; petrifyCones.length = 0; medusaWaves.length = 0;
   waveQueue = []; waveActive = false; waveDelay = 0;
-  bossActive = false; bossRef = null;
+  waveComplete = false; waveTransitionTimer = 0;
+  bossActive = false; bossRef = null; currentBossType = null;
   dragging = null; selectedTowerType = null; pointerDownInfo = null;
 
   Sound.resume();
@@ -3111,9 +3180,7 @@ document.getElementById('secretCancel').addEventListener('click', () => {
   document.getElementById('secretModal').classList.remove('active');
 });
 document.getElementById('secretOk').addEventListener('click', trySecret);
-document.getElementById('secretInput').addEventListener('keydown', e => {
-  if (e.key === 'Enter') trySecret();
-});
+document.getElementById('secretInput').addEventListener('keydown', e => { if (e.key === 'Enter') trySecret(); });
 function trySecret() {
   const val = document.getElementById('secretInput').value.trim();
   if (val === '2313') {
@@ -3125,33 +3192,21 @@ function trySecret() {
     document.getElementById('secretInput').value = '';
   }
 }
-function openAdminPanel() {
-  document.getElementById('adminPanel').classList.add('active');
-}
-document.getElementById('adminClose').addEventListener('click', () => {
-  document.getElementById('adminPanel').classList.remove('active');
-});
+function openAdminPanel() { document.getElementById('adminPanel').classList.add('active'); }
+document.getElementById('adminClose').addEventListener('click', () => document.getElementById('adminPanel').classList.remove('active'));
 document.getElementById('adminGiveCrystals').addEventListener('click', () => {
-  crystals += 1000;
-  saveCrystals(crystals);
-  Sound.crystal();
-  updateMenuCrystals();
+  crystals += 1000; saveCrystals(crystals); Sound.crystal(); updateMenuCrystals();
   showMsg('> +1000 CRISTAIS');
 });
 document.getElementById('adminUnlockLord').addEventListener('click', () => {
-  lordUnlocked = true;
-  saveLordUnlocked(true);
-  Sound.upgrade();
+  lordUnlocked = true; saveLordUnlocked(true); Sound.upgrade();
   showMsg('> 👑 LORD DESBLOQUEADO');
 });
 document.getElementById('adminResetCrystals').addEventListener('click', () => {
   if (confirm('Resetar cristais?')) { crystals = 0; saveCrystals(0); updateMenuCrystals(); showMsg('> CRISTAIS RESETADOS'); }
 });
 document.getElementById('adminResetStars').addEventListener('click', () => {
-  if (confirm('Resetar estrelas?')) {
-    for (const t of TOWER_ORDER) stars[t] = 0;
-    saveStars(stars); showMsg('> ESTRELAS RESETADAS');
-  }
+  if (confirm('Resetar estrelas?')) { for (const t of TOWER_ORDER) stars[t] = 0; saveStars(stars); showMsg('> ESTRELAS RESETADAS'); }
 });
 document.getElementById('adminResetAll').addEventListener('click', () => {
   if (confirm('RESETAR TUDO?')) {
@@ -3175,12 +3230,9 @@ document.getElementById('adminMyMaps').addEventListener('click', () => {
 
 // ============ MAP EDITOR ============
 let editorPath = [];
-let editorStart = { x: 0, y: 64 };
-let editorEnd = { x: 480, y: 240 };
 let editorTool = 'path';
 let editorIsDrawing = false;
 let editingMapIndex = -1;
-
 const editorCanvas = document.getElementById('editorCanvas');
 const editorCtx = editorCanvas.getContext('2d');
 
@@ -3190,120 +3242,74 @@ function openEditor(mapIndex) {
     const m = customMaps[editingMapIndex];
     document.getElementById('editorName').value = m.name;
     editorPath = m.path.map(p => ({ x: p.x, y: p.y }));
-    editorStart = editorPath.length > 0 ? { ...editorPath[0] } : { x: 0, y: 64 };
-    editorEnd = editorPath.length > 0 ? { ...editorPath[editorPath.length - 1] } : { x: 480, y: 240 };
   } else {
     document.getElementById('editorName').value = '';
     editorPath = [];
-    editorStart = { x: 0, y: 64 };
-    editorEnd = { x: 480, y: 240 };
   }
   document.getElementById('editorScreen').classList.add('active');
-  document.querySelectorAll('.editor-tool[data-tool]').forEach(b => {
-    b.classList.toggle('active', b.dataset.tool === 'path');
-  });
+  document.querySelectorAll('.editor-tool[data-tool]').forEach(b => b.classList.toggle('active', b.dataset.tool === 'path'));
   editorTool = 'path';
   redrawEditor();
 }
-function closeEditor() {
-  document.getElementById('editorScreen').classList.remove('active');
-}
+function closeEditor() { document.getElementById('editorScreen').classList.remove('active'); }
 function redrawEditor() {
   editorCtx.fillStyle = '#0a1a0a';
   editorCtx.fillRect(0, 0, editorCanvas.width, editorCanvas.height);
-  // Grid
   editorCtx.strokeStyle = 'rgba(102,221,255,0.15)';
   editorCtx.lineWidth = 1;
-  for (let x = 0; x <= editorCanvas.width; x += PPM) {
-    editorCtx.beginPath(); editorCtx.moveTo(x, 0); editorCtx.lineTo(x, editorCanvas.height); editorCtx.stroke();
-  }
-  for (let y = 0; y <= editorCanvas.height; y += PPM) {
-    editorCtx.beginPath(); editorCtx.moveTo(0, y); editorCtx.lineTo(editorCanvas.width, y); editorCtx.stroke();
-  }
-  // Grid 5m
+  for (let x = 0; x <= editorCanvas.width; x += PPM) { editorCtx.beginPath(); editorCtx.moveTo(x, 0); editorCtx.lineTo(x, editorCanvas.height); editorCtx.stroke(); }
+  for (let y = 0; y <= editorCanvas.height; y += PPM) { editorCtx.beginPath(); editorCtx.moveTo(0, y); editorCtx.lineTo(editorCanvas.width, y); editorCtx.stroke(); }
   editorCtx.strokeStyle = 'rgba(102,221,255,0.3)';
-  for (let x = 0; x <= editorCanvas.width; x += PPM * 5) {
-    editorCtx.beginPath(); editorCtx.moveTo(x, 0); editorCtx.lineTo(x, editorCanvas.height); editorCtx.stroke();
-  }
-  for (let y = 0; y <= editorCanvas.height; y += PPM * 5) {
-    editorCtx.beginPath(); editorCtx.moveTo(0, y); editorCtx.lineTo(editorCanvas.width, y); editorCtx.stroke();
-  }
-  // Path
+  for (let x = 0; x <= editorCanvas.width; x += PPM * 5) { editorCtx.beginPath(); editorCtx.moveTo(x, 0); editorCtx.lineTo(x, editorCanvas.height); editorCtx.stroke(); }
+  for (let y = 0; y <= editorCanvas.height; y += PPM * 5) { editorCtx.beginPath(); editorCtx.moveTo(0, y); editorCtx.lineTo(editorCanvas.width, y); editorCtx.stroke(); }
   if (editorPath.length > 0) {
-    editorCtx.strokeStyle = '#66ddff';
-    editorCtx.lineWidth = pathWidth;
-    editorCtx.lineCap = 'round';
-    editorCtx.lineJoin = 'round';
+    editorCtx.strokeStyle = '#66ddff'; editorCtx.lineWidth = pathWidth;
+    editorCtx.lineCap = 'round'; editorCtx.lineJoin = 'round';
     editorCtx.beginPath();
     editorCtx.moveTo(editorPath[0].x, editorPath[0].y);
     for (let i = 1; i < editorPath.length; i++) editorCtx.lineTo(editorPath[i].x, editorPath[i].y);
     editorCtx.stroke();
-    editorCtx.strokeStyle = '#ffffff';
-    editorCtx.lineWidth = 2;
-    editorCtx.stroke();
+    editorCtx.strokeStyle = '#ffffff'; editorCtx.lineWidth = 2; editorCtx.stroke();
   }
-  // Waypoints
   for (let i = 0; i < editorPath.length; i++) {
     const p = editorPath[i];
     editorCtx.fillStyle = i === 0 ? '#33ff33' : (i === editorPath.length - 1 ? '#ff3333' : '#66ddff');
     editorCtx.beginPath(); editorCtx.arc(p.x, p.y, 5, 0, Math.PI * 2); editorCtx.fill();
   }
-  // Info
   let totalDist = 0;
   for (let i = 1; i < editorPath.length; i++) {
     totalDist += Math.hypot(editorPath[i].x - editorPath[i-1].x, editorPath[i].y - editorPath[i-1].y);
   }
   document.getElementById('editorInfo').textContent = `Pontos: ${editorPath.length} · ${(totalDist / 16).toFixed(1)}m`;
 }
-
-function snapToGrid(x, y) {
-  return { x: Math.round(x / PPM) * PPM, y: Math.round(y / PPM) * PPM };
-}
+function snapToGrid(x, y) { return { x: Math.round(x / PPM) * PPM, y: Math.round(y / PPM) * PPM }; }
 
 editorCanvas.addEventListener('pointerdown', e => {
   const rect = editorCanvas.getBoundingClientRect();
   const cx = (e.clientX - rect.left) * (editorCanvas.width / rect.width);
   const cy = (e.clientY - rect.top) * (editorCanvas.height / rect.height);
   const snapped = snapToGrid(cx, cy);
-
-  if (editorTool === 'start') {
-    editorStart = snapped;
-    if (editorPath.length > 0) editorPath[0] = snapped;
-    else editorPath.push(snapped);
-    redrawEditor();
-  } else if (editorTool === 'end') {
-    editorEnd = snapped;
-    if (editorPath.length > 0) editorPath[editorPath.length - 1] = snapped;
-    else editorPath.push(snapped);
-    redrawEditor();
-  } else if (editorTool === 'path') {
-    editorIsDrawing = true;
-    if (editorPath.length === 0) editorPath.push(snapped);
-    else {
-      // Verifica distância mínima
-      const last = editorPath[editorPath.length - 1];
-      if (Math.hypot(snapped.x - last.x, snapped.y - last.y) > PPM * 0.5) {
-        editorPath.push(snapped);
-      }
-    }
-    redrawEditor();
+  editorIsDrawing = true;
+  if (editorPath.length === 0) editorPath.push(snapped);
+  else {
+    const last = editorPath[editorPath.length - 1];
+    if (Math.hypot(snapped.x - last.x, snapped.y - last.y) > PPM * 0.5) editorPath.push(snapped);
   }
+  redrawEditor();
 });
 editorCanvas.addEventListener('pointermove', e => {
-  if (!editorIsDrawing || editorTool !== 'path') return;
+  if (!editorIsDrawing) return;
   const rect = editorCanvas.getBoundingClientRect();
   const cx = (e.clientX - rect.left) * (editorCanvas.width / rect.width);
   const cy = (e.clientY - rect.top) * (editorCanvas.height / rect.height);
   const snapped = snapToGrid(cx, cy);
   const last = editorPath[editorPath.length - 1];
   if (last && Math.hypot(snapped.x - last.x, snapped.y - last.y) > PPM * 0.5) {
-    editorPath.push(snapped);
-    redrawEditor();
+    editorPath.push(snapped); redrawEditor();
   }
 });
 editorCanvas.addEventListener('pointerup', () => { editorIsDrawing = false; });
 editorCanvas.addEventListener('pointerleave', () => { editorIsDrawing = false; });
-
 document.querySelectorAll('.editor-tool[data-tool]').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.editor-tool[data-tool]').forEach(b => b.classList.remove('active'));
@@ -3311,35 +3317,18 @@ document.querySelectorAll('.editor-tool[data-tool]').forEach(btn => {
     editorTool = btn.dataset.tool;
   });
 });
-document.getElementById('editorUndo').addEventListener('click', () => {
-  editorPath.pop();
-  redrawEditor();
-});
-document.getElementById('editorClear').addEventListener('click', () => {
-  editorPath = [];
-  redrawEditor();
-});
-document.getElementById('editorClose').addEventListener('click', () => {
-  closeEditor();
-  openAdminPanel();
-});
+document.getElementById('editorUndo').addEventListener('click', () => { editorPath.pop(); redrawEditor(); });
+document.getElementById('editorClear').addEventListener('click', () => { editorPath = []; redrawEditor(); });
+document.getElementById('editorClose').addEventListener('click', () => { closeEditor(); openAdminPanel(); });
 document.getElementById('editorSave').addEventListener('click', () => {
   if (editorPath.length < 2) { showMsg('> PRECISA 2+ PONTOS'); Sound.error(); return; }
   const name = document.getElementById('editorName').value.trim() || ('Mapa ' + (customMaps.length + 1));
-  const newMap = {
-    id: 'custom_' + Date.now(),
-    name: name,
-    desc: 'Custom · ' + editorPath.length + ' pts',
-    path: editorPath.map(p => ({ x: p.x, y: p.y })),
-    isCustom: true
-  };
+  const newMap = { id: 'custom_' + Date.now(), name: name, desc: 'Custom · ' + editorPath.length + ' pts', path: editorPath.map(p => ({ x: p.x, y: p.y })), isCustom: true };
   if (editingMapIndex >= 0) customMaps[editingMapIndex] = newMap;
   else customMaps.push(newMap);
-  saveCustomMaps(customMaps);
-  Sound.upgrade();
+  saveCustomMaps(customMaps); Sound.upgrade();
   showMsg('> MAPA SALVO!');
-  closeEditor();
-  openAdminPanel();
+  closeEditor(); openAdminPanel();
 });
 document.getElementById('editorExport').addEventListener('click', () => {
   if (editorPath.length < 2) { showMsg('> PRECISA 2+ PONTOS'); Sound.error(); return; }
@@ -3383,32 +3372,18 @@ document.getElementById('btnLoadCustomMap').addEventListener('click', () => {
     if (!isNaN(x) && !isNaN(y)) newPath.push({ x, y });
   }
   if (newPath.length < 2) { Sound.error(); showMsg('> MAPA MUITO CURTO'); return; }
-  const newMap = {
-    id: 'custom_' + Date.now(),
-    name: parts[1] || 'Custom',
-    desc: 'Custom · ' + newPath.length + ' pts',
-    path: newPath,
-    isCustom: true
-  };
+  const newMap = { id: 'custom_' + Date.now(), name: parts[1] || 'Custom', desc: 'Custom · ' + newPath.length + ' pts', path: newPath, isCustom: true };
   if (!customMaps.find(m => m.name === newMap.name && JSON.stringify(m.path) === JSON.stringify(newMap.path))) {
-    customMaps.push(newMap);
-    saveCustomMaps(customMaps);
+    customMaps.push(newMap); saveCustomMaps(customMaps);
   }
   selectedMap = newMap;
-  Sound.upgrade();
-  showMsg('> MAPA CARREGADO!');
-  buildMapSelect();
-  updateMapSelectUI();
+  Sound.upgrade(); showMsg('> MAPA CARREGADO!');
+  buildMapSelect(); updateMapSelectUI();
 });
-document.getElementById('btnMapSelectStart').addEventListener('click', () => {
-  if (!selectedMap) return;
-  startGame();
-});
-document.getElementById('btnMapSelectBack').addEventListener('click', () => {
-  showDeck();
-});
+document.getElementById('btnMapSelectStart').addEventListener('click', () => { if (selectedMap) startGame(); });
+document.getElementById('btnMapSelectBack').addEventListener('click', () => { showDeck(); });
 
-// ============ SOUND BUTTON ============
+// ============ SOUND BTN ============
 const soundBtn = document.getElementById('soundBtn');
 soundBtn.addEventListener('click', () => {
   Sound.init();
@@ -3421,10 +3396,7 @@ document.addEventListener('pointerdown', () => { Sound.init(); Sound.resume(); }
 
 // ============ MENU EVENTS ============
 document.querySelectorAll('.mode-btn[data-mode]').forEach(btn => {
-  btn.addEventListener('click', () => {
-    gameMode = btn.dataset.mode;
-    showDeck();
-  });
+  btn.addEventListener('click', () => { gameMode = btn.dataset.mode; showDeck(); });
 });
 document.getElementById('btnDeckDefault').addEventListener('click', () => {
   selectedDeck = ['recruta','boxeador','drone','faca','sniper','bazuca','medico','comerciante'];
@@ -3440,9 +3412,7 @@ document.getElementById('btnDeckStart').addEventListener('click', () => {
   if (nonLordCount !== DECK_SIZE) return;
   showMapSelect();
 });
-document.getElementById('btnUpgradeBack').addEventListener('click', () => {
-  showDeck();
-});
+document.getElementById('btnUpgradeBack').addEventListener('click', () => showDeck());
 document.getElementById('btnMenu').addEventListener('click', () => showMenu());
 
 updateMenuCrystals();
