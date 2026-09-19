@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>TOWER DEFENSE 1970 v20</title>
+<title>TOWER DEFENSE 1970 v21</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
@@ -48,7 +48,7 @@
     box-shadow: 0 0 20px #33ff33, inset 0 0 15px rgba(51,255,51,0.2);
     user-select: none; touch-action: manipulation; }
   .mode-btn:active, .mode-btn:hover { background: #33ff33; color: #000;
-    box-shadow: 0 0 40px #33ff33, 0 0 80px #33ff33; transform: scale(1.05); }
+    box-shadow: 0 0 40px #33ff33, transform: scale(1.05); }
   .mode-btn:hover .mode-icon, .mode-btn:hover .mode-name, .mode-btn:hover .mode-desc,
   .mode-btn:active .mode-icon, .mode-btn:active .mode-name, .mode-btn:active .mode-desc {
     color: #000; text-shadow: none; }
@@ -69,9 +69,9 @@
     line-height: 1.2; transition: all 0.1s; user-select: none; position: relative; }
   .deck-card:hover { background: #062a06; }
   .deck-card.selected { background: #1a4a1a; border-color: #ffd700;
-    box-shadow: 0 0 15px #ffd700, inset 0 0 10px rgba(255,215,0,0.3); }
+    box-shadow: 0 0 15px #ffd700; }
   .deck-card.selected::after { content: "✓"; position: absolute; top: 4px; right: 8px;
-    color: #ffd700; font-size: 22px; text-shadow: 0 0 8px #ffd700; }
+    color: #ffd700; font-size: 22px; }
   .deck-card .card-name { font-size: 16px; font-weight: bold; margin-bottom: 3px; }
   .deck-card .card-cost { font-size: 13px; color: #ffd700; margin-bottom: 4px; }
   .deck-card .card-stat { font-size: 11px; color: #22aa22; }
@@ -82,30 +82,30 @@
     padding: 10px 22px; font-family: 'VT323', monospace; font-size: 20px;
     cursor: pointer; letter-spacing: 2px; box-shadow: 0 0 10px #33ff33;
     transition: all 0.15s; user-select: none; }
-  .action-btn:hover:not(:disabled) { background: #33ff33; color: #000; box-shadow: 0 0 25px #33ff33; }
+  .action-btn:hover:not(:disabled) { background: #33ff33; color: #000; }
   .action-btn:disabled { opacity: 0.3; cursor: not-allowed; }
   .action-btn.primary { border-color: #ffd700; color: #ffd700; }
-  .action-btn.primary:hover:not(:disabled) { background: #ffd700; color: #000; box-shadow: 0 0 25px #ffd700; }
+  .action-btn.primary:hover:not(:disabled) { background: #ffd700; color: #000; }
   .action-btn.cyan { border-color: #66ddff; color: #66ddff; }
-  .action-btn.cyan:hover:not(:disabled) { background: #66ddff; color: #000; box-shadow: 0 0 25px #66ddff; }
+  .action-btn.cyan:hover:not(:disabled) { background: #66ddff; color: #000; }
   .action-btn.red { border-color: #ff3333; color: #ff3333; }
-  .action-btn.red:hover:not(:disabled) { background: #ff3333; color: #000; box-shadow: 0 0 25px #ff3333; }
+  .action-btn.red:hover:not(:disabled) { background: #ff3333; color: #000; }
 
   #upgradeGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
     gap: 10px; max-width: 1100px; margin: 0 auto; width: 100%; }
   .upgrade-card { background: #000; border: 2px solid #66ddff; color: #66ddff;
-    padding: 10px; font-family: 'VT323', monospace; line-height: 1.25; position: relative; }
+    padding: 10px; font-family: 'VT323', monospace; line-height: 1.25; }
   .upgrade-card .u-name { font-size: 18px; font-weight: bold; margin-bottom: 5px;
-    text-shadow: 0 0 6px #66ddff; display: flex; justify-content: space-between; align-items: center; }
-  .upgrade-card .u-stars { font-size: 18px; color: #ffd700; text-shadow: 0 0 6px #ffd700; }
+    display: flex; justify-content: space-between; align-items: center; }
+  .upgrade-card .u-stars { font-size: 18px; color: #ffd700; }
   .upgrade-card .u-stats { font-size: 12px; color: #22aa22; margin-bottom: 6px; line-height: 1.4; }
   .upgrade-card .u-stats .next { color: #88ff88; }
   .upgrade-card .u-btn { width: 100%; padding: 6px; margin-top: 4px;
     background: #000; border: 2px solid #66ddff; color: #66ddff;
     font-family: 'VT323', monospace; font-size: 14px; cursor: pointer;
-    letter-spacing: 2px; box-shadow: 0 0 8px #66ddff; transition: all 0.15s; }
+    letter-spacing: 2px; transition: all 0.15s; }
   .upgrade-card .u-btn:hover:not(:disabled) { background: #66ddff; color: #000; }
-  .upgrade-card .u-btn:disabled { opacity: 0.35; cursor: not-allowed; border-color: #555; color: #555; box-shadow: none; }
+  .upgrade-card .u-btn:disabled { opacity: 0.35; cursor: not-allowed; border-color: #555; color: #555; }
   .upgrade-card .u-btn.max { border-color: #ffd700; color: #ffd700; background: #1a1a00; cursor: default; }
 
   #mapSelectGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
@@ -116,18 +116,18 @@
   .map-card:hover { background: #062a06; }
   .map-card.selected { background: #1a4a1a; border-color: #ffd700; box-shadow: 0 0 15px #ffd700; }
   .map-card.selected::after { content: "✓"; position: absolute; top: 4px; right: 8px;
-    color: #ffd700; font-size: 22px; text-shadow: 0 0 8px #ffd700; }
+    color: #ffd700; font-size: 22px; }
   .map-card .map-preview { width: 100%; height: 120px; background: #0a3a0a;
     border: 1px solid #33ff33; margin-bottom: 6px; }
   .map-card .map-preview canvas { width: 100%; height: 100%; display: block; }
-  .map-card .map-name { font-size: 18px; font-weight: bold; margin-bottom: 2px; text-shadow: 0 0 6px #33ff33; }
+  .map-card .map-name { font-size: 18px; font-weight: bold; margin-bottom: 2px; }
   .map-card.selected .map-name { color: #ffd700; }
   .map-card .map-desc { font-size: 12px; color: #22aa22; }
 
   .custom-map-box { max-width: 900px; margin: 12px auto 0 auto;
     border: 2px solid #66ddff; padding: 12px; background: #000; box-shadow: 0 0 12px #66ddff; }
   .custom-map-box .box-title { color: #66ddff; font-size: 20px;
-    letter-spacing: 3px; margin-bottom: 8px; text-shadow: 0 0 8px #66ddff; }
+    letter-spacing: 3px; margin-bottom: 8px; }
   .custom-map-box textarea { width: 100%; min-height: 60px;
     background: #0a1a1a; border: 1px solid #66ddff; color: #66ddff;
     font-family: 'VT323', monospace; font-size: 14px; padding: 8px; resize: vertical; }
@@ -143,10 +143,9 @@
     display: none; justify-content: center; align-items: center; z-index: 20000; padding: 20px; }
   #secretModal.active, #customMapModal.active { display: flex; }
   .secret-box { background: #000; border: 3px solid #ffd700;
-    box-shadow: 0 0 30px #ffd700; padding: 25px; max-width: 400px; width: 100%;
-    font-family: 'VT323', monospace; }
+    box-shadow: 0 0 30px #ffd700; padding: 25px; max-width: 400px; width: 100%; }
   .secret-box h3 { color: #ffd700; text-align: center; font-size: 26px;
-    letter-spacing: 4px; margin-bottom: 15px; text-shadow: 0 0 10px #ffd700; }
+    letter-spacing: 4px; margin-bottom: 15px; }
   .secret-box input { width: 100%; background: #000; border: 2px solid #ffd700;
     color: #ffd700; font-family: 'VT323', monospace; font-size: 22px;
     padding: 8px 12px; letter-spacing: 6px; text-align: center; margin-bottom: 12px; }
@@ -167,8 +166,7 @@
     max-width: 500px; width: 100%; margin: 0 auto; }
   .admin-btn { background: #000; border: 2px solid #ffd700; color: #ffd700;
     padding: 14px 20px; font-family: 'VT323', monospace; font-size: 20px;
-    cursor: pointer; letter-spacing: 3px; box-shadow: 0 0 10px #ffd700;
-    transition: all 0.15s; text-align: center; }
+    cursor: pointer; letter-spacing: 3px; transition: all 0.15s; text-align: center; }
   .admin-btn:hover { background: #ffd700; color: #000; }
   .admin-btn.warn { border-color: #ff3333; color: #ff3333; }
   .admin-btn.warn:hover { background: #ff3333; color: #000; }
@@ -188,13 +186,11 @@
   .editor-tools { display: flex; flex-direction: column; gap: 8px; width: 220px; }
   .editor-tool { background: #000; border: 2px solid #66ddff; color: #66ddff;
     padding: 10px; cursor: pointer; font-family: 'VT323', monospace;
-    font-size: 16px; letter-spacing: 2px; text-align: center; transition: all 0.15s; }
+    font-size: 16px; letter-spacing: 2px; text-align: center; }
   .editor-tool:hover { background: #0a2a3a; }
-  .editor-tool.active { background: #66ddff; color: #000; box-shadow: 0 0 15px #66ddff; }
+  .editor-tool.active { background: #66ddff; color: #000; }
   .editor-tool.start { border-color: #33ff33; color: #33ff33; }
-  .editor-tool.start.active { background: #33ff33; color: #000; }
   .editor-tool.end { border-color: #ff3333; color: #ff3333; }
-  .editor-tool.end.active { background: #ff3333; color: #000; }
   .editor-tool.warn { border-color: #ffaa00; color: #ffaa00; }
   .editor-tool.danger { border-color: #ff3333; color: #ff3333; }
   .editor-name-input { background: #000; border: 2px solid #66ddff;
@@ -206,8 +202,7 @@
   #soundBtn { position: fixed; top: 8px; left: 50%; transform: translateX(-50%);
     background: #000; border: 2px solid #33ff33; color: #33ff33;
     font-family: 'VT323', monospace; font-size: 14px; padding: 4px 10px;
-    cursor: pointer; letter-spacing: 2px; box-shadow: 0 0 10px #33ff33;
-    z-index: 100; display: none; }
+    cursor: pointer; letter-spacing: 2px; z-index: 100; display: none; }
   #soundBtn:hover { background: #33ff33; color: #000; }
   #soundBtn.muted { border-color: #ff3333; color: #ff3333; }
 
@@ -215,7 +210,7 @@
     width: min(85vw, 520px); background: #000; border: 3px solid #66ff33;
     box-shadow: 0 0 25px #66ff33; padding: 6px 10px; display: none; z-index: 1400; }
   #bossHpBar .boss-label { font-size: 16px; color: #66ff33;
-    text-shadow: 0 0 10px #66ff33; letter-spacing: 4px; text-align: center; margin-bottom: 3px; }
+    letter-spacing: 4px; text-align: center; margin-bottom: 3px; }
   #bossHpBar .boss-bar-outer { width: 100%; height: 16px; background: #0a1a00;
     border: 1px solid #66ff33; overflow: hidden; }
   #bossHpBar .boss-bar-inner { height: 100%; width: 100%;
@@ -232,7 +227,7 @@
   #ui::-webkit-scrollbar-thumb { background: #33ff33; }
   #ui h2 { font-size: 18px; margin-bottom: 10px; color: #33ff33;
     border-bottom: 1px dashed #33ff33; padding-bottom: 5px; letter-spacing: 2px;
-    text-align: left; text-shadow: 0 0 8px #33ff33; }
+    text-align: left; }
   .troops-grid { display: flex; flex-direction: column; gap: 4px; }
   .tower-btn { width: 100%; padding: 5px 8px; background: #000;
     border: 2px solid #33ff33; color: #33ff33; cursor: grab; text-align: left;
@@ -242,7 +237,7 @@
   .tower-btn.selected { background: #33ff33; color: #000;
     animation: blink 0.6s steps(2) infinite; }
   .tower-btn:disabled { opacity: 0.3; cursor: not-allowed; }
-  .tower-btn.lord { border-color: #ffd700; color: #ffd700; box-shadow: 0 0 8px #ffd700; }
+  .tower-btn.lord { border-color: #ffd700; color: #ffd700; }
   .tower-btn.lord:hover { background: #ffd700; color: #000; }
   @keyframes blink {
     0%, 50% { background: #33ff33; }
@@ -283,7 +278,7 @@
   #btnMenu { position: fixed; bottom: 10px; left: 10px;
     background: #000; border: 2px solid #33ff33; color: #33ff33;
     font-family: 'VT323', monospace; font-size: 16px; padding: 6px 12px;
-    cursor: pointer; letter-spacing: 2px; box-shadow: 0 0 10px #33ff33; z-index: 100; }
+    cursor: pointer; letter-spacing: 2px; z-index: 100; }
   #btnMenu:hover { background: #33ff33; color: #000; }
 
   #hordeBanner { position: fixed; top: 40%; left: 50%;
@@ -344,7 +339,7 @@
 
 <!-- UPGRADE -->
 <div id="upgradeScreen" class="screen">
-  <h2 style="color:#66ddff;text-shadow:0 0 15px #66ddff;">⭐ APRIMORAMENTO ⭐</h2>
+  <h2 style="color:#66ddff;">⭐ APRIMORAMENTO ⭐</h2>
   <div class="info-line" style="color:#66ddff;">💎 <span id="upgradeCrystals">0</span> CRISTAIS DISPONÍVEIS</div>
   <div id="upgradeGrid"></div>
   <div class="actions-bar">
@@ -398,7 +393,7 @@
   </div>
 </div>
 
-<!-- MAP EDITOR -->
+<!-- EDITOR -->
 <div id="editorScreen">
   <h2>🗺️ EDITOR DE MAPAS</h2>
   <input type="text" class="editor-name-input" id="editorName" placeholder="Nome do mapa..." maxlength="30">
@@ -406,13 +401,11 @@
     <canvas id="editorCanvas" width="480" height="480"></canvas>
     <div class="editor-tools">
       <button class="editor-tool active" data-tool="path">🟡 CAMINHO</button>
-      <button class="editor-tool start" data-tool="start">🟢 INÍCIO</button>
-      <button class="editor-tool end" data-tool="end">🔴 FIM</button>
       <div class="editor-info" id="editorInfo">Pontos: 0</div>
       <button class="editor-tool warn" id="editorUndo">⏪ DESFAZER</button>
       <button class="editor-tool warn" id="editorClear">🗑️ LIMPAR</button>
-      <button class="editor-tool cyan" id="editorExport" style="border-color:#66ddff;">📤 EXPORTAR</button>
-      <button class="editor-tool cyan" id="editorImport" style="border-color:#66ddff;">📥 IMPORTAR</button>
+      <button class="editor-tool" id="editorExport" style="border-color:#66ddff;color:#66ddff;">📤 EXPORTAR</button>
+      <button class="editor-tool" id="editorImport" style="border-color:#66ddff;color:#66ddff;">📥 IMPORTAR</button>
       <button class="editor-tool" id="editorSave" style="border-color:#ffd700;color:#ffd700;">💾 SALVAR</button>
       <button class="editor-tool danger" id="editorClose">◄ SAIR</button>
     </div>
@@ -421,7 +414,7 @@
 
 <div id="customMapModal">
   <div class="secret-box" style="border-color:#66ddff;">
-    <h3 style="color:#66ddff;text-shadow:0 0 10px #66ddff;">📋 CÓDIGO DO MAPA</h3>
+    <h3 style="color:#66ddff;">📋 CÓDIGO DO MAPA</h3>
     <textarea id="exportTextArea" style="width:100%;min-height:80px;background:#0a1a1a;border:2px solid #66ddff;color:#66ddff;font-family:'VT323',monospace;font-size:14px;padding:8px;resize:vertical;"></textarea>
     <div class="secret-actions" style="margin-top:12px;">
       <button id="exportCopyBtn" style="border-color:#66ddff;color:#66ddff;">📋 COPIAR</button>
@@ -431,7 +424,7 @@
 </div>
 
 <!-- GAME -->
-<div class="title" id="titleBar" style="display:none;">◄ TOWER DEFENSE · v20 ►</div>
+<div class="title" id="titleBar" style="display:none;">◄ TOWER DEFENSE · v21 ►</div>
 <div class="map-info" id="mapInfoBar" style="display:none;">
   MAPA: <span class="map-name" id="mapName">---</span><br>
   30m × 30m · 1m = 16px<br>
@@ -541,6 +534,16 @@ const Sound = (() => {
     barrilExplode() { noise(0.4, 0.35, 500); tone(80, 0.4, 'sawtooth', 0.25, 20); },
     medusaGaze() { tone(300, 0.2, 'sine', 0.2, 100); },
     stoneShatter() { noise(0.3, 0.25, 800); tone(150, 0.3, 'square', 0.2, 60); },
+    // v21
+    batSpawn() { tone(1200, 0.08, 'sine', 0.15, 800); setTimeout(() => tone(1000, 0.08, 'sine', 0.15, 700), 80); },
+    vampireSuck() { tone(400, 0.3, 'sawtooth', 0.25, 100); setTimeout(() => tone(200, 0.3, 'sawtooth', 0.2, 50), 150); },
+    pentagram() { tone(100, 0.5, 'sawtooth', 0.3, 40); noise(0.4, 0.15, 200); },
+    omegaMissile() { tone(600, 0.15, 'square', 0.2, 200); },
+    omegaBeam() { tone(2000, 0.2, 'square', 0.2, 400); },
+    blackKnightCurse() { tone(80, 0.6, 'sawtooth', 0.3, 30); setTimeout(() => tone(60, 0.5, 'sawtooth', 0.25, 25), 300); },
+    reviveSound() { tone(300, 0.1, 'square', 0.2, 800); setTimeout(() => tone(800, 0.15, 'square', 0.15, 400), 100); },
+    colossusPound() { noise(0.5, 0.45, 250); tone(30, 0.6, 'square', 0.35, 10); },
+    colossusDeath() { noise(0.9, 0.4, 400); tone(25, 1, 'sawtooth', 0.4, 5); },
     enemyHit() { tone(400, 0.03, 'square', 0.08, 200); },
     enemyDeath() { tone(300, 0.08, 'square', 0.15, 100); },
     playerHit() { tone(200, 0.3, 'sawtooth', 0.3, 60); noise(0.2, 0.2, 400); },
@@ -573,6 +576,7 @@ const ICE = '#88ddff';
 const FROZEN = '#66ccff';
 const STONE = '#8a8a8a';
 const RED = '#ff3333';
+const DARKRED = '#8a0000';
 const FIRE = '#ff6600';
 const FIRE_BRIGHT = '#ffaa33';
 const WHITE = '#ffffff';
@@ -592,10 +596,14 @@ const SPIDER_COL = '#aa66ff';
 const CENTAUR_COL = '#8b5a2b';
 const STARK_COL = '#ff4444';
 const MEDUSA_COL = '#66ff66';
+const DRACULA_COL = '#8a0000';
+const OMEGA_COL = '#88aaff';
+const KNIGHT_COL = '#444444';
+const COLOSSUS_COL = '#666666';
 const LORD_GOLD = '#ffd700';
 const LORD_PURPLE = '#aa66ff';
 
-// ============ 3 MAPAS OFICIAIS ============
+// ============ MAPAS ============
 const OFFICIAL_MAPS = [
   { id: 'zigue', name: 'ZIGUE-ZAGUE', desc: 'Clássico · Equilibrado',
     path: [
@@ -759,24 +767,23 @@ let waveNum = 0;
 let paused = false;
 let gameOver = false;
 let gameMode = null;
-let pendingMode = null;
 let selectedDeck = [];
 let selectedMap = null;
-let currentMap = null;
 let path = null;
 let pathWidth = 32;
 let playerHp = PLAYER_MAX_HP;
 let bossActive = false;
 let bossRef = null;
-let currentBossType = null;
 let dragging = null;
 let selectedTowerType = null;
 let pointerDownInfo = null;
 let shakeAmount = 0;
 let screenFlash = 0;
 let screenFlashColor = '51,255,51';
-let waveComplete = false; // flag pra controlar transição
+let waveComplete = false;
 let waveTransitionTimer = 0;
+let curseWavesLeft = 0; // Black Knight maldição
+let curseActive = false;
 
 const towers = [];
 const enemies = [];
@@ -797,11 +804,18 @@ const teslaBolts = [];
 const paradoxZones = [];
 const airTrails = [];
 const lordAuras = [];
-const webProjectiles = [];   // Aracnídeo
-const poisonClouds = [];      // Aracnídeo
-const barrils = [];           // Stark
-const petrifyCones = [];      // Medusa visual
-const medusaWaves = [];       // Medusa
+const webProjectiles = [];
+const poisonClouds = [];
+const barrils = [];
+const petrifyCones = [];
+const medusaWaves = [];
+const bats = [];         // Drácula
+const vampireRays = [];  // Drácula
+const pentagrams = [];   // Drácula
+const omegaMissiles = []; // Ômega
+const omegaBeams = [];    // Ômega
+const debris = [];        // Colossos
+const reviveAuras = [];   // Black Knight
 
 function getTowerStats(type) {
   const level = type === 'lord' ? 0 : (stars[type] || 0);
@@ -845,7 +859,11 @@ const ENEMY_TYPES = {
   aracnideo: { hp: 4000, damage: 200, speed: 40, size: 45, reward: 600, drawStyle: 'spider', isBoss: true, bossName: 'ARACNÍDEO' },
   centauro:  { hp: 4800, damage: 210, speed: 50, size: 45, reward: 700, drawStyle: 'centaur', isBoss: true, bossName: 'CENTAURO' },
   stark:     { hp: 5500, damage: 225, speed: 40, size: 45, reward: 800, drawStyle: 'stark', isBoss: true, bossName: 'CAPITÃO STARK' },
-  medusa:    { hp: 6000, damage: 250, speed: 40, size: 45, reward: 900, drawStyle: 'medusa', isBoss: true, bossName: 'MEDUSA' }
+  medusa:    { hp: 6000, damage: 250, speed: 40, size: 45, reward: 900, drawStyle: 'medusa', isBoss: true, bossName: 'MEDUSA' },
+  dracula:   { hp: 3000, damage: 275, speed: 40, size: 45, reward: 1000, drawStyle: 'dracula', isBoss: true, bossName: 'DRÁCULA' },
+  omega:     { hp: 5000, damage: 300, speed: 30, size: 45, reward: 1100, drawStyle: 'omega', isBoss: true, bossName: 'ÔMEGA-04' },
+  blackknight: { hp: 5000, damage: 300, speed: 30, size: 45, reward: 1200, drawStyle: 'knight', isBoss: true, bossName: 'BLACK KNIGHT' },
+  colossos:  { hp: 8000, damage: 500, speed: 10, size: 60, reward: 1300, drawStyle: 'colossus', isBoss: true, bossName: 'COLOSSOS' }
 };
 
 const UNLOCK_WAVE = {
@@ -853,11 +871,9 @@ const UNLOCK_WAVE = {
   blindado: 8, explosivo: 12, fungo: 15, clone: 20, yeti: 22
 };
 
-// Bosses por onda
 const BOSS_BY_WAVE = {
-  10: 'ogro', 20: 'aracnideo', 30: 'centauro', 40: 'stark', 50: 'medusa'
-  // v21: 60: 'dracula', 70: 'omega', 80: 'blackknight', 90: 'colossos'
-  // v22: 100: 'azazel'
+  10: 'ogro', 20: 'aracnideo', 30: 'centauro', 40: 'stark', 50: 'medusa',
+  60: 'dracula', 70: 'omega', 80: 'blackknight', 90: 'colossos'
 };
 
 function isBossWave(wave) { return wave in BOSS_BY_WAVE; }
@@ -884,6 +900,7 @@ function isValidPlacement(x, y, type) {
   if (x < 14 || y < 14 || x > canvas.width - 14 || y > canvas.height - 14) return false;
   if (isOnPath(x, y)) return false;
   if (towers.some(t => Math.hypot(t.x-x, t.y-y) < 30)) return false;
+  if (debris.some(d => Math.hypot(d.x-x, d.y-y) < 30)) return false;
   if (gold < getCostForType(type)) return false;
   return true;
 }
@@ -918,9 +935,6 @@ function addHealEffect(x, y, amount) {
   heals.push({ x, y, life: 45, maxLife: 45, amount, radius: 12 });
   for (let i = 0; i < 6; i++) addParticle(x + (Math.random() - 0.5) * 20, y, { vx: (Math.random() - 0.5) * 0.5, vy: -1 - Math.random(), life: 40, size: 2, color: GREEN_BRIGHT, friction: 0.98 });
   addText(x, y - 18, '+' + amount, GREEN_BRIGHT, 50);
-}
-function addEnemyHealEffect(x, y, amount) {
-  addText(x, y - 15, '+' + amount, TOXIC, 35);
 }
 function addMoneyPop(x, y, amount) { moneyPops.push({ x, y, amount, life: 60, maxLife: 60, vy: -1.2, text: '+$' + amount }); }
 function addCrystalPop(x, y, amount) {
@@ -971,6 +985,7 @@ function updateGameUI() {
 
   const hordeInd = document.getElementById('hordeIndicator');
   if (bossActive && bossRef) hordeInd.textContent = '👹 ' + (bossRef.bossName || 'BOSS') + ' ATIVO';
+  else if (curseActive) hordeInd.textContent = '⚠ MALDIÇÃO: ' + curseWavesLeft + ' ONDAS';
   else if (waveNum > 0 && isBossWave(waveNum + 1)) hordeInd.textContent = 'PRÓXIMA: BOSS';
   else hordeInd.textContent = '';
 
@@ -1019,6 +1034,7 @@ function selectTowerType(type) {
 function tryPlace(x, y, type) {
   if (!isValidPlacement(x, y, type)) {
     if (isOnPath(x, y)) showMsg('> ÁREA BLOQUEADA');
+    else if (debris.some(d => Math.hypot(d.x-x, d.y-y) < 30)) showMsg('> DESTROÇOS NO CAMINHO');
     else if (towers.some(t => Math.hypot(t.x-x, t.y-y) < 30)) showMsg('> MUITO PRÓXIMO');
     else if (gold < getCostForType(type)) showMsg('> CRÉDITOS INSUFICIENTES');
     Sound.error();
@@ -1165,17 +1181,18 @@ function spawnEnemy(typeKey, x, y, wp, overrideHp, overrideDmg) {
     isBoss: t.isBoss || false,
     bossName: t.bossName || '',
     stepTimer: 0, crackLevel: 0,
-    // Boss-specific
-    specialTimer: 0,        // usado por vários bosses
-    specialTimer2: 0,       // timer 2
-    poisonWaveFired: false, // aracnídeo
-    barrilCounter: 0,       // stark
-    medusaWaveFired: false  // medusa
+    specialTimer: 0, specialTimer2: 0,
+    poisonWaveFired: false,
+    barrilCounter: 0,
+    medusaWaveFired: false,
+    vampireRayUsed: false,
+    cursed: false,
+    isRevived: false
   };
   enemies.push(enemy);
   if (t.isBoss) {
-    bossActive = true; bossRef = enemy; currentBossType = typeKey;
-    const bossCol = typeKey === 'ogro' ? OGRE_COL : typeKey === 'aracnideo' ? SPIDER_COL : typeKey === 'centauro' ? CENTAUR_COL : typeKey === 'stark' ? STARK_COL : MEDUSA_COL;
+    bossActive = true; bossRef = enemy;
+    const bossCol = getBossColor(typeKey);
     addShockwave(ex, ey, bossCol, 120, 45);
     burst(ex, ey, 50, { speed: 6, life: 40, size: 4, color: bossCol });
     addFlash(0.5, '255,51,51');
@@ -1188,6 +1205,21 @@ function spawnEnemy(typeKey, x, y, wp, overrideHp, overrideDmg) {
   } else {
     addShockwave(ex, ey, GREEN, 20, 12);
     burst(ex, ey, 6, { speed: 1.5, life: 15, size: 1.5 });
+  }
+}
+
+function getBossColor(typeKey) {
+  switch (typeKey) {
+    case 'ogro': return OGRE_COL;
+    case 'aracnideo': return SPIDER_COL;
+    case 'centauro': return CENTAUR_COL;
+    case 'stark': return STARK_COL;
+    case 'medusa': return MEDUSA_COL;
+    case 'dracula': return DRACULA_COL;
+    case 'omega': return OMEGA_COL;
+    case 'blackknight': return KNIGHT_COL;
+    case 'colossos': return COLOSSUS_COL;
+    default: return RED;
   }
 }
 
@@ -1219,8 +1251,6 @@ function getWaveComposition(wave) {
   return queue;
 }
 
-function getBossHp(wave) { return Math.floor(5000 * Math.pow(1.5, (wave / 10) - 1)); }
-
 // ============ LIMPAR CAMPO ============
 function clearFieldForBoss() {
   let goldBonus = 0;
@@ -1244,21 +1274,34 @@ function clearFieldForBoss() {
 // ============ WAVE FLOW ============
 let waveQueue = [];
 let spawnCooldown = 0;
-let waveDelay = 0;
 let waveActive = false;
 
 function startWave() {
   waveNum++;
-  bossActive = false; bossRef = null; currentBossType = null;
+  bossActive = false; bossRef = null;
   waveComplete = false;
   waveTransitionTimer = 0;
 
-  // Limpar listas de boss
+  // Decrementa maldição do Black Knight
+  if (curseActive) {
+    curseWavesLeft--;
+    if (curseWavesLeft <= 0) {
+      curseActive = false;
+      showMsg('> MALDIÇÃO DISSIPOU');
+    }
+  }
+
   webProjectiles.length = 0;
   poisonClouds.length = 0;
   barrils.length = 0;
-  petrifyCones.length = 0;
   medusaWaves.length = 0;
+  vampireRays.length = 0;
+  // Pentagramas persistem (duram 40s, mas de onda em onda)
+  // Omega missiles/beams limpam
+  omegaMissiles.length = 0;
+  omegaBeams.length = 0;
+  // Bats limpam
+  bats.length = 0;
 
   if (isBossWave(waveNum)) {
     const bossType = getBossType(waveNum);
@@ -1284,7 +1327,7 @@ function startWave() {
   updateGameUI();
 }
 
-// ============ COMBAT HELPERS ============
+// ============ COMBAT ============
 function areaExplosion(x, y, damage, radius) {
   addShockwave(x, y, GREEN, radius, 25);
   burst(x, y, 40, { speed: 6, life: 40, size: 3, gravity: 0.2, friction: 0.92 });
@@ -1308,7 +1351,6 @@ function areaExplosion(x, y, damage, radius) {
 }
 
 function damageEnemy(e, amount, fromX, fromY, isFire, ignoreArmor) {
-  if (e.petrified > 0) return; // Petrificado não toma dano? Não... ele toma dano, só não se move
   let dmg = amount;
   if (isFire && e.isBoss) dmg = Math.floor(dmg * 0.5);
   const real = ignoreArmor ? Math.max(1, dmg) : Math.max(1, dmg - (e.armor || 0));
@@ -1317,7 +1359,7 @@ function damageEnemy(e, amount, fromX, fromY, isFire, ignoreArmor) {
   addText(e.x, e.y - (e.airHeight || 0) - e.size - 5, '-' + real, isFire ? FIRE_BRIGHT : (e.isAir ? AIR : GREEN_BRIGHT), 30, e.isBoss ? 18 : 14);
   if (fromX !== undefined && fromY !== undefined) addSpark(fromX, fromY, e.x, e.y - (e.airHeight || 0), e.isAir ? AIR : GREEN_BRIGHT);
 
-  // Ogro: pisão a cada 1000 HP
+  // Ogro pisão
   if (e.type === 'ogro' && e.isBoss) {
     const hpLost = e.maxHp - e.hp;
     const poundsExpected = Math.floor(hpLost / 1000);
@@ -1327,7 +1369,7 @@ function damageEnemy(e, amount, fromX, fromY, isFire, ignoreArmor) {
       ogroPound(e.x, e.y);
     }
   }
-  // Stark: barril a cada 1000 HP
+  // Stark barril
   if (e.type === 'stark' && e.isBoss) {
     const hpLost = e.maxHp - e.hp;
     const expected = Math.floor(hpLost / 1000);
@@ -1335,6 +1377,16 @@ function damageEnemy(e, amount, fromX, fromY, isFire, ignoreArmor) {
     if (expected > done) {
       e.barrilCounter = expected;
       spawnBarril(e.x, e.y);
+    }
+  }
+  // Ômega feixes
+  if (e.type === 'omega' && e.isBoss) {
+    const hpLost = e.maxHp - e.hp;
+    const expected = Math.floor(hpLost / 1000);
+    const done = e.beamCounter || 0;
+    if (expected > done) {
+      e.beamCounter = expected;
+      spawnOmegaBeams(e);
     }
   }
 }
@@ -1355,8 +1407,6 @@ function ogroPound(x, y) {
     t.hp -= dmg;
     addText(t.x, t.y - 15, '-' + dmg, OGRE_COL, 55, 18);
     if (t.hp <= 0) {
-      addShockwave(t.x, t.y, OGRE_COL, 60, 30);
-      burst(t.x, t.y, 30, { speed: 5, life: 35, size: 3, color: OGRE_COL });
       const idx = towers.indexOf(t);
       if (idx >= 0) towers.splice(idx, 1);
       if (t.isHealer) healPlayer(5);
@@ -1366,7 +1416,7 @@ function ogroPound(x, y) {
 }
 
 function spawnBarril(x, y) {
-  barrils.push({ x, y, life: 180, maxLife: 180, exploded: false });
+  barrils.push({ x, y, life: 180, maxLife: 180 });
   addShockwave(x, y, STARK_COL, 20, 15);
   Sound.barrilWarning();
 }
@@ -1374,7 +1424,6 @@ function spawnBarril(x, y) {
 function barrilExplode(x, y) {
   const radius = 6 * PPM;
   addShockwave(x, y, STARK_COL, radius, 25);
-  addShockwave(x, y, YELLOW, radius * 0.7, 18);
   burst(x, y, 40, { speed: 6, life: 35, size: 3, gravity: 0.2, friction: 0.92, color: FIRE });
   addFlash(0.5); addShake(10);
   Sound.barrilExplode();
@@ -1404,104 +1453,213 @@ function applyIce(e, iceDur) {
   if (e.type === 'blindado') { e.iceFrozen = Math.floor((iceDur || 90) * 0.5); return; }
   e.iceFrozen = iceDur || 90;
 }
-function applyPetrify(e, dur) {
-  if (e.isBoss) return;
-  e.petrified = dur;
-}
 
-// ============ BOSS SKILLS ============
-function aracnideoShootWeb(boss) {
-  // Acha tropa mais próxima dentro de 6m
-  const range = 6 * PPM;
-  let best = null, bestDist = Infinity;
-  for (const t of towers) {
-    const d = Math.hypot(t.x - boss.x, t.y - boss.y);
-    if (d < range && d < bestDist) { bestDist = d; best = t; }
-  }
-  if (best) {
-    webProjectiles.push({
-      x: boss.x, y: boss.y, target: best, speed: 6,
-      life: 120
-    });
-    Sound.spiderWeb();
-  }
-}
-
-function aracnideoPoisonWave(boss) {
-  const radius = 8 * PPM;
-  poisonClouds.push({
-    x: boss.x, y: boss.y, radius: radius,
-    life: 5 * 60, maxLife: 5 * 60, tickTimer: 0
+// ============ BOSS SKILLS v21 ============
+// DRÁCULA
+function draculaSpawnBat(boss) {
+  // Spawna 1 morcego 5m atrás
+  const angle = (boss.angle || 0) + Math.PI;
+  const ox = boss.x + Math.cos(angle) * 5 * PPM;
+  const oy = boss.y + Math.sin(angle) * 5 * PPM;
+  bats.push({
+    x: ox, y: oy,
+    hp: 100, maxHp: 100, damage: 50,
+    speed: speedToPixels(100), baseSpeed: speedToPixels(100),
+    size: 12, reward: 12, armor: 0,
+    wp: boss.wp,
+    angle: angle,
+    bobPhase: Math.random() * Math.PI * 2,
+    // Bate pro boss
+    ownerBoss: boss
   });
-  addShockwave(boss.x, boss.y, POISON, radius, 40);
-  burst(boss.x, boss.y, 40, { speed: 4, life: 40, size: 3, color: POISON, gravity: 0.05 });
-  addText(boss.x, boss.y - 40, 'VENENO!', POISON, 70, 24);
-  Sound.poisonCloud();
+  addShockwave(ox, oy, DRACULA_COL, 20, 12);
+  burst(ox, oy, 8, { speed: 2, life: 15, size: 2, color: DRACULA_COL });
+  Sound.batSpawn();
 }
 
-function centauroEarthquake(boss) {
-  // Aura contínua (aplicada por frame em updateEnemies)
-  // Aqui só efeito visual esporádico
-  if (Math.random() < 0.15) {
-    addShockwave(boss.x, boss.y, CENTAUR_COL, 5 * PPM, 15);
-    burst(boss.x + (Math.random() - 0.5) * 80, boss.y + (Math.random() - 0.5) * 80, 8, {
-      speed: 3, life: 25, size: 2, color: '#6b4c2a', gravity: 0.3
-    });
-  }
-}
-
-function starkShoot(boss) {
+function draculaVampireRay(boss) {
+  // Pega as 3 tropas mais próximas em 10m
   const range = 10 * PPM;
+  const candidates = towers
+    .map(t => ({ t, d: Math.hypot(t.x - boss.x, t.y - boss.y) }))
+    .filter(x => x.d <= range)
+    .sort((a, b) => a.d - b.d)
+    .slice(0, 3);
+  if (candidates.length === 0) return;
+  let totalDrained = 0;
+  for (const { t } of candidates) {
+    // Drena 100 HP por tropa
+    let dmg = 100;
+    if (t.isProtected) dmg = Math.floor(dmg * (1 - t.protReduction));
+    t.hp -= dmg;
+    totalDrained += dmg;
+    vampireRays.push({ x1: boss.x, y1: boss.y, x2: t.x, y2: t.y, life: 120, maxLife: 120 });
+    addText(t.x, t.y - 15, '-' + dmg, DRACULA_COL, 50);
+    if (t.hp <= 0) {
+      const idx = towers.indexOf(t);
+      if (idx >= 0) towers.splice(idx, 1);
+    }
+  }
+  // Cura boss
+  const heal = Math.min(totalDrained * 2.5, 800);
+  boss.hp = Math.min(boss.maxHp, boss.hp + heal);
+  addText(boss.x, boss.y - 40, '+' + Math.round(heal) + ' HP', DRACULA_COL, 60, 22);
+  addShockwave(boss.x, boss.y, DRACULA_COL, 100, 40);
+  Sound.vampireSuck();
+  updateGameUI();
+}
+
+function draculaPentagram(boss) {
+  pentagrams.push({
+    x: boss.x, y: boss.y,
+    radius: 10 * PPM,
+    life: 40 * 60, // 40 segundos
+    maxLife: 40 * 60,
+    tickTimer: 0
+  });
+  addShockwave(boss.x, boss.y, DRACULA_COL, 10 * PPM, 50);
+  addText(boss.x, boss.y - 50, 'PENTAGRAMA!', DRACULA_COL, 90, 28);
+  Sound.pentagram();
+}
+
+// ÔMEGA-04
+function omegaShootMissile(boss) {
+  const range = 7 * PPM;
   let best = null, bestDist = Infinity;
   for (const t of towers) {
     const d = Math.hypot(t.x - boss.x, t.y - boss.y);
     if (d < range && d < bestDist) { bestDist = d; best = t; }
   }
   if (best) {
-    bullets.push({
-      x: boss.x, y: boss.y, target: best, damage: 75,
-      speed: 7, type: 'stark', angle: 0
+    omegaMissiles.push({
+      x: boss.x, y: boss.y, target: best,
+      damage: 100, splash: 3 * PPM,
+      speed: 5, angle: 0, life: 300
     });
-    Sound.starkShot();
+    Sound.omegaMissile();
   }
 }
 
-function medusaPetrifyWave(boss) {
-  const radius = 20 * PPM;
-  medusaWaves.push({ x: boss.x, y: boss.y, radius: radius, life: 40, maxLife: 40 });
-  addShockwave(boss.x, boss.y, MEDUSA_COL, radius, 45);
-  addShockwave(boss.x, boss.y, STONE, radius * 0.8, 35);
-  addText(boss.x, boss.y - 50, 'PETRIFICAÇÃO!', MEDUSA_COL, 80, 26);
-  addFlash(0.5, '136,255,136');
-  addShake(10);
-  Sound.medusaGaze();
-  // Aplica petrificação em todas as tropas no raio
-  for (const t of towers) {
-    if (Math.hypot(t.x - boss.x, t.y - boss.y) <= radius) {
-      t.petrified = 3 * 60;
-      t.petrifyTimer = 3 * 60;
-    }
+function spawnOmegaBeams(boss) {
+  // 5 feixes em direções aleatórias, 1 a cada 24 frames (~0.4s)
+  for (let i = 0; i < 5; i++) {
+    setTimeout(() => {
+      if (enemies.indexOf(boss) === -1) return;
+      const angle = Math.random() * Math.PI * 2;
+      omegaBeams.push({
+        x: boss.x, y: boss.y, angle: angle,
+        range: 10 * PPM, damage: 120,
+        life: 20, maxLife: 20,
+        hasHit: new Set()
+      });
+      Sound.omegaBeam();
+    }, i * 400);
   }
+  addText(boss.x, boss.y - 40, 'FEIXES!', OMEGA_COL, 70, 24);
+  addFlash(0.4, '136,170,255');
 }
 
-function medusaConeCheck(boss) {
-  // Cone de 3m na frente
-  const coneRange = 3 * PPM;
-  const coneAngle = boss.angle || 0;
-  const spread = Math.PI / 4; // 45 graus
-  for (const t of towers) {
-    const dx = t.x - boss.x, dy = t.y - boss.y;
-    const dist = Math.hypot(dx, dy);
-    if (dist > coneRange) continue;
-    const angle = Math.atan2(dy, dx);
-    let diff = angle - coneAngle;
-    while (diff > Math.PI) diff -= Math.PI * 2;
-    while (diff < -Math.PI) diff += Math.PI * 2;
-    if (Math.abs(diff) < spread) {
-      // Tá no cone
-      t.inMedusaCone = true;
+function omegaDeathExplosion(x, y) {
+  const radius = 15 * PPM;
+  addShockwave(x, y, OMEGA_COL, radius, 55);
+  addShockwave(x, y, RED, radius * 0.7, 45);
+  addShockwave(x, y, YELLOW, radius * 1.2, 65);
+  burst(x, y, 100, { speed: 10, life: 60, size: 4, gravity: 0.2, friction: 0.9, color: OMEGA_COL });
+  burst(x, y, 50, { speed: 15, life: 40, size: 3, color: YELLOW, friction: 0.88 });
+  addFlash(0.8, '255,100,100'); addShake(20);
+  Sound.colossusDeath();
+  const inRange = towers.filter(t => Math.hypot(t.x - x, t.y - y) <= radius);
+  for (const t of inRange) {
+    let dmg = 500;
+    if (t.isProtected) dmg = Math.floor(dmg * (1 - t.protReduction));
+    t.hp -= dmg;
+    addText(t.x, t.y - 15, '-' + dmg, OMEGA_COL, 60, 24);
+    if (t.hp <= 0) {
+      addShockwave(t.x, t.y, OMEGA_COL, 80, 40);
+      burst(t.x, t.y, 30, { speed: 5, life: 35, size: 3, color: OMEGA_COL });
+      const idx = towers.indexOf(t);
+      if (idx >= 0) towers.splice(idx, 1);
+      if (t.isHealer) healPlayer(5);
     }
   }
+  updateGameUI();
+}
+
+// BLACK KNIGHT
+function blackKnightCurse() {
+  curseActive = true;
+  curseWavesLeft = 3;
+  addText(canvas.width/2, canvas.height/2, 'MALDIÇÃO!', KNIGHT_COL, 120, 40);
+  addFlash(0.7, '50,50,50');
+  Sound.blackKnightCurse();
+}
+
+// COLOSSOS
+function colossusPound(x, y) {
+  const radius = 5 * PPM;
+  addShockwave(x, y, COLOSSUS_COL, radius, 32);
+  addShockwave(x, y, '#6b4c2a', radius * 1.2, 42);
+  burst(x, y, 50, { speed: 7, life: 45, size: 4, gravity: 0.35, friction: 0.9, color: COLOSSUS_COL });
+  burst(x, y, 30, { speed: 4, life: 55, size: 3, gravity: 0.5, color: '#6b4c2a' });
+  addShake(14); addFlash(0.4, '150,150,150');
+  addText(x, y - 35, 'PISÃO!', COLOSSUS_COL, 75, 26);
+  Sound.colossusPound();
+  const inRange = towers.filter(t => Math.hypot(t.x - x, t.y - y) <= radius);
+  for (const t of inRange) {
+    let dmg = 200;
+    if (t.isProtected) dmg = Math.floor(dmg * (1 - t.protReduction));
+    t.hp -= dmg;
+    addText(t.x, t.y - 15, '-' + dmg, COLOSSUS_COL, 55, 20);
+    if (t.hp <= 0) {
+      const idx = towers.indexOf(t);
+      if (idx >= 0) towers.splice(idx, 1);
+      if (t.isHealer) healPlayer(5);
+    }
+  }
+  updateGameUI();
+}
+
+function colossusDeathExplosion(x, y) {
+  const radius = 10 * PPM;
+  addShockwave(x, y, COLOSSUS_COL, radius, 55);
+  addShockwave(x, y, '#6b4c2a', radius * 0.7, 45);
+  addShockwave(x, y, YELLOW, radius * 1.2, 70);
+  burst(x, y, 120, { speed: 12, life: 65, size: 5, gravity: 0.3, friction: 0.9, color: COLOSSUS_COL });
+  burst(x, y, 60, { speed: 8, life: 50, size: 4, color: '#6b4c2a', gravity: 0.4 });
+  addFlash(0.85, '200,200,200'); addShake(22);
+  Sound.colossusDeath();
+  const inRange = towers.filter(t => Math.hypot(t.x - x, t.y - y) <= radius);
+  for (const t of inRange) {
+    let dmg = 1000;
+    if (t.isProtected) dmg = Math.floor(dmg * (1 - t.protReduction));
+    t.hp -= dmg;
+    addText(t.x, t.y - 15, '-' + dmg, COLOSSUS_COL, 65, 28);
+    if (t.hp <= 0) {
+      addShockwave(t.x, t.y, COLOSSUS_COL, 90, 45);
+      burst(t.x, t.y, 40, { speed: 6, life: 40, size: 4, color: COLOSSUS_COL });
+      const idx = towers.indexOf(t);
+      if (idx >= 0) towers.splice(idx, 1);
+      if (t.isHealer) healPlayer(5);
+    }
+  }
+  // Deixa 6 destroços
+  for (let i = 0; i < 6; i++) {
+    const angle = Math.random() * Math.PI * 2;
+    const dist = Math.random() * 10 * PPM;
+    const dx = x + Math.cos(angle) * dist;
+    const dy = y + Math.sin(angle) * dist;
+    if (!isOnPath(dx, dy)) {
+      debris.push({
+        x: dx, y: dy,
+        radius: 2 * PPM / 2,
+        life: 5 * 60 * 60, // 5 waves
+        wavesLeft: 5,
+        spawnAnim: 30
+      });
+    }
+  }
+  showMsg('> COLOSSOS DEIXOU DESTROÇOS!');
+  updateGameUI();
 }
 
 // ============ LOOP ============
@@ -1513,22 +1671,19 @@ function loop(time) {
   lastTime = time;
   if (paused || gameOver) { draw(); return; }
 
-  // Spawn de inimigos comuns
   if (waveActive && waveQueue.length > 0) {
     spawnCooldown -= dt;
     if (spawnCooldown <= 0) {
       spawnEnemy(waveQueue.shift());
       spawnCooldown = 45;
     }
-  } else if (waveActive && waveQueue.length === 0 && enemies.length === 0) {
-    // Wave normal completa
+  } else if (waveActive && waveQueue.length === 0 && enemies.length === 0 && bats.length === 0) {
     if (!waveComplete) {
       waveComplete = true;
       waveTransitionTimer = 90;
     }
   }
 
-  // Transição de wave
   if (waveComplete && waveTransitionTimer > 0) {
     waveTransitionTimer -= dt;
     if (waveTransitionTimer <= 0) {
@@ -1537,19 +1692,11 @@ function loop(time) {
     }
   }
 
-  // Tropas: reset
   for (const t of towers) {
     t.frozenByYeti = false; t.isProtected = false; t.protReduction = 0.5;
     if (t.punchAnim > 0) t.punchAnim -= dt * 2;
     if (t.isDrone) t.droneRotorAngle += dt * 0.8;
-    if (t.petrifyTimer > 0) t.petrifyTimer -= dt;
-    // Medusa cone - reset por frame
-    // (aplicado em check abaixo)
   }
-  // Medusa cone: reset
-  for (const t of towers) t.inMedusaCone = false;
-
-  // Defensor protection
   for (const t of towers) {
     if (t.isDefensor) {
       t.defensorPulse = (t.defensorPulse || 0) + dt * 0.08;
@@ -1561,8 +1708,6 @@ function loop(time) {
       }
     }
   }
-
-  // Lord aura
   for (const t of towers) {
     if (t.isLord) {
       if (Math.random() < 0.3) addLordAura(t.x, t.y, t.range);
@@ -1581,15 +1726,10 @@ function loop(time) {
     if (e.spawnAnim > 0) e.spawnAnim -= dt;
     if (e.hitFlash > 0) e.hitFlash -= dt;
 
-    // Petrification (medusa) — não anda, mas toma dano
-    if (e.petrified > 0) {
-      e.petrified -= dt;
-      continue;
-    }
+    if (e.petrified > 0) { e.petrified -= dt; continue; }
 
     if (e.iceFrozen > 0) {
       e.iceFrozen -= dt;
-      if (Math.random() < 0.3) addParticle(e.x + (Math.random() - 0.5) * e.size, e.y + (Math.random() - 0.5) * e.size, { vx: 0, vy: -0.4, life: 20, size: 2, color: FROZEN, friction: 0.97 });
       continue;
     }
     let frozenByParadox = false;
@@ -1599,7 +1739,7 @@ function loop(time) {
 
     // ====== BOSS SKILLS ======
     if (e.isBoss) {
-      // Ogro: passos pesados
+      // OGRA passos
       if (e.type === 'ogro') {
         e.stepTimer -= dt;
         if (e.stepTimer <= 0) {
@@ -1607,23 +1747,33 @@ function loop(time) {
           for (let k = 0; k < 6; k++) addParticle(e.x + (Math.random() - 0.5) * e.size, e.y + e.size/2 + Math.random() * 6, { vx: (Math.random() - 0.5) * 1, vy: -0.5 - Math.random() * 0.5, life: 60, size: 3, color: Math.random() < 0.5 ? OGRE_COL : ORANGE, friction: 0.95 });
         }
       }
-      // Aracnídeo: teia + veneno
+      // ARACNÍDEO
       if (e.type === 'aracnideo') {
         e.specialTimer = (e.specialTimer || 0) - dt;
         if (e.specialTimer <= 0) {
           e.specialTimer = 300;
-          aracnideoShootWeb(e);
+          const range = 6 * PPM;
+          let best = null, bestDist = Infinity;
+          for (const t of towers) {
+            const d = Math.hypot(t.x - e.x, t.y - e.y);
+            if (d < range && d < bestDist) { bestDist = d; best = t; }
+          }
+          if (best) {
+            webProjectiles.push({ x: e.x, y: e.y, target: best, speed: 6, life: 120 });
+            Sound.spiderWeb();
+          }
         }
-        // Veneno aos 50%
         if (!e.poisonWaveFired && e.hp <= e.maxHp * 0.5) {
           e.poisonWaveFired = true;
-          aracnideoPoisonWave(e);
+          const radius = 8 * PPM;
+          poisonClouds.push({ x: e.x, y: e.y, radius, life: 5 * 60, maxLife: 5 * 60, tickTimer: 0 });
+          addShockwave(e.x, e.y, POISON, radius, 40);
+          addText(e.x, e.y - 40, 'VENENO!', POISON, 70, 24);
+          Sound.poisonCloud();
         }
       }
-      // Centauro: terremoto contínuo
+      // CENTAURO
       if (e.type === 'centauro') {
-        centauroEarthquake(e);
-        // Dano contínuo em tropas próximas
         const auraR = 5 * PPM;
         for (const t of towers) {
           if (Math.hypot(t.x - e.x, t.y - e.y) <= auraR) {
@@ -1631,50 +1781,117 @@ function loop(time) {
             if (t.isProtected) dmg *= (1 - t.protReduction);
             t.hp -= dmg;
             if (t.hp <= 0) {
-              addShockwave(t.x, t.y, CENTAUR_COL, 60, 30);
-              burst(t.x, t.y, 30, { speed: 5, life: 35, size: 3, color: CENTAUR_COL });
               const idx = towers.indexOf(t);
               if (idx >= 0) towers.splice(idx, 1);
-              if (t.isHealer) healPlayer(5);
             }
           }
         }
+        if (Math.random() < 0.15) {
+          addShockwave(e.x, e.y, CENTAUR_COL, auraR, 15);
+        }
       }
-      // Stark: tiro
+      // STARK
       if (e.type === 'stark') {
         e.specialTimer = (e.specialTimer || 0) - dt;
         if (e.specialTimer <= 0) {
           e.specialTimer = 300;
-          starkShoot(e);
+          const range = 10 * PPM;
+          let best = null, bestDist = Infinity;
+          for (const t of towers) {
+            const d = Math.hypot(t.x - e.x, t.y - e.y);
+            if (d < range && d < bestDist) { bestDist = d; best = t; }
+          }
+          if (best) {
+            bullets.push({ x: e.x, y: e.y, target: best, damage: 75, speed: 7, type: 'stark', angle: 0 });
+            Sound.starkShot();
+          }
         }
       }
-      // Medusa: cone + onda
+      // MEDUSA
       if (e.type === 'medusa') {
-        medusaConeCheck(e);
+        const coneRange = 3 * PPM;
+        const coneAngle = e.angle || 0;
+        const spread = Math.PI / 4;
+        for (const t of towers) {
+          const dx = t.x - e.x, dy = t.y - e.y;
+          const dist = Math.hypot(dx, dy);
+          if (dist > coneRange) continue;
+          const angle = Math.atan2(dy, dx);
+          let diff = angle - coneAngle;
+          while (diff > Math.PI) diff -= Math.PI * 2;
+          while (diff < -Math.PI) diff += Math.PI * 2;
+          if (Math.abs(diff) < spread) t.inMedusaCone = true;
+        }
         if (!e.medusaWaveFired && e.hp <= e.maxHp * 0.5) {
           e.medusaWaveFired = true;
-          medusaPetrifyWave(e);
+          const radius = 20 * PPM;
+          medusaWaves.push({ x: e.x, y: e.y, radius, life: 40, maxLife: 40 });
+          addShockwave(e.x, e.y, MEDUSA_COL, radius, 45);
+          addText(e.x, e.y - 50, 'PETRIFICAÇÃO!', MEDUSA_COL, 80, 26);
+          addFlash(0.5, '136,255,136'); addShake(10);
+          Sound.medusaGaze();
+          for (const t of towers) {
+            if (Math.hypot(t.x - e.x, t.y - e.y) <= radius) {
+              t.petrified = 3 * 60;
+            }
+          }
+        }
+      }
+      // DRÁCULA
+      if (e.type === 'dracula') {
+        e.specialTimer = (e.specialTimer || 0) - dt;
+        if (e.specialTimer <= 0) {
+          e.specialTimer = 300;
+          draculaSpawnBat(e);
+        }
+        if (!e.vampireRayUsed && e.hp <= e.maxHp * 0.5) {
+          e.vampireRayUsed = true;
+          draculaVampireRay(e);
+        }
+      }
+      // ÔMEGA-04
+      if (e.type === 'omega') {
+        e.specialTimer = (e.specialTimer || 0) - dt;
+        if (e.specialTimer <= 0) {
+          e.specialTimer = 300;
+          omegaShootMissile(e);
+        }
+      }
+      // BLACK KNIGHT
+      if (e.type === 'blackknight') {
+        // Skill só ao morrer
+      }
+      // COLOSSOS
+      if (e.type === 'colossos') {
+        // Pisão a cada 1000 HP
+        const hpLost = e.maxHp - e.hp;
+        const expected = Math.floor(hpLost / 1000);
+        const done = e.poundCounter || 0;
+        if (expected > done) {
+          e.poundCounter = expected;
+          colossusPound(e.x, e.y);
         }
       }
     }
 
-    // ====== MOVIMENTO ======
+    // Medusa cone reset (aplicado por frame — precisa resetar aqui)
+    // Feito no início do loop das towers
+
+    // Movimento
     if (!frozenByParadox) {
       const target = path[e.wp];
       if (!target) {
-        // Chegou ao fim
         damagePlayer(e.damage);
         burst(e.x, e.y - (e.airHeight || 0), 14, { speed: 4, life: 22, size: 2, color: RED });
         addShockwave(e.x, e.y - (e.airHeight || 0), RED, 30, 18);
         if (e.isBoss) { addShake(10); addFlash(0.5, '255,51,51'); }
         enemies.splice(i, 1); continue;
       }
-      // Atualiza angle do boss (Medusa usa)
       const dx = target.x - e.x, dy = target.y - e.y;
       e.angle = Math.atan2(dy, dx);
       e.lastTrailTime -= dt;
       if (e.lastTrailTime <= 0 && e.baseSpeed > 0.5 && !e.isAir) {
-        const trailCol = e.isBoss ? (e.type === 'ogro' ? OGRE_COL : e.type === 'aracnideo' ? SPIDER_COL : e.type === 'centauro' ? CENTAUR_COL : e.type === 'stark' ? STARK_COL : MEDUSA_COL) : GREEN;
+        const trailCol = e.isBoss ? getBossColor(e.type) : GREEN;
         addTrail(e.x, e.y, trailCol, e.size * 0.5, 10);
         e.lastTrailTime = 4;
       }
@@ -1693,7 +1910,7 @@ function loop(time) {
       if (e.fireTimer <= 0) e.fireTimer = 0;
     }
 
-    // Aéreo propulsion
+    // Aéreo
     if (e.isAir) {
       e.airBob += dt * 0.1;
       e.airPropTimer -= dt;
@@ -1706,18 +1923,44 @@ function loop(time) {
     // Morte
     if (e.hp <= 0) {
       gold += e.reward;
-      const deathCol = e.isBoss ? (e.type === 'ogro' ? OGRE_COL : e.type === 'aracnideo' ? SPIDER_COL : e.type === 'centauro' ? CENTAUR_COL : e.type === 'stark' ? STARK_COL : MEDUSA_COL) : (e.isAir ? AIR : GREEN);
+      const deathCol = e.isBoss ? getBossColor(e.type) : (e.isAir ? AIR : GREEN);
       addShockwave(e.x, e.y - (e.airHeight || 0), deathCol, 25, 15);
       burst(e.x, e.y - (e.airHeight || 0), e.isBoss ? 40 : 12, { speed: 3, life: 22, size: e.isBoss ? 4 : 2, color: deathCol });
       addText(e.x, e.y - (e.airHeight || 0) - e.size - 5, '+' + e.reward, YELLOW, 40, e.isBoss ? 26 : 14);
       if (!e.isBoss) Sound.enemyDeath();
+
+      // Black Knight maldição: 40% revive se curse ativa
+      if (curseActive && !e.isBoss && !e.isRevived && e.type !== 'minion') {
+        if (Math.random() < 0.4) {
+          // Revive!
+          e.hp = Math.floor(e.maxHp * 0.5);
+          e.isRevived = true;
+          e.hitFlash = 10;
+          addShockwave(e.x, e.y, KNIGHT_COL, 40, 25);
+          burst(e.x, e.y, 15, { speed: 4, life: 25, size: 3, color: KNIGHT_COL });
+          addText(e.x, e.y - 20, 'REVIVE!', KNIGHT_COL, 50, 18);
+          Sound.reviveSound();
+          continue;
+        }
+      }
+
       if (e.onDeath === 'clone') spawnCloneMinions(e.x, e.y, e.wp);
       else if (e.onDeath === 'explode') areaExplosion(e.x, e.y, 50, 4 * PPM);
       else if (e.onDeath === 'fungusZone') spawnFungusZone(e.x, e.y);
 
+      // Boss death special
       if (e.isBoss) {
-        // Explosão final padrão dos bosses
-        bossFinalExplosion(e.x, e.y, deathCol);
+        if (e.type === 'omega') omegaDeathExplosion(e.x, e.y);
+        else if (e.type === 'colossos') colossusDeathExplosion(e.x, e.y);
+        else if (e.type === 'dracula') {
+          draculaPentagram(e);
+          bossFinalExplosion(e.x, e.y, DRACULA_COL, false);
+        }
+        else if (e.type === 'blackknight') {
+          blackKnightCurse();
+          bossFinalExplosion(e.x, e.y, KNIGHT_COL, false);
+        }
+        else bossFinalExplosion(e.x, e.y, getBossColor(e.type), true);
         bossRef = null;
         healPlayer(50 + (Math.floor(waveNum / 10) - 1) * 25);
         const crystalReward = getBossCrystalReward(waveNum);
@@ -1733,13 +1976,147 @@ function loop(time) {
     }
   }
 
+  // BATS (Drácula)
+  for (let i = bats.length - 1; i >= 0; i--) {
+    const b = bats[i];
+    b.bobPhase += dt * 0.3;
+    // Movimento
+    const target = path[b.wp];
+    if (!target) {
+      damagePlayer(b.damage);
+      bats.splice(i, 1);
+      continue;
+    }
+    const dx = target.x - b.x, dy = target.y - b.y;
+    const dist = Math.hypot(dx, dy);
+    if (dist < b.speed * dt) { b.x = target.x; b.y = target.y; b.wp++; }
+    else { b.x += (dx/dist) * b.speed * dt; b.y += (dy/dist) * b.speed * dt; }
+    b.angle = Math.atan2(dy, dx);
+    // Death check
+    if (b.hp <= 0) {
+      gold += b.reward;
+      // Cura o boss Drácula +50
+      if (b.ownerBoss && enemies.indexOf(b.ownerBoss) !== -1) {
+        b.ownerBoss.hp = Math.min(b.ownerBoss.maxHp, b.ownerBoss.hp + 50);
+        addText(b.x, b.y - 20, '+50 BOSS', DRACULA_COL, 40, 14);
+      }
+      burst(b.x, b.y, 10, { speed: 3, life: 20, size: 2, color: DRACULA_COL });
+      bats.splice(i, 1);
+      updateGameUI();
+    }
+  }
+
+  // VAMPIRE RAYS (visual)
+  for (let i = vampireRays.length - 1; i >= 0; i--) {
+    vampireRays[i].life -= dt;
+    if (vampireRays[i].life <= 0) vampireRays.splice(i, 1);
+  }
+
+  // PENTAGRAMS
+  for (let i = pentagrams.length - 1; i >= 0; i--) {
+    const p = pentagrams[i];
+    p.life -= dt;
+    p.tickTimer += dt;
+    if (p.life <= 0) { pentagrams.splice(i, 1); continue; }
+    // Aplica efeitos a cada 1s
+    if (p.tickTimer >= 60) {
+      p.tickTimer -= 60;
+      // Tropas perdem 10 HP
+      for (const t of towers) {
+        if (Math.hypot(t.x - p.x, t.y - p.y) <= p.radius) {
+          t.hp -= 10;
+          if (t.hp <= 0) {
+            const idx = towers.indexOf(t);
+            if (idx >= 0) towers.splice(idx, 1);
+          }
+        }
+      }
+      // Inimigos ganham 5 HP
+      for (const e of enemies) {
+        if (Math.hypot(e.x - p.x, e.y - p.y) <= p.radius) {
+          e.hp = Math.min(e.maxHp, e.hp + 5);
+        }
+      }
+    }
+  }
+
+  // OMEGA MISSILES
+  for (let i = omegaMissiles.length - 1; i >= 0; i--) {
+    const m = omegaMissiles[i];
+    m.life -= dt;
+    addTrail(m.x, m.y, OMEGA_COL, 4, 14);
+    if (!m.target || towers.indexOf(m.target) === -1) {
+      omegaMissileExplode(m.x, m.y, m.damage, m.splash);
+      omegaMissiles.splice(i, 1); continue;
+    }
+    const desiredAngle = Math.atan2(m.target.y - m.y, m.target.x - m.x);
+    let diff = desiredAngle - m.angle;
+    while (diff > Math.PI) diff -= Math.PI * 2;
+    while (diff < -Math.PI) diff += Math.PI * 2;
+    m.angle += Math.max(-0.1, Math.min(0.1, diff)) * dt;
+    const dx = m.target.x - m.x, dy = m.target.y - m.y;
+    const dist = Math.hypot(dx, dy);
+    if (dist < 12 || m.life <= 0) {
+      omegaMissileExplode(m.x, m.y, m.damage, m.splash);
+      omegaMissiles.splice(i, 1); continue;
+    }
+    m.x += Math.cos(m.angle) * m.speed * dt;
+    m.y += Math.sin(m.angle) * m.speed * dt;
+  }
+
+  // OMEGA BEAMS
+  for (let i = omegaBeams.length - 1; i >= 0; i--) {
+    const b = omegaBeams[i];
+    b.life -= dt;
+    if (b.life <= 0) { omegaBeams.splice(i, 1); continue; }
+    // Checa colisão com tropas
+    const dirX = Math.cos(b.angle), dirY = Math.sin(b.angle);
+    for (const t of towers) {
+      if (b.hasHit.has(t)) continue;
+      const dx = t.x - b.x, dy = t.y - b.y;
+      const proj = dx * dirX + dy * dirY;
+      if (proj < 0 || proj > b.range) continue;
+      const perpX = dx - proj * dirX;
+      const perpY = dy - proj * dirY;
+      const perpDist = Math.hypot(perpX, perpY);
+      if (perpDist < 12) {
+        b.hasHit.add(t);
+        let dmg = b.damage;
+        if (t.isProtected) dmg = Math.floor(dmg * (1 - t.protReduction));
+        t.hp -= dmg;
+        addText(t.x, t.y - 15, '-' + dmg, OMEGA_COL, 45);
+        if (t.hp <= 0) {
+          const idx = towers.indexOf(t);
+          if (idx >= 0) towers.splice(idx, 1);
+        }
+      }
+    }
+  }
+
+  // Web projectiles
+  for (let i = webProjectiles.length - 1; i >= 0; i--) {
+    const wp = webProjectiles[i];
+    wp.life -= dt;
+    if (!wp.target || towers.indexOf(wp.target) === -1 || wp.life <= 0) {
+      webProjectiles.splice(i, 1); continue;
+    }
+    const dx = wp.target.x - wp.x, dy = wp.target.y - wp.y;
+    const dist = Math.hypot(dx, dy);
+    if (dist < wp.speed * dt) {
+      wp.target.petrified = 3 * 60;
+      addShockwave(wp.target.x, wp.target.y, SPIDER_COL, 20, 15);
+      webProjectiles.splice(i, 1);
+    } else {
+      wp.x += (dx/dist) * wp.speed * dt;
+      wp.y += (dy/dist) * wp.speed * dt;
+    }
+  }
+
   // Poison clouds
   for (let i = poisonClouds.length - 1; i >= 0; i--) {
     const pc = poisonClouds[i];
-    pc.life -= dt;
-    pc.tickTimer += dt;
+    pc.life -= dt; pc.tickTimer += dt;
     if (pc.life <= 0) { poisonClouds.splice(i, 1); continue; }
-    // 40 dano/s → 40/60 por frame
     if (pc.tickTimer >= 1) {
       pc.tickTimer -= 1;
       for (const t of towers) {
@@ -1756,28 +2133,6 @@ function loop(time) {
     }
   }
 
-  // Web projectiles
-  for (let i = webProjectiles.length - 1; i >= 0; i--) {
-    const wp = webProjectiles[i];
-    wp.life -= dt;
-    if (!wp.target || towers.indexOf(wp.target) === -1 || wp.life <= 0) {
-      webProjectiles.splice(i, 1); continue;
-    }
-    const dx = wp.target.x - wp.x, dy = wp.target.y - wp.y;
-    const dist = Math.hypot(dx, dy);
-    if (dist < wp.speed * dt) {
-      // Acertou!
-      wp.target.petrified = 3 * 60; // paralisada 3s
-      wp.target.petrifyTimer = 3 * 60;
-      addShockwave(wp.target.x, wp.target.y, SPIDER_COL, 20, 15);
-      burst(wp.target.x, wp.target.y, 12, { speed: 4, life: 20, size: 2, color: SPIDER_COL });
-      webProjectiles.splice(i, 1);
-    } else {
-      wp.x += (dx/dist) * wp.speed * dt;
-      wp.y += (dy/dist) * wp.speed * dt;
-    }
-  }
-
   // Barrils
   for (let i = barrils.length - 1; i >= 0; i--) {
     const b = barrils[i];
@@ -1790,12 +2145,11 @@ function loop(time) {
 
   // Medusa waves (visual)
   for (let i = medusaWaves.length - 1; i >= 0; i--) {
-    const mw = medusaWaves[i];
-    mw.life -= dt;
-    if (mw.life <= 0) medusaWaves.splice(i, 1);
+    medusaWaves[i].life -= dt;
+    if (medusaWaves[i].life <= 0) medusaWaves.splice(i, 1);
   }
 
-  // Fungus heal zones
+  // Fungus zones
   for (let i = healZones.length - 1; i >= 0; i--) {
     const z = healZones[i];
     z.life -= dt; z.pulse += dt * 0.15;
@@ -1804,8 +2158,6 @@ function loop(time) {
       const d = Math.hypot(e.x - z.x, (e.y - (e.airHeight || 0)) - z.y);
       if (d <= z.radius) {
         e.hp = Math.min(e.maxHp, e.hp + 10 / 60 * dt);
-        e.lastHealTick = (e.lastHealTick || 0) + dt;
-        if (e.lastHealTick >= 60 && e.hp < e.maxHp) { addEnemyHealEffect(e.x, e.y - (e.airHeight || 0), 10); e.lastHealTick = 0; }
       }
     }
   }
@@ -1820,14 +2172,28 @@ function loop(time) {
     if (lordAuras[i].life <= 0) lordAuras.splice(i, 1);
   }
 
+  // Debris decay
+  for (let i = debris.length - 1; i >= 0; i--) {
+    const d = debris[i];
+    if (d.spawnAnim > 0) d.spawnAnim -= dt;
+    d.life -= dt;
+    if (d.life <= 0) debris.splice(i, 1);
+  }
+
   // ====== TOWERS ======
+  for (const t of towers) {
+    if (t.inMedusaCone) continue; // resetado abaixo
+  }
+  // Reset Medusa cone
+  for (const t of towers) t.inMedusaCone = false;
+  // Reaplica (feito no loop dos bosses)
+
   for (const t of towers) {
     if (t.spawnAnim > 0) t.spawnAnim -= dt;
     if (t.recoil > 0) t.recoil -= dt * 3;
     if (t.healPulse > 0) t.healPulse -= dt * 2;
     if (t.incomePulse > 0) t.incomePulse -= dt * 2;
 
-    // Petrified ou em cone da Medusa = não faz nada
     if (t.petrified > 0) { t.petrified -= dt; continue; }
     if (t.inMedusaCone) continue;
 
@@ -1865,7 +2231,6 @@ function loop(time) {
         gold += t.income;
         addMoneyPop(t.x, t.y - 15, t.income);
         addShockwave(t.x, t.y, GOLD, 35, 25);
-        burst(t.x, t.y, 12, { speed: 2, life: 35, color: GOLD, size: 2 });
         t.incomePulse = 1;
         Sound.coin(); updateGameUI(); t.cooldown = t.fireRate;
       }
@@ -1877,7 +2242,6 @@ function loop(time) {
           crystals += 1;
           saveCrystals(crystals);
           addCrystalPop(t.x, t.y - 25, 1);
-          Sound.crystal();
           updateMenuCrystals();
         }
       }
@@ -1898,16 +2262,16 @@ function loop(time) {
       if (t.cooldown <= 0) {
         paradoxZones.push({ x: t.x, y: t.y, radius: t.range, life: t.duration, maxLife: t.duration, pulse: 0 });
         addShockwave(t.x, t.y, PURPLE, t.range, 30);
-        burst(t.x, t.y, 30, { speed: 4, life: 30, size: 3, color: PURPLE });
-        addFlash(0.35, '170,102,255'); addShake(4);
+        addFlash(0.35, '170,102,255');
         Sound.shootGlacial();
         t.cooldown = t.fireRate;
       }
       continue;
     }
 
-    // Target selection
+    // Target selection (inclui bats!)
     let target = null, bestDist = Infinity;
+    // Prioridade aéreo para Drone/Lord
     if (t.isDrone || t.isLord) {
       for (const e of enemies) {
         if (!e.isAir) continue;
@@ -1938,9 +2302,8 @@ function loop(time) {
           burst(target.x, targetY, 40, { speed: 6, life: 35, size: 4, color: LORD_PURPLE });
           const inRange = enemies.filter(e => Math.hypot(e.x - target.x, (e.y - (e.airHeight || 0)) - targetY) <= t.splash);
           for (const e of inRange) {
-            const dist = Math.hypot(e.x - target.x, (e.y - (e.airHeight || 0)) - targetY);
             if (e === target) damageEnemy(e, actualDamage, t.x, t.y);
-            else damageEnemy(e, Math.floor(actualDamage * (1 - dist / t.splash * 0.5)));
+            else damageEnemy(e, Math.floor(actualDamage * 0.5));
           }
           Sound.shootLord();
           t.recoil = 5;
@@ -1949,27 +2312,23 @@ function loop(time) {
           damageEnemy(target, actualDamage, t.x, t.y);
           applyFire(target, t.fireDmg, t.fireDur);
           if (t.starLevel >= 3) target.fireIgnoresArmor = true;
-          burst(mx, my, 6, { speed: 2.5, life: 15, size: 2, color: FIRE });
-          t.recoil = 2;
           Sound.shootLanca();
+          t.recoil = 2;
         } else if (t.isBoxer) {
           t.punchAnim = 1;
           damageEnemy(target, actualDamage, t.x, t.y);
-          burst(target.x, targetY, 8, { speed: 3, life: 15, size: 2, color: BOXER });
           if (t.starLevel >= 3) target.iceFrozen = 18;
-          t.recoil = 4;
           Sound.shootBoxer();
+          t.recoil = 4;
         } else if (t.isGlacial) {
-          burst(mx, my, 5, { speed: 2, life: 12, size: 2, color: ICE });
           bullets.push({ x: t.x, y: t.y, target, damage: actualDamage, speed: 8, type: 'glacial', angle: t.angle, iceDur: t.iceDur, splashIce: t.starLevel >= 3 });
-          t.recoil = 3;
           Sound.shootGlacial();
+          t.recoil = 3;
         } else if (t.isTesla) {
           const chainPoints = [{ x: t.x, y: t.y }, { x: target.x, y: targetY }];
           const hitEnemies = [target];
           let current = target, currentY = targetY, currentDmg = actualDamage;
           damageEnemy(current, currentDmg);
-          if (t.starLevel >= 3) current.iceFrozen = 12;
           currentDmg -= 5;
           let chainsLeft = t.maxChains;
           while (chainsLeft > 0) {
@@ -1991,17 +2350,14 @@ function loop(time) {
           Sound.shootTesla();
           t.recoil = 3;
         } else if (t.type === 'bazuca') {
-          burst(mx, my, 8, { speed: 3, life: 14, size: 2, color: ORANGE });
           missiles.push({ x: t.x, y: t.y, target, damage: actualDamage, splash: t.splash, speed: 6, angle: t.angle, life: 300, splitOnExplode: t.starLevel >= 3 });
-          t.recoil = 6;
           Sound.fireBazuca();
+          t.recoil = 6;
         } else if (t.type === 'sniper') {
           damageEnemy(target, actualDamage, t.x, t.y);
-          addShockwave(target.x, targetY, CYAN, 15, 10);
           Sound.shootSniper();
           t.recoil = 4;
         } else {
-          burst(mx, my, 5, { speed: 2, life: 10, size: 1.5, color: t.isDrone ? DRONE : GREEN_BRIGHT });
           bullets.push({ x: t.x, y: t.y, target, damage: actualDamage, speed: 8, type: t.isDrone ? 'drone' : t.type, angle: t.angle });
           if (t.isDrone) Sound.shootDrone();
           else if (t.type === 'metralhadora') Sound.shootMetralhadora();
@@ -2043,6 +2399,9 @@ function loop(time) {
   for (let i = bullets.length - 1; i >= 0; i--) {
     const b = bullets[i];
     if (!b.target || b.target.hp <= 0 || enemies.indexOf(b.target) === -1) {
+      if (b.type === 'stark') {
+        // Stark bullet mirava em tropa
+      }
       bullets.splice(i, 1); continue;
     }
     const targetY = b.target.y - (b.target.airHeight || 0);
@@ -2050,7 +2409,6 @@ function loop(time) {
     const dist = Math.hypot(dx, dy);
     if (dist < b.speed * dt) {
       if (b.type === 'stark') {
-        // Dano direto em tropa
         let dmg = b.damage;
         if (b.target.isProtected) dmg = Math.floor(dmg * (1 - b.target.protReduction));
         b.target.hp -= dmg;
@@ -2071,7 +2429,7 @@ function loop(time) {
     }
   }
 
-  // Partículas, trails, etc.
+  // Partículas etc
   for (let i = particles.length - 1; i >= 0; i--) {
     const p = particles[i];
     p.x += p.vx * dt; p.y += p.vy * dt;
@@ -2112,19 +2470,16 @@ function loop(time) {
   draw();
 }
 
-// ============ DRAW ============
+// ============ DRAW (compacto - só desenha, muito do antigo) ============
 function draw() {
   if (!path) return;
   ctx.save();
   if (shakeAmount > 0.1) {
-    const sx = (Math.random() - 0.5) * shakeAmount;
-    const sy = (Math.random() - 0.5) * shakeAmount;
-    ctx.translate(sx, sy);
+    ctx.translate((Math.random() - 0.5) * shakeAmount, (Math.random() - 0.5) * shakeAmount);
   }
   ctx.fillStyle = BLACK;
   ctx.fillRect(-20, -20, canvas.width + 40, canvas.height + 40);
 
-  // Grid
   ctx.strokeStyle = 'rgba(51,255,51,0.06)';
   ctx.lineWidth = 1;
   for (let x = 0; x <= canvas.width; x += PPM) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke(); }
@@ -2133,12 +2488,37 @@ function draw() {
   for (let x = 0; x <= canvas.width; x += PPM * 5) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke(); }
   for (let y = 0; y <= canvas.height; y += PPM * 5) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke(); }
 
+  // Pentagrams
+  for (const p of pentagrams) {
+    const alpha = 0.4 + Math.sin(Date.now() / 300) * 0.15;
+    ctx.globalAlpha = alpha * Math.min(1, p.life / 60);
+    ctx.fillStyle = DRACULA_COL;
+    ctx.beginPath(); ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2); ctx.fill();
+    ctx.globalAlpha = alpha * 1.5;
+    ctx.strokeStyle = DRACULA_COL; ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2); ctx.stroke();
+    // Estrela de 5 pontas
+    ctx.beginPath();
+    for (let k = 0; k < 5; k++) {
+      const a1 = (k * 4 * Math.PI / 5) - Math.PI / 2;
+      const a2 = ((k + 1) * 4 * Math.PI / 5) - Math.PI / 2;
+      const x1 = p.x + Math.cos(a1) * p.radius * 0.8;
+      const y1 = p.y + Math.sin(a1) * p.radius * 0.8;
+      const x2 = p.x + Math.cos(a2) * p.radius * 0.8;
+      const y2 = p.y + Math.sin(a2) * p.radius * 0.8;
+      if (k === 0) ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+    }
+    ctx.closePath(); ctx.stroke();
+  }
+  ctx.globalAlpha = 1;
+
   // Poison clouds
   for (const pc of poisonClouds) {
     const p = pc.life / pc.maxLife;
     ctx.globalAlpha = 0.35 * p;
     ctx.fillStyle = POISON;
-    ctx.beginPath(); ctx.arc(pc.x, pc.y, pc.radius * (1 + (1 - p) * 0.1), 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(pc.x, pc.y, pc.radius, 0, Math.PI * 2); ctx.fill();
     ctx.globalAlpha = 0.7 * p;
     ctx.strokeStyle = POISON; ctx.lineWidth = 2;
     ctx.setLineDash([6, 4]);
@@ -2153,9 +2533,6 @@ function draw() {
     ctx.globalAlpha = p * 0.5;
     ctx.strokeStyle = MEDUSA_COL; ctx.lineWidth = 4;
     ctx.beginPath(); ctx.arc(mw.x, mw.y, mw.radius * (1 - p), 0, Math.PI * 2); ctx.stroke();
-    ctx.globalAlpha = p * 0.3;
-    ctx.strokeStyle = STONE; ctx.lineWidth = 3;
-    ctx.beginPath(); ctx.arc(mw.x, mw.y, mw.radius * (1 - p) * 0.8, 0, Math.PI * 2); ctx.stroke();
   }
   ctx.globalAlpha = 1;
 
@@ -2183,17 +2560,42 @@ function draw() {
   }
   ctx.globalAlpha = 1;
 
-  // Lord aura
+  // Lord auras
   for (const a of lordAuras) {
     const p = a.life / a.maxLife;
     ctx.globalAlpha = p * 0.2;
     ctx.fillStyle = LORD_PURPLE;
     ctx.beginPath(); ctx.arc(a.x, a.y, a.range * (1 - p * 0.3), 0, Math.PI * 2); ctx.fill();
-    ctx.globalAlpha = p * 0.6;
-    ctx.strokeStyle = LORD_GOLD; ctx.lineWidth = 2;
-    ctx.beginPath(); ctx.arc(a.x, a.y, a.range * (1 - p * 0.3), 0, Math.PI * 2); ctx.stroke();
   }
   ctx.globalAlpha = 1;
+
+  // Debris (Colossos)
+  for (const d of debris) {
+    const scale = d.spawnAnim > 0 ? 0.3 + (1 - d.spawnAnim / 30) * 0.7 : 1;
+    ctx.save();
+    ctx.translate(d.x, d.y);
+    ctx.scale(scale, scale);
+    ctx.fillStyle = '#3a3a3a';
+    ctx.strokeStyle = COLOSSUS_COL;
+    ctx.lineWidth = 2;
+    // Rocha irregular
+    ctx.beginPath();
+    ctx.moveTo(-d.radius, 0);
+    ctx.lineTo(-d.radius * 0.6, -d.radius);
+    ctx.lineTo(d.radius * 0.4, -d.radius * 0.8);
+    ctx.lineTo(d.radius, 0);
+    ctx.lineTo(d.radius * 0.5, d.radius);
+    ctx.lineTo(-d.radius * 0.7, d.radius * 0.7);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    ctx.restore();
+    // WavesLeft
+    ctx.fillStyle = '#aaa';
+    ctx.font = 'bold 10px VT323, monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText(d.wavesLeft + 'W', d.x, d.y + 4);
+  }
 
   // Path
   const pathPulse = 0.15 + Math.sin(Date.now() / 400) * 0.03;
@@ -2219,8 +2621,7 @@ function draw() {
 
   // Air trails
   for (const at of airTrails) {
-    const p = at.life / at.maxLife;
-    ctx.globalAlpha = p * 0.7;
+    ctx.globalAlpha = (at.life / at.maxLife) * 0.7;
     ctx.fillStyle = AIR;
     ctx.fillRect(at.x - 1.5, at.y - 1.5, 3, 3);
   }
@@ -2228,8 +2629,8 @@ function draw() {
 
   // Trails
   for (const tr of trails) {
-    const p = tr.life / tr.maxLife;
-    ctx.globalAlpha = p * 0.7; ctx.fillStyle = tr.color;
+    ctx.globalAlpha = (tr.life / tr.maxLife) * 0.7;
+    ctx.fillStyle = tr.color;
     ctx.fillRect(tr.x - tr.size/2, tr.y - tr.size/2, tr.size, tr.size);
   }
   ctx.globalAlpha = 1;
@@ -2242,8 +2643,6 @@ function draw() {
     ctx.globalAlpha = p * 0.75;
     const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, f.range);
     grad.addColorStop(0, 'rgba(255,255,150,1)');
-    grad.addColorStop(0.3, 'rgba(255,170,50,0.9)');
-    grad.addColorStop(0.7, 'rgba(255,100,0,0.6)');
     grad.addColorStop(1, 'rgba(255,50,0,0)');
     ctx.fillStyle = grad;
     const spread = Math.PI / 6;
@@ -2261,15 +2660,9 @@ function draw() {
 
     if (!isPetrified) {
       if (t.isLord) {
-        const pulse = 0.15 + Math.sin(Date.now() / 400) * 0.05;
-        ctx.globalAlpha = pulse;
+        ctx.globalAlpha = 0.15;
         ctx.fillStyle = LORD_PURPLE;
         ctx.beginPath(); ctx.arc(t.x, t.y, t.range, 0, Math.PI * 2); ctx.fill();
-        ctx.globalAlpha = pulse * 2;
-        ctx.strokeStyle = LORD_GOLD; ctx.lineWidth = 2;
-        ctx.setLineDash([8, 4]);
-        ctx.beginPath(); ctx.arc(t.x, t.y, t.range, 0, Math.PI * 2); ctx.stroke();
-        ctx.setLineDash([]);
         ctx.globalAlpha = 1;
       } else if (t.isDefensor) {
         ctx.strokeStyle = SHIELD; ctx.globalAlpha = 0.3; ctx.lineWidth = 3;
@@ -2277,15 +2670,6 @@ function draw() {
         ctx.beginPath(); ctx.arc(t.x, t.y, t.range, 0, Math.PI * 2); ctx.stroke();
         ctx.setLineDash([]);
         ctx.globalAlpha = 1;
-      } else if (t.isHealer) {
-        ctx.strokeStyle = GREEN_BRIGHT; ctx.globalAlpha = 0.15; ctx.lineWidth = 2;
-        ctx.beginPath(); ctx.arc(t.x, t.y, t.range, 0, Math.PI * 2); ctx.stroke();
-        ctx.globalAlpha = 1;
-      } else if (t.isDrone) {
-        ctx.strokeStyle = 'rgba(102,238,255,0.3)'; ctx.lineWidth = 1;
-        ctx.setLineDash([3, 5]);
-        ctx.beginPath(); ctx.arc(t.x, t.y, t.range, 0, Math.PI * 2); ctx.stroke();
-        ctx.setLineDash([]);
       }
     }
 
@@ -2319,16 +2703,6 @@ function draw() {
     ctx.translate(t.x, t.y); ctx.scale(scale, scale);
     ctx.strokeStyle = col; ctx.lineWidth = 2;
     ctx.strokeRect(-11, -11, 22, 22);
-    ctx.beginPath();
-    ctx.moveTo(-11, -11); ctx.lineTo(-6, -11);
-    ctx.moveTo(-11, -11); ctx.lineTo(-11, -6);
-    ctx.moveTo(11, -11); ctx.lineTo(6, -11);
-    ctx.moveTo(11, -11); ctx.lineTo(11, -6);
-    ctx.moveTo(-11, 11); ctx.lineTo(-6, 11);
-    ctx.moveTo(-11, 11); ctx.lineTo(-11, 6);
-    ctx.moveTo(11, 11); ctx.lineTo(6, 11);
-    ctx.moveTo(11, 11); ctx.lineTo(11, 6);
-    ctx.stroke();
     ctx.restore();
 
     ctx.fillStyle = col;
@@ -2347,15 +2721,13 @@ function draw() {
       ctx.fillText('$', t.x, t.y + 1);
     } else if (t.isBoxer) {
       ctx.beginPath(); ctx.arc(t.x + 2, t.y - 2, 6, 0, Math.PI * 2); ctx.fill();
-      ctx.fillRect(t.x - 6, t.y - 2, 6, 6);
     } else if (t.isFlamethrower) {
       ctx.fillStyle = FIRE_BRIGHT;
       ctx.beginPath();
       ctx.moveTo(t.x, t.y - 7); ctx.lineTo(t.x - 5, t.y + 3);
       ctx.lineTo(t.x - 2, t.y + 3); ctx.lineTo(t.x - 2, t.y + 7);
       ctx.lineTo(t.x + 2, t.y + 7); ctx.lineTo(t.x + 2, t.y + 3);
-      ctx.lineTo(t.x + 5, t.y + 3); ctx.closePath();
-      ctx.fill();
+      ctx.lineTo(t.x + 5, t.y + 3); ctx.closePath(); ctx.fill();
     } else if (t.isGlacial) {
       ctx.strokeStyle = col; ctx.lineWidth = 2;
       for (let i = 0; i < 3; i++) {
@@ -2412,21 +2784,58 @@ function draw() {
       ctx.fillText('🪨', t.x, t.y);
     }
 
-    if (t.starLevel > 0 && !t.isLord && !isPetrified) {
-      ctx.font = 'bold 10px VT323, monospace';
-      ctx.fillStyle = GOLD;
-      ctx.fillText('⭐'.repeat(t.starLevel), t.x, t.y - 18);
-    }
-
     const bw = 26, bh = 3, bx = t.x - bw/2, by = t.y + 15;
     ctx.fillStyle = GREEN_DARK; ctx.fillRect(bx, by, bw, bh);
     ctx.fillStyle = col; ctx.fillRect(bx, by, bw * hpPct, bh);
   }
 
-  // Sparks
+  // Vampire rays
+  for (const vr of vampireRays) {
+    const p = vr.life / vr.maxLife;
+    ctx.strokeStyle = DRACULA_COL; ctx.globalAlpha = p;
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(vr.x1, vr.y1); ctx.lineTo(vr.x2, vr.y2);
+    ctx.stroke();
+    // Bolinhas de HP voltando
+    const prog = 1 - p;
+    const hx = vr.x2 + (vr.x1 - vr.x2) * prog;
+    const hy = vr.y2 + (vr.y1 - vr.y2) * prog;
+    ctx.fillStyle = RED;
+    ctx.beginPath(); ctx.arc(hx, hy, 4, 0, Math.PI * 2); ctx.fill();
+    ctx.globalAlpha = 1;
+  }
+
+  // Omega missiles
+  for (const m of omegaMissiles) {
+    ctx.save(); ctx.translate(m.x, m.y); ctx.rotate(m.angle);
+    ctx.fillStyle = OMEGA_COL;
+    ctx.fillRect(-8, -3, 16, 6);
+    ctx.fillStyle = YELLOW;
+    ctx.beginPath(); ctx.moveTo(8, -3); ctx.lineTo(14, 0); ctx.lineTo(8, 3); ctx.closePath(); ctx.fill();
+    ctx.restore();
+  }
+
+  // Omega beams
+  for (const b of omegaBeams) {
+    const p = b.life / b.maxLife;
+    ctx.save();
+    ctx.translate(b.x, b.y); ctx.rotate(b.angle);
+    const grad = ctx.createLinearGradient(0, 0, b.range, 0);
+    grad.addColorStop(0, `rgba(136,170,255,${p})`);
+    grad.addColorStop(1, `rgba(255,255,255,${p * 0.3})`);
+    ctx.strokeStyle = grad;
+    ctx.lineWidth = 6 * p + 2;
+    ctx.beginPath();
+    ctx.moveTo(0, 0); ctx.lineTo(b.range, 0);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  // Spars
   for (const sp of sparks) {
-    const p = sp.life / sp.maxLife;
-    ctx.strokeStyle = sp.color; ctx.globalAlpha = p; ctx.lineWidth = 2;
+    ctx.strokeStyle = sp.color; ctx.globalAlpha = sp.life / sp.maxLife;
+    ctx.lineWidth = 2;
     ctx.beginPath(); ctx.moveTo(sp.x1, sp.y1); ctx.lineTo(sp.x2, sp.y2); ctx.stroke();
   }
   ctx.globalAlpha = 1;
@@ -2443,8 +2852,7 @@ function draw() {
   // Bullets
   for (const b of bullets) {
     if (b.type === 'stark') {
-      ctx.fillStyle = STARK_COL; ctx.shadowColor = STARK_COL; ctx.shadowBlur = 8;
-      ctx.fillRect(b.x - 3, b.y - 3, 6, 6); ctx.shadowBlur = 0;
+      ctx.fillStyle = STARK_COL; ctx.fillRect(b.x - 3, b.y - 3, 6, 6);
     } else if (b.type === 'glacial') {
       ctx.fillStyle = ICE; ctx.beginPath(); ctx.arc(b.x, b.y, 4, 0, Math.PI * 2); ctx.fill();
     } else if (b.type === 'drone') {
@@ -2458,48 +2866,34 @@ function draw() {
     }
   }
 
-  // Missiles
+  // Missiles (bazuca)
   for (const m of missiles) {
     ctx.save(); ctx.translate(m.x, m.y); ctx.rotate(m.angle);
-    ctx.fillStyle = ORANGE;
-    ctx.fillRect(-8, -3, 16, 6);
-    ctx.fillStyle = YELLOW;
-    ctx.beginPath(); ctx.moveTo(8, -3); ctx.lineTo(14, 0); ctx.lineTo(8, 3); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = ORANGE; ctx.fillRect(-8, -3, 16, 6);
     ctx.restore();
   }
 
-  // Web projectiles
+  // Web
   for (const wp of webProjectiles) {
     ctx.fillStyle = SPIDER_COL;
     ctx.beginPath(); ctx.arc(wp.x, wp.y, 5, 0, Math.PI * 2); ctx.fill();
-    ctx.strokeStyle = WHITE; ctx.lineWidth = 1;
-    for (let k = 0; k < 3; k++) {
-      const ang = (Math.PI / 3) * k;
-      ctx.beginPath();
-      ctx.moveTo(wp.x - Math.cos(ang) * 6, wp.y - Math.sin(ang) * 6);
-      ctx.lineTo(wp.x + Math.cos(ang) * 6, wp.y + Math.sin(ang) * 6);
-      ctx.stroke();
-    }
   }
 
   // Barrils
   for (const b of barrils) {
-    const p = b.life / b.maxLife;
     ctx.fillStyle = '#8b5a2b';
     ctx.fillRect(b.x - 10, b.y - 10, 20, 20);
     ctx.strokeStyle = '#4a2a0a'; ctx.lineWidth = 2;
     ctx.strokeRect(b.x - 10, b.y - 10, 20, 20);
-    // Pavio aceso
     ctx.fillStyle = FIRE_BRIGHT;
     const spark = Math.sin(Date.now() / 100) * 2;
     ctx.beginPath(); ctx.arc(b.x, b.y - 12 + spark, 4, 0, Math.PI * 2); ctx.fill();
-    // Contagem
     ctx.fillStyle = WHITE; ctx.font = 'bold 12px VT323, monospace';
     ctx.textAlign = 'center';
     ctx.fillText(Math.ceil(b.life / 60), b.x, b.y + 4);
   }
 
-  // Tesla bolts
+  // Tesla
   for (const tb of teslaBolts) {
     const p = tb.life / tb.maxLife;
     ctx.strokeStyle = TESLA; ctx.globalAlpha = p; ctx.lineWidth = 3;
@@ -2516,8 +2910,7 @@ function draw() {
 
   // Particles
   for (const p of particles) {
-    const alpha = p.life / p.maxLife;
-    ctx.globalAlpha = alpha; ctx.fillStyle = p.color;
+    ctx.globalAlpha = p.life / p.maxLife; ctx.fillStyle = p.color;
     ctx.fillRect(p.x - p.size/2, p.y - p.size/2, p.size, p.size);
   }
   ctx.globalAlpha = 1;
@@ -2535,30 +2928,52 @@ function draw() {
   // Enemies
   for (const e of enemies) drawEnemy(e);
 
+  // Bats
+  for (const b of bats) {
+    ctx.save();
+    ctx.translate(b.x, b.y - 10 + Math.sin(b.bobPhase) * 4);
+    ctx.fillStyle = DRACULA_COL;
+    ctx.strokeStyle = '#ff3333';
+    ctx.lineWidth = 2;
+    // Corpo
+    ctx.beginPath(); ctx.arc(0, 0, 6, 0, Math.PI * 2); ctx.fill();
+    // Asas
+    ctx.beginPath();
+    ctx.moveTo(-3, -2); ctx.lineTo(-12, -6); ctx.lineTo(-10, 0); ctx.lineTo(-12, 6); ctx.lineTo(-3, 2);
+    ctx.closePath(); ctx.fill(); ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(3, -2); ctx.lineTo(12, -6); ctx.lineTo(10, 0); ctx.lineTo(12, 6); ctx.lineTo(3, 2);
+    ctx.closePath(); ctx.fill(); ctx.stroke();
+    // Olhos
+    ctx.fillStyle = '#ffff33';
+    ctx.beginPath(); ctx.arc(-2, -2, 1, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(2, -2, 1, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+    // HP
+    const w = 14, h = 2;
+    ctx.fillStyle = GREEN_DARK; ctx.fillRect(b.x - w/2, b.y - 22, w, h);
+    ctx.fillStyle = RED; ctx.fillRect(b.x - w/2, b.y - 22, w * (b.hp / b.maxHp), h);
+  }
+
   // Texts
   for (const tx of texts) {
-    const alpha = tx.life / tx.maxLife;
-    ctx.globalAlpha = alpha; ctx.fillStyle = tx.color;
+    ctx.globalAlpha = tx.life / tx.maxLife; ctx.fillStyle = tx.color;
     ctx.font = `bold ${tx.size || 14}px VT323, monospace`;
     ctx.textAlign = 'center';
     ctx.fillText(tx.text, tx.x, tx.y);
   }
   ctx.globalAlpha = 1;
 
-  // Money pops
   for (const mp of moneyPops) {
-    const alpha = mp.life / mp.maxLife;
-    ctx.globalAlpha = alpha; ctx.fillStyle = GOLD;
+    ctx.globalAlpha = mp.life / mp.maxLife; ctx.fillStyle = GOLD;
     ctx.font = 'bold 18px VT323, monospace';
     ctx.textAlign = 'center';
     ctx.fillText(mp.text, mp.x, mp.y);
   }
   ctx.globalAlpha = 1;
 
-  // Crystal pops
   for (const cp of crystalPops) {
-    const alpha = cp.life / cp.maxLife;
-    ctx.globalAlpha = alpha; ctx.fillStyle = CRYSTAL;
+    ctx.globalAlpha = cp.life / cp.maxLife; ctx.fillStyle = CRYSTAL;
     ctx.font = 'bold 22px VT323, monospace';
     ctx.textAlign = 'center';
     ctx.fillText(cp.text, cp.x, cp.y);
@@ -2594,6 +3009,14 @@ function draw() {
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
   }
+  if (curseActive) {
+    const pulseAmount = 0.15 + Math.sin(Date.now() / 300) * 0.1;
+    const grad = ctx.createRadialGradient(240, 240, 180, 240, 240, 340);
+    grad.addColorStop(0, 'rgba(50,50,50,0)');
+    grad.addColorStop(1, `rgba(50,50,50,${pulseAmount})`);
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  }
 
   const vg = ctx.createRadialGradient(240, 240, 150, 240, 240, 340);
   vg.addColorStop(0, 'rgba(0,0,0,0)');
@@ -2619,6 +3042,7 @@ function draw() {
   }
 }
 
+// Draw enemy - apenas uma versão compacta com novos desenhos
 function drawEnemy(e) {
   const s = e.size;
   const isHit = e.hitFlash > 0;
@@ -2627,20 +3051,15 @@ function drawEnemy(e) {
   const isIceFrozen = e.iceFrozen > 0;
   const isAir = e.isAir;
   const isPetrified = e.petrified > 0;
+  const isRevived = e.isRevived;
 
   let color;
   if (isPetrified) color = STONE;
   else if (isHit) color = '#ffffff';
+  else if (isRevived) color = KNIGHT_COL;
   else if (isIceFrozen) color = FROZEN;
   else if (isBurning) color = FIRE_BRIGHT;
-  else if (isBoss) {
-    if (e.type === 'ogro') color = OGRE_COL;
-    else if (e.type === 'aracnideo') color = SPIDER_COL;
-    else if (e.type === 'centauro') color = CENTAUR_COL;
-    else if (e.type === 'stark') color = STARK_COL;
-    else if (e.type === 'medusa') color = MEDUSA_COL;
-    else color = RED;
-  }
+  else if (isBoss) color = getBossColor(e.type);
   else if (isAir) color = AIR;
   else if (e.type === 'fungo') color = TOXIC;
   else color = GREEN;
@@ -2718,23 +3137,15 @@ function drawEnemy(e) {
       ctx.fillRect(-s/2, -s/2, s, s);
       ctx.strokeStyle = color; ctx.strokeRect(-s/2, -s/2, s, s);
       ctx.fillStyle = color;
-      // Chifres
       ctx.beginPath(); ctx.moveTo(-15, -s/2); ctx.lineTo(-10, -s/2 - 12); ctx.lineTo(-5, -s/2); ctx.closePath(); ctx.fill();
       ctx.beginPath(); ctx.moveTo(5, -s/2); ctx.lineTo(10, -s/2 - 12); ctx.lineTo(15, -s/2); ctx.closePath(); ctx.fill();
-      // Punhos
-      ctx.beginPath(); ctx.arc(-s/2 - 4, 5, 7, 0, Math.PI * 2); ctx.fill();
-      ctx.beginPath(); ctx.arc(s/2 + 4, 5, 7, 0, Math.PI * 2); ctx.fill();
-      // Olhos
       ctx.fillStyle = '#ffff33';
       ctx.fillRect(-11, -6, 6, 6); ctx.fillRect(5, -6, 6, 6);
       break;
     case 'spider':
-      // Corpo de aranha
       ctx.fillStyle = isHit ? color : '#1a0a2a';
       ctx.beginPath(); ctx.arc(0, 0, s/2 - 4, 0, Math.PI * 2); ctx.fill();
-      ctx.strokeStyle = color; ctx.stroke();
-      // 8 patas
-      ctx.strokeStyle = color; ctx.lineWidth = 2;
+      ctx.strokeStyle = color;
       for (let k = 0; k < 4; k++) {
         const side = k < 2 ? -1 : 1;
         const idx = k % 2;
@@ -2744,48 +3155,35 @@ function drawEnemy(e) {
         ctx.lineTo(Math.cos(baseAngle) * (s/2 + 8), Math.sin(baseAngle) * (s/2 + 8));
         ctx.stroke();
       }
-      // Olhos vermelhos
       ctx.fillStyle = '#ff3333';
       ctx.beginPath(); ctx.arc(-4, -3, 2, 0, Math.PI * 2); ctx.fill();
       ctx.beginPath(); ctx.arc(4, -3, 2, 0, Math.PI * 2); ctx.fill();
       break;
     case 'centaur':
-      // Corpo de cavalo (baixo)
       ctx.fillStyle = isHit ? color : '#5a3a1a';
       ctx.fillRect(-s/2, 0, s, s/2);
       ctx.strokeStyle = color; ctx.strokeRect(-s/2, 0, s, s/2);
-      // Torso humano (cima)
       ctx.fillStyle = isHit ? color : '#c19a6b';
       ctx.fillRect(-s/4, -s/2, s/2, s/2);
       ctx.strokeRect(-s/4, -s/2, s/2, s/2);
-      // Cabeça
-      ctx.fillStyle = '#c19a6b';
       ctx.beginPath(); ctx.arc(0, -s/2 - 3, s/6, 0, Math.PI * 2); ctx.fill();
-      ctx.strokeStyle = color; ctx.stroke();
-      // Lança
       ctx.strokeStyle = GOLD; ctx.lineWidth = 3;
       ctx.beginPath(); ctx.moveTo(s/2, -s/2); ctx.lineTo(s/2 + 20, -s/2 - 20); ctx.stroke();
       break;
     case 'stark':
-      // Corpo militar
       ctx.fillStyle = isHit ? color : '#2a2a5a';
       ctx.fillRect(-s/2, -s/2, s, s);
       ctx.strokeStyle = color; ctx.strokeRect(-s/2, -s/2, s, s);
-      // Bandana vermelha
       ctx.fillStyle = RED;
       ctx.fillRect(-s/2, -s/2 + 5, s, 4);
-      // Olhos
       ctx.fillStyle = '#fff';
       ctx.fillRect(-7, -5, 4, 4); ctx.fillRect(3, -5, 4, 4);
-      // Fuzil
       ctx.fillStyle = '#333'; ctx.fillRect(-3, -s/2 - 8, 6, 20);
       break;
     case 'medusa':
-      // Corpo
       ctx.fillStyle = isHit ? color : '#2a5a2a';
       ctx.beginPath(); ctx.arc(0, 0, s/2, 0, Math.PI * 2); ctx.fill();
       ctx.strokeStyle = color; ctx.stroke();
-      // Cabelos de serpente
       ctx.strokeStyle = '#33ff33'; ctx.lineWidth = 3;
       for (let k = 0; k < 6; k++) {
         const ang = -Math.PI + (Math.PI / 5) * k;
@@ -2795,11 +3193,90 @@ function drawEnemy(e) {
         ctx.lineTo(Math.cos(ang) * (s/2 + 8), -s/2 + 4 + Math.sin(ang) * 8 + wobble);
         ctx.stroke();
       }
-      // Olhos brilhantes
       ctx.fillStyle = '#88ff88';
       ctx.shadowColor = '#88ff88'; ctx.shadowBlur = 10;
       ctx.beginPath(); ctx.arc(-5, -2, 3, 0, Math.PI * 2); ctx.fill();
       ctx.beginPath(); ctx.arc(5, -2, 3, 0, Math.PI * 2); ctx.fill();
+      ctx.shadowBlur = 0;
+      break;
+    case 'dracula':
+      // Conde Drácula
+      ctx.fillStyle = isHit ? color : '#2a0a0a';
+      ctx.fillRect(-s/2, -s/2, s, s);
+      ctx.strokeStyle = color; ctx.strokeRect(-s/2, -s/2, s, s);
+      // Capa
+      ctx.fillStyle = DRACULA_COL;
+      ctx.beginPath();
+      ctx.moveTo(-s/2, -s/2);
+      ctx.lineTo(-s/2 - 10, s/2 + 10);
+      ctx.lineTo(s/2 + 10, s/2 + 10);
+      ctx.lineTo(s/2, -s/2);
+      ctx.closePath(); ctx.fill(); ctx.stroke();
+      // Rosto pálido
+      ctx.fillStyle = '#eee';
+      ctx.beginPath(); ctx.arc(0, -3, s/3, 0, Math.PI * 2); ctx.fill();
+      ctx.stroke();
+      // Olhos vermelhos
+      ctx.fillStyle = '#ff3333';
+      ctx.shadowColor = '#ff3333'; ctx.shadowBlur = 10;
+      ctx.beginPath(); ctx.arc(-5, -4, 2, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(5, -4, 2, 0, Math.PI * 2); ctx.fill();
+      ctx.shadowBlur = 0;
+      // Presas
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(-3, 3, 2, 4);
+      ctx.fillRect(1, 3, 2, 4);
+      break;
+    case 'omega':
+      // Robô Ômega-04
+      ctx.fillStyle = isHit ? color : '#2a2a3a';
+      ctx.fillRect(-s/2, -s/2, s, s);
+      ctx.strokeStyle = color; ctx.strokeRect(-s/2, -s/2, s, s);
+      // Visor
+      ctx.fillStyle = '#ff3333';
+      ctx.shadowColor = '#ff3333'; ctx.shadowBlur = 12;
+      ctx.fillRect(-s/2 + 4, -6, s - 8, 6);
+      ctx.shadowBlur = 0;
+      // Braços canhão
+      ctx.fillStyle = '#444';
+      ctx.fillRect(-s/2 - 8, -2, 8, 6);
+      ctx.fillRect(s/2, -2, 8, 6);
+      break;
+    case 'knight':
+      // Black Knight
+      ctx.fillStyle = isHit ? color : '#0a0a0a';
+      ctx.fillRect(-s/2, -s/2, s, s);
+      ctx.strokeStyle = color; ctx.strokeRect(-s/2, -s/2, s, s);
+      // Elmo
+      ctx.fillStyle = '#333';
+      ctx.fillRect(-s/3, -s/2 - 4, s * 0.66, s/3);
+      ctx.strokeStyle = '#666'; ctx.strokeRect(-s/3, -s/2 - 4, s * 0.66, s/3);
+      // Visor vermelho
+      ctx.fillStyle = RED;
+      ctx.shadowColor = RED; ctx.shadowBlur = 10;
+      ctx.fillRect(-s/4, -s/2 + 2, s/2, 3);
+      ctx.shadowBlur = 0;
+      // Espada
+      ctx.strokeStyle = '#ccc'; ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.moveTo(s/2, -s/2); ctx.lineTo(s/2 + 15, s/2); ctx.stroke();
+      break;
+    case 'colossus':
+      // Colossos - pedra
+      ctx.fillStyle = isHit ? color : '#3a3a3a';
+      ctx.fillRect(-s/2, -s/2, s, s);
+      ctx.strokeStyle = color; ctx.strokeRect(-s/2, -s/2, s, s);
+      // Rachaduras
+      ctx.strokeStyle = '#ff6600'; ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(-s/4, -s/2); ctx.lineTo(-s/6, -s/6); ctx.lineTo(s/6, -s/4); ctx.lineTo(s/4, 0);
+      ctx.moveTo(-s/3, s/4); ctx.lineTo(0, s/3);
+      ctx.moveTo(s/4, -s/3); ctx.lineTo(s/3, s/6);
+      ctx.stroke();
+      // Olhos
+      ctx.fillStyle = '#ff6600';
+      ctx.shadowColor = '#ff6600'; ctx.shadowBlur = 15;
+      ctx.fillRect(-s/4, -s/4, s/6, s/6);
+      ctx.fillRect(s/12, -s/4, s/6, s/6);
       ctx.shadowBlur = 0;
       break;
   }
@@ -2836,15 +3313,15 @@ function drawEnemy(e) {
   for (let i = 0; i < filled; i++) {
     ctx.fillRect(e.x - w/2 + i * (w/segs), barY, (w / segs) - 1, h);
   }
-  if (isPetrified) {
-    ctx.fillStyle = STONE;
-    ctx.font = 'bold 12px VT323, monospace';
+  if (isRevived) {
+    ctx.fillStyle = KNIGHT_COL;
+    ctx.font = 'bold 10px VT323, monospace';
     ctx.textAlign = 'center';
-    ctx.fillText('🪨', e.x, barY - 5);
+    ctx.fillText('👻', e.x, barY - 5);
   }
 }
 
-// ============ FUNÇÕES AUX ============
+// ============ HELPERS ============
 function bazookaExplosion(x, y, damage, radius, split) {
   addShockwave(x, y, ORANGE, radius, 22);
   burst(x, y, 50, { speed: 7, life: 40, size: 3, gravity: 0.15, friction: 0.9 });
@@ -2855,6 +3332,12 @@ function bazookaExplosion(x, y, damage, radius, split) {
     const dist = Math.hypot(e.x - x, (e.y - (e.airHeight || 0)) - y);
     const falloff = 1 - (dist / radius) * 0.6;
     damageEnemy(e, Math.floor(damage * falloff));
+  }
+  // Bats também tomam dano
+  for (const b of bats) {
+    if (Math.hypot(b.x - x, b.y - y) <= radius) {
+      b.hp -= Math.floor(damage * 0.8);
+    }
   }
 }
 function findCorrectWaypointForPosition(x, y) {
@@ -2884,24 +3367,43 @@ function spawnFungusZone(x, y) {
   addShockwave(x, y, TOXIC, 8 * PPM, 45);
   burst(x, y, 25, { speed: 4, life: 40, size: 3, color: TOXIC, gravity: 0.05 });
 }
-function bossFinalExplosion(x, y, color) {
+function bossFinalExplosion(x, y, color, doDamage) {
   addShockwave(x, y, color, 128, 35);
   addShockwave(x, y, YELLOW, 96, 25);
-  burst(x, y, 80, { speed: 8, life: 50, size: 4, gravity: 0.2, friction: 0.9, color: color });
+  burst(x, y, 80, { speed: 8, life: 50, size: 4, gravity: 0.2, friction: 0.9, color });
   burst(x, y, 40, { speed: 12, life: 35, size: 3, color: YELLOW, friction: 0.88 });
   addFlash(0.7, '255,255,255'); addShake(18);
   Sound.bigExplosion();
-  const radius = 8 * PPM;
+  if (doDamage) {
+    const radius = 8 * PPM;
+    const inRange = towers.filter(t => Math.hypot(t.x - x, t.y - y) <= radius);
+    for (const t of inRange) {
+      let dmg = 100;
+      if (t.isProtected) dmg = Math.floor(dmg * (1 - t.protReduction));
+      t.hp -= dmg;
+      if (t.hp <= 0) {
+        const idx = towers.indexOf(t);
+        if (idx >= 0) towers.splice(idx, 1);
+        if (t.isHealer) healPlayer(5);
+      }
+    }
+    updateGameUI();
+  }
+}
+function omegaMissileExplode(x, y, damage, radius) {
+  addShockwave(x, y, OMEGA_COL, radius, 22);
+  burst(x, y, 30, { speed: 6, life: 30, size: 3, color: OMEGA_COL });
+  addFlash(0.4, '136,170,255'); addShake(7);
+  Sound.explosion();
   const inRange = towers.filter(t => Math.hypot(t.x - x, t.y - y) <= radius);
   for (const t of inRange) {
-    let dmg = 100;
-    if (t.isProtected) dmg = Math.floor(dmg * (t.protReduction || 0.5));
+    let dmg = damage;
+    if (t.isProtected) dmg = Math.floor(dmg * (1 - t.protReduction));
     t.hp -= dmg;
-    addText(t.x, t.y - 15, '-' + dmg, color, 55, 22);
+    addText(t.x, t.y - 15, '-' + dmg, OMEGA_COL, 45);
     if (t.hp <= 0) {
       const idx = towers.indexOf(t);
       if (idx >= 0) towers.splice(idx, 1);
-      if (t.isHealer) healPlayer(5);
     }
   }
   updateGameUI();
@@ -2927,8 +3429,6 @@ function showMenu() {
   updateMenuCrystals();
   showScreen('menu');
 }
-
-// ============ DECK ============
 function buildDeckGrid() {
   const grid = document.getElementById('deckGrid');
   grid.innerHTML = '';
@@ -2981,8 +3481,6 @@ function showDeck() {
   updateDeckUI();
   Sound.select();
 }
-
-// ============ UPGRADE ============
 function buildUpgradeGrid() {
   const grid = document.getElementById('upgradeGrid');
   grid.innerHTML = '';
@@ -3005,25 +3503,21 @@ function buildUpgradeGrid() {
     statsHtml += `</div>`;
     if (def.isHealer) {
       statsHtml += `<div>CURA: ${cur.heal}`;
-      if (next) statsHtml += ` <span class="next">→ ${next.heal}</span>`;
+      if (next) statsHtml += ` → ${next.heal}`;
       statsHtml += `</div>`;
     } else if (def.isMerchant) {
-      statsHtml += `<div>OURO: +${cur.income}`;
-      if (next) statsHtml += ` <span class="next">→ +${next.income}</span>`;
-      statsHtml += `</div>`;
+      statsHtml += `<div>OURO: +${cur.income}</div>`;
     } else if (def.isDefensor) {
-      statsHtml += `<div>REDUÇÃO: ${Math.round(cur.reduction * 100)}%`;
-      if (next) statsHtml += ` <span class="next">→ ${Math.round(next.reduction * 100)}%</span>`;
-      statsHtml += `</div>`;
+      statsHtml += `<div>REDUÇÃO: ${Math.round(cur.reduction * 100)}%</div>`;
     } else if (def.isParadox) {
       statsHtml += `<div>DURAÇÃO: ${(cur.duration / 60).toFixed(1)}s</div>`;
     } else if (cur.damage !== undefined) {
       statsHtml += `<div>DANO: ${cur.damage}`;
-      if (next) statsHtml += ` <span class="next">→ ${next.damage}</span>`;
+      if (next) statsHtml += ` → ${next.damage}`;
       statsHtml += `</div>`;
     }
     statsHtml += `<div>ALC: ${(cur.range / 16).toFixed(1)}m`;
-    if (next) statsHtml += ` <span class="next">→ ${(next.range / 16).toFixed(1)}m</span>`;
+    if (next) statsHtml += ` → ${(next.range / 16).toFixed(1)}m`;
     statsHtml += `</div>`;
 
     card.innerHTML = `
@@ -3052,8 +3546,6 @@ function showUpgrade() {
   buildUpgradeGrid();
   Sound.select();
 }
-
-// ============ MAP SELECT ============
 function buildMapSelect() {
   const grid = document.getElementById('mapSelectGrid');
   grid.innerHTML = '';
@@ -3109,12 +3601,10 @@ function showMapSelect() {
   Sound.select();
 }
 
-// ============ GAME START ============
 function startGame() {
   if (!selectedMap) return;
-  currentMap = selectedMap;
-  path = currentMap.path;
-  document.getElementById('mapName').textContent = currentMap.name;
+  path = selectedMap.path;
+  document.getElementById('mapName').textContent = selectedMap.name;
   document.getElementById('game').style.display = 'flex';
   document.getElementById('titleBar').style.display = 'block';
   document.getElementById('mapInfoBar').style.display = 'block';
@@ -3134,9 +3624,12 @@ function startGame() {
   teslaBolts.length = 0; paradoxZones.length = 0; airTrails.length = 0;
   lordAuras.length = 0; webProjectiles.length = 0; poisonClouds.length = 0;
   barrils.length = 0; petrifyCones.length = 0; medusaWaves.length = 0;
-  waveQueue = []; waveActive = false; waveDelay = 0;
+  bats.length = 0; vampireRays.length = 0; pentagrams.length = 0;
+  omegaMissiles.length = 0; omegaBeams.length = 0; debris.length = 0; reviveAuras.length = 0;
+  waveQueue = []; waveActive = false;
   waveComplete = false; waveTransitionTimer = 0;
-  bossActive = false; bossRef = null; currentBossType = null;
+  curseActive = false; curseWavesLeft = 0;
+  bossActive = false; bossRef = null;
   dragging = null; selectedTowerType = null; pointerDownInfo = null;
 
   Sound.resume();
@@ -3228,14 +3721,10 @@ document.getElementById('adminMyMaps').addEventListener('click', () => {
   showMsg('> ' + customMaps.length + ' MAPA(S) SALVO(S)');
 });
 
-// ============ MAP EDITOR ============
-let editorPath = [];
-let editorTool = 'path';
-let editorIsDrawing = false;
-let editingMapIndex = -1;
+// ============ EDITOR ============
+let editorPath = [], editorIsDrawing = false, editingMapIndex = -1;
 const editorCanvas = document.getElementById('editorCanvas');
 const editorCtx = editorCanvas.getContext('2d');
-
 function openEditor(mapIndex) {
   editingMapIndex = mapIndex !== undefined ? mapIndex : -1;
   if (editingMapIndex >= 0 && customMaps[editingMapIndex]) {
@@ -3247,8 +3736,6 @@ function openEditor(mapIndex) {
     editorPath = [];
   }
   document.getElementById('editorScreen').classList.add('active');
-  document.querySelectorAll('.editor-tool[data-tool]').forEach(b => b.classList.toggle('active', b.dataset.tool === 'path'));
-  editorTool = 'path';
   redrawEditor();
 }
 function closeEditor() { document.getElementById('editorScreen').classList.remove('active'); }
@@ -3256,12 +3743,8 @@ function redrawEditor() {
   editorCtx.fillStyle = '#0a1a0a';
   editorCtx.fillRect(0, 0, editorCanvas.width, editorCanvas.height);
   editorCtx.strokeStyle = 'rgba(102,221,255,0.15)';
-  editorCtx.lineWidth = 1;
   for (let x = 0; x <= editorCanvas.width; x += PPM) { editorCtx.beginPath(); editorCtx.moveTo(x, 0); editorCtx.lineTo(x, editorCanvas.height); editorCtx.stroke(); }
   for (let y = 0; y <= editorCanvas.height; y += PPM) { editorCtx.beginPath(); editorCtx.moveTo(0, y); editorCtx.lineTo(editorCanvas.width, y); editorCtx.stroke(); }
-  editorCtx.strokeStyle = 'rgba(102,221,255,0.3)';
-  for (let x = 0; x <= editorCanvas.width; x += PPM * 5) { editorCtx.beginPath(); editorCtx.moveTo(x, 0); editorCtx.lineTo(x, editorCanvas.height); editorCtx.stroke(); }
-  for (let y = 0; y <= editorCanvas.height; y += PPM * 5) { editorCtx.beginPath(); editorCtx.moveTo(0, y); editorCtx.lineTo(editorCanvas.width, y); editorCtx.stroke(); }
   if (editorPath.length > 0) {
     editorCtx.strokeStyle = '#66ddff'; editorCtx.lineWidth = pathWidth;
     editorCtx.lineCap = 'round'; editorCtx.lineJoin = 'round';
@@ -3269,21 +3752,15 @@ function redrawEditor() {
     editorCtx.moveTo(editorPath[0].x, editorPath[0].y);
     for (let i = 1; i < editorPath.length; i++) editorCtx.lineTo(editorPath[i].x, editorPath[i].y);
     editorCtx.stroke();
-    editorCtx.strokeStyle = '#ffffff'; editorCtx.lineWidth = 2; editorCtx.stroke();
   }
   for (let i = 0; i < editorPath.length; i++) {
     const p = editorPath[i];
     editorCtx.fillStyle = i === 0 ? '#33ff33' : (i === editorPath.length - 1 ? '#ff3333' : '#66ddff');
     editorCtx.beginPath(); editorCtx.arc(p.x, p.y, 5, 0, Math.PI * 2); editorCtx.fill();
   }
-  let totalDist = 0;
-  for (let i = 1; i < editorPath.length; i++) {
-    totalDist += Math.hypot(editorPath[i].x - editorPath[i-1].x, editorPath[i].y - editorPath[i-1].y);
-  }
-  document.getElementById('editorInfo').textContent = `Pontos: ${editorPath.length} · ${(totalDist / 16).toFixed(1)}m`;
+  document.getElementById('editorInfo').textContent = `Pontos: ${editorPath.length}`;
 }
 function snapToGrid(x, y) { return { x: Math.round(x / PPM) * PPM, y: Math.round(y / PPM) * PPM }; }
-
 editorCanvas.addEventListener('pointerdown', e => {
   const rect = editorCanvas.getBoundingClientRect();
   const cx = (e.clientX - rect.left) * (editorCanvas.width / rect.width);
@@ -3310,20 +3787,13 @@ editorCanvas.addEventListener('pointermove', e => {
 });
 editorCanvas.addEventListener('pointerup', () => { editorIsDrawing = false; });
 editorCanvas.addEventListener('pointerleave', () => { editorIsDrawing = false; });
-document.querySelectorAll('.editor-tool[data-tool]').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.editor-tool[data-tool]').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    editorTool = btn.dataset.tool;
-  });
-});
 document.getElementById('editorUndo').addEventListener('click', () => { editorPath.pop(); redrawEditor(); });
 document.getElementById('editorClear').addEventListener('click', () => { editorPath = []; redrawEditor(); });
 document.getElementById('editorClose').addEventListener('click', () => { closeEditor(); openAdminPanel(); });
 document.getElementById('editorSave').addEventListener('click', () => {
   if (editorPath.length < 2) { showMsg('> PRECISA 2+ PONTOS'); Sound.error(); return; }
   const name = document.getElementById('editorName').value.trim() || ('Mapa ' + (customMaps.length + 1));
-  const newMap = { id: 'custom_' + Date.now(), name: name, desc: 'Custom · ' + editorPath.length + ' pts', path: editorPath.map(p => ({ x: p.x, y: p.y })), isCustom: true };
+  const newMap = { id: 'custom_' + Date.now(), name, desc: 'Custom · ' + editorPath.length + ' pts', path: editorPath.map(p => ({ x: p.x, y: p.y })), isCustom: true };
   if (editingMapIndex >= 0) customMaps[editingMapIndex] = newMap;
   else customMaps.push(newMap);
   saveCustomMaps(customMaps); Sound.upgrade();
@@ -3349,7 +3819,6 @@ document.getElementById('editorImport').addEventListener('click', () => {
     if (!isNaN(x) && !isNaN(y)) editorPath.push({ x, y });
   }
   redrawEditor();
-  showMsg('> MAPA CARREGADO');
 });
 document.getElementById('exportCopyBtn').addEventListener('click', () => {
   const ta = document.getElementById('exportTextArea');
@@ -3359,11 +3828,9 @@ document.getElementById('exportCopyBtn').addEventListener('click', () => {
 document.getElementById('exportCloseBtn').addEventListener('click', () => {
   document.getElementById('customMapModal').classList.remove('active');
 });
-
-// ============ MAP SELECT EVENTS ============
 document.getElementById('btnLoadCustomMap').addEventListener('click', () => {
   const code = document.getElementById('customMapCode').value.trim();
-  if (!code) { Sound.error(); showMsg('> COLE UM CÓDIGO'); return; }
+  if (!code) { Sound.error(); return; }
   const parts = code.split('|');
   if (parts[0] !== 'TD19' || parts.length < 3) { Sound.error(); showMsg('> CÓDIGO INVÁLIDO'); return; }
   const newPath = [];
@@ -3371,7 +3838,7 @@ document.getElementById('btnLoadCustomMap').addEventListener('click', () => {
     const [x, y] = parts[i].split(',').map(Number);
     if (!isNaN(x) && !isNaN(y)) newPath.push({ x, y });
   }
-  if (newPath.length < 2) { Sound.error(); showMsg('> MAPA MUITO CURTO'); return; }
+  if (newPath.length < 2) { Sound.error(); return; }
   const newMap = { id: 'custom_' + Date.now(), name: parts[1] || 'Custom', desc: 'Custom · ' + newPath.length + ' pts', path: newPath, isCustom: true };
   if (!customMaps.find(m => m.name === newMap.name && JSON.stringify(m.path) === JSON.stringify(newMap.path))) {
     customMaps.push(newMap); saveCustomMaps(customMaps);
