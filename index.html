@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>TOWER DEFENSE 1970 v21</title>
+<title>TOWER DEFENSE 1970 v22 — FINAL</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
@@ -40,38 +40,36 @@
   #menu .subtitle { color: #22aa22; font-size: 22px; letter-spacing: 6px; margin-top: -20px; }
   #crystalDisplay { color: #66ddff; font-size: 26px; letter-spacing: 3px; text-shadow: 0 0 10px #66ddff;
     border: 2px solid #66ddff; padding: 8px 20px; background: #000;
-    box-shadow: 0 0 15px #66ddff, inset 0 0 10px rgba(102,221,255,0.2); }
+    box-shadow: 0 0 15px #66ddff; }
   .menu-options { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
   .mode-btn { background: #000; border: 3px solid #33ff33; color: #33ff33;
     padding: 20px 30px; font-family: 'VT323', monospace; cursor: pointer;
     text-align: center; min-width: 180px; transition: all 0.15s;
-    box-shadow: 0 0 20px #33ff33, inset 0 0 15px rgba(51,255,51,0.2);
-    user-select: none; touch-action: manipulation; }
+    box-shadow: 0 0 20px #33ff33, inset 0 0 15px rgba(51,255,51,0.2); user-select: none; }
   .mode-btn:active, .mode-btn:hover { background: #33ff33; color: #000;
     box-shadow: 0 0 40px #33ff33, transform: scale(1.05); }
-  .mode-btn:hover .mode-icon, .mode-btn:hover .mode-name, .mode-btn:hover .mode-desc,
-  .mode-btn:active .mode-icon, .mode-btn:active .mode-name, .mode-btn:active .mode-desc {
+  .mode-btn:hover .mode-icon, .mode-btn:hover .mode-name, .mode-btn:hover .mode-desc {
     color: #000; text-shadow: none; }
   .mode-icon { font-size: 50px; margin-bottom: 8px; line-height: 1; }
-  .mode-name { font-size: 28px; letter-spacing: 5px; margin-bottom: 6px; text-shadow: 0 0 10px currentColor; }
+  .mode-name { font-size: 28px; letter-spacing: 5px; margin-bottom: 6px; }
   .mode-desc { font-size: 14px; letter-spacing: 2px; color: #22aa22; }
 
   .screen h2 { font-size: 32px; color: #33ff33; text-shadow: 0 0 15px #33ff33;
     letter-spacing: 5px; text-align: center; margin-bottom: 8px; }
   .info-line { text-align: center; color: #22aa22; font-size: 18px; letter-spacing: 2px; margin-bottom: 12px; }
-  .info-line strong { color: #ffd700; text-shadow: 0 0 8px #ffd700; }
+  .info-line strong { color: #ffd700; }
   .info-line.full strong { color: #33ff33; }
 
   #deckGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     gap: 8px; max-width: 1100px; margin: 0 auto; width: 100%; }
   .deck-card { background: #000; border: 2px solid #33ff33; color: #33ff33;
     padding: 8px; cursor: pointer; font-family: 'VT323', monospace; text-align: left;
-    line-height: 1.2; transition: all 0.1s; user-select: none; position: relative; }
+    line-height: 1.2; user-select: none; position: relative; }
   .deck-card:hover { background: #062a06; }
-  .deck-card.selected { background: #1a4a1a; border-color: #ffd700;
-    box-shadow: 0 0 15px #ffd700; }
+  .deck-card.selected { background: #1a4a1a; border-color: #ffd700; box-shadow: 0 0 15px #ffd700; }
   .deck-card.selected::after { content: "✓"; position: absolute; top: 4px; right: 8px;
     color: #ffd700; font-size: 22px; }
+  .deck-card.cruzado { border-color: #ffd700; box-shadow: 0 0 12px #ffd700; }
   .deck-card .card-name { font-size: 16px; font-weight: bold; margin-bottom: 3px; }
   .deck-card .card-cost { font-size: 13px; color: #ffd700; margin-bottom: 4px; }
   .deck-card .card-stat { font-size: 11px; color: #22aa22; }
@@ -89,7 +87,6 @@
   .action-btn.cyan { border-color: #66ddff; color: #66ddff; }
   .action-btn.cyan:hover:not(:disabled) { background: #66ddff; color: #000; }
   .action-btn.red { border-color: #ff3333; color: #ff3333; }
-  .action-btn.red:hover:not(:disabled) { background: #ff3333; color: #000; }
 
   #upgradeGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
     gap: 10px; max-width: 1100px; margin: 0 auto; width: 100%; }
@@ -99,7 +96,6 @@
     display: flex; justify-content: space-between; align-items: center; }
   .upgrade-card .u-stars { font-size: 18px; color: #ffd700; }
   .upgrade-card .u-stats { font-size: 12px; color: #22aa22; margin-bottom: 6px; line-height: 1.4; }
-  .upgrade-card .u-stats .next { color: #88ff88; }
   .upgrade-card .u-btn { width: 100%; padding: 6px; margin-top: 4px;
     background: #000; border: 2px solid #66ddff; color: #66ddff;
     font-family: 'VT323', monospace; font-size: 14px; cursor: pointer;
@@ -112,7 +108,7 @@
     gap: 12px; max-width: 900px; margin: 0 auto; width: 100%; }
   .map-card { background: #000; border: 2px solid #33ff33; color: #33ff33;
     padding: 10px; cursor: pointer; font-family: 'VT323', monospace;
-    text-align: left; transition: all 0.15s; position: relative; }
+    text-align: left; position: relative; }
   .map-card:hover { background: #062a06; }
   .map-card.selected { background: #1a4a1a; border-color: #ffd700; box-shadow: 0 0 15px #ffd700; }
   .map-card.selected::after { content: "✓"; position: absolute; top: 4px; right: 8px;
@@ -125,7 +121,7 @@
   .map-card .map-desc { font-size: 12px; color: #22aa22; }
 
   .custom-map-box { max-width: 900px; margin: 12px auto 0 auto;
-    border: 2px solid #66ddff; padding: 12px; background: #000; box-shadow: 0 0 12px #66ddff; }
+    border: 2px solid #66ddff; padding: 12px; background: #000; }
   .custom-map-box .box-title { color: #66ddff; font-size: 20px;
     letter-spacing: 3px; margin-bottom: 8px; }
   .custom-map-box textarea { width: 100%; min-height: 60px;
@@ -172,13 +168,14 @@
   .admin-btn.warn:hover { background: #ff3333; color: #000; }
   .admin-btn.cyan { border-color: #66ddff; color: #66ddff; }
   .admin-btn.cyan:hover { background: #66ddff; color: #000; }
+  .admin-btn.gold { border-color: #ffd700; color: #ffd700; }
+  .admin-btn.gold:hover { background: #ffd700; color: #000; }
 
   #editorScreen { position: fixed; inset: 0; background: #000;
     display: none; flex-direction: column; z-index: 20000;
     padding: 10px; overflow-y: auto; }
   #editorScreen.active { display: flex; }
-  #editorScreen h2 { color: #66ddff; text-shadow: 0 0 15px #66ddff;
-    text-align: center; font-size: 24px; letter-spacing: 4px; margin-bottom: 8px; }
+  #editorScreen h2 { color: #66ddff; text-align: center; font-size: 24px; margin-bottom: 8px; }
   .editor-layout { display: flex; gap: 15px; flex: 1;
     justify-content: center; align-items: flex-start; flex-wrap: wrap; }
   #editorCanvas { background: #0a1a0a; border: 2px solid #66ddff;
@@ -189,8 +186,6 @@
     font-size: 16px; letter-spacing: 2px; text-align: center; }
   .editor-tool:hover { background: #0a2a3a; }
   .editor-tool.active { background: #66ddff; color: #000; }
-  .editor-tool.start { border-color: #33ff33; color: #33ff33; }
-  .editor-tool.end { border-color: #ff3333; color: #ff3333; }
   .editor-tool.warn { border-color: #ffaa00; color: #ffaa00; }
   .editor-tool.danger { border-color: #ff3333; color: #ff3333; }
   .editor-name-input { background: #000; border: 2px solid #66ddff;
@@ -207,14 +202,14 @@
   #soundBtn.muted { border-color: #ff3333; color: #ff3333; }
 
   #bossHpBar { position: fixed; top: 12px; left: 50%; transform: translateX(-50%);
-    width: min(85vw, 520px); background: #000; border: 3px solid #66ff33;
-    box-shadow: 0 0 25px #66ff33; padding: 6px 10px; display: none; z-index: 1400; }
-  #bossHpBar .boss-label { font-size: 16px; color: #66ff33;
+    width: min(85vw, 520px); background: #000; border: 3px solid #ff0000;
+    box-shadow: 0 0 25px #ff0000; padding: 6px 10px; display: none; z-index: 1400; }
+  #bossHpBar .boss-label { font-size: 16px; color: #ff0000;
     letter-spacing: 4px; text-align: center; margin-bottom: 3px; }
-  #bossHpBar .boss-bar-outer { width: 100%; height: 16px; background: #0a1a00;
-    border: 1px solid #66ff33; overflow: hidden; }
+  #bossHpBar .boss-bar-outer { width: 100%; height: 16px; background: #1a0000;
+    border: 1px solid #ff0000; overflow: hidden; }
   #bossHpBar .boss-bar-inner { height: 100%; width: 100%;
-    background: linear-gradient(90deg, #2a5a1a, #66ff33, #aaff66); transition: width 0.2s linear; }
+    background: linear-gradient(90deg, #8a0000, #ff0000, #ff6600); transition: width 0.2s linear; }
   #bossHpBar .boss-bar-inner.low { animation: hpBlink 0.3s steps(2) infinite; }
   @keyframes hpBlink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0.5; } }
 
@@ -238,6 +233,9 @@
     animation: blink 0.6s steps(2) infinite; }
   .tower-btn:disabled { opacity: 0.3; cursor: not-allowed; }
   .tower-btn.lord { border-color: #ffd700; color: #ffd700; }
+  .tower-btn.cruzado { border-color: #ffd700; color: #ffd700;
+    box-shadow: 0 0 8px #ffd700; }
+  .tower-btn.cruzado:hover { background: #ffd700; color: #000; }
   .tower-btn.lord:hover { background: #ffd700; color: #000; }
   @keyframes blink {
     0%, 50% { background: #33ff33; }
@@ -288,6 +286,7 @@
     white-space: nowrap; }
   #hordeBanner.show { animation: hordeIntro 2.5s ease-out forwards; }
   #hordeBanner.boss { color: #ff2200; text-shadow: 0 0 40px #ff2200, 0 0 80px #ff2200; }
+  #hordeBanner.azazel { color: #ff0000; text-shadow: 0 0 50px #ff0000, 0 0 100px #ff0000, 0 0 150px #ff0000; }
   @keyframes hordeIntro {
     0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
     15% { transform: translate(-50%, -50%) scale(1.3); opacity: 1; }
@@ -295,6 +294,33 @@
     80% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
     100% { transform: translate(-50%, -50%) scale(1.1); opacity: 0; }
   }
+
+  /* VICTORY SCREEN */
+  #victoryScreen { justify-content: center; align-items: center; gap: 25px;
+    background: radial-gradient(circle at center, #1a0a0a, #000); }
+  #victoryScreen h1 { font-size: 72px; color: #ffd700;
+    text-shadow: 0 0 30px #ffd700, 0 0 60px #ffd700, 0 0 90px #ffd700;
+    letter-spacing: 8px; text-align: center;
+    animation: victoryPulse 1.5s ease-in-out infinite; }
+  @keyframes victoryPulse {
+    0%, 100% { text-shadow: 0 0 30px #ffd700, 0 0 60px #ffd700; }
+    50% { text-shadow: 0 0 50px #ffd700, 0 0 100px #ffd700, 0 0 150px #ffd700; }
+  }
+  #victoryScreen .victory-sub { color: #ffaa00; font-size: 24px;
+    letter-spacing: 5px; text-align: center; }
+  #victoryScreen .victory-stats { background: #000; border: 2px solid #ffd700;
+    padding: 20px 30px; color: #ffd700; font-size: 20px; letter-spacing: 2px;
+    text-align: center; box-shadow: 0 0 20px #ffd700;
+    min-width: 320px; }
+  #victoryScreen .victory-stats div { margin: 6px 0; }
+  #victoryScreen .victory-stats .value { color: #33ff33; }
+  #victoryScreen .unlock-box {
+    background: #000; border: 3px solid #ffd700;
+    padding: 15px 30px; color: #ffd700; font-size: 22px;
+    text-align: center; box-shadow: 0 0 30px #ffd700;
+    animation: victoryPulse 1.5s ease-in-out infinite;
+  }
+  #victoryScreen .unlock-box .cross { font-size: 48px; display: block; margin-bottom: 8px; }
 </style>
 </head>
 <body>
@@ -318,6 +344,26 @@
       <div class="mode-name">MOBILE</div>
       <div class="mode-desc">TOQUE · ARRASTE</div>
     </button>
+  </div>
+</div>
+
+<!-- VICTORY -->
+<div id="victoryScreen" class="screen">
+  <h1>VOCÊ VENCEU!</h1>
+  <div class="victory-sub">O APOCALIPSE FOI DETIDO</div>
+  <div class="victory-stats" id="victoryStats">
+    <div>ONDAS: <span class="value" id="vWaves">100</span></div>
+    <div>CRISTAIS GANHOS: <span class="value" id="vCrystals">0</span></div>
+    <div>BOSSES DERROTADOS: <span class="value">10</span></div>
+  </div>
+  <div class="unlock-box">
+    <span class="cross">✝️</span>
+    TROPA DESBLOQUEADA:<br>
+    <strong>CRUZADO</strong>
+  </div>
+  <div class="actions-bar">
+    <button class="action-btn primary" id="btnVictoryMenu">◄ VOLTAR AO MENU</button>
+    <button class="action-btn cyan" id="btnVictoryDeck">🎴 JOGAR NOVAMENTE</button>
   </div>
 </div>
 
@@ -384,6 +430,7 @@
   <div class="admin-actions">
     <button class="admin-btn" id="adminGiveCrystals">💎 SACAR 1.000 CRISTAIS</button>
     <button class="admin-btn" id="adminUnlockLord">👑 DESBLOQUEAR LORD</button>
+    <button class="admin-btn gold" id="adminUnlockCruzado">✝️ DESBLOQUEAR CRUZADO</button>
     <button class="admin-btn cyan" id="adminMapEditor">🗺️ EDITOR DE MAPAS</button>
     <button class="admin-btn cyan" id="adminMyMaps">📁 MEUS MAPAS</button>
     <button class="admin-btn warn" id="adminResetCrystals">⚠️ RESETAR CRISTAIS</button>
@@ -424,7 +471,7 @@
 </div>
 
 <!-- GAME -->
-<div class="title" id="titleBar" style="display:none;">◄ TOWER DEFENSE · v21 ►</div>
+<div class="title" id="titleBar" style="display:none;">◄ TOWER DEFENSE · v22 ►</div>
 <div class="map-info" id="mapInfoBar" style="display:none;">
   MAPA: <span class="map-name" id="mapName">---</span><br>
   30m × 30m · 1m = 16px<br>
@@ -522,6 +569,9 @@ const Sound = (() => {
     shootLanca() { noise(0.1, 0.12, 800); },
     shootDrone() { tone(1600, 0.04, 'sine', 0.12, 2000); },
     shootLord() { tone(120, 0.4, 'sawtooth', 0.3, 800); setTimeout(() => tone(800, 0.3, 'sawtooth', 0.25, 100), 100); },
+    shootCruzado() { tone(900, 0.1, 'sine', 0.2, 1200); setTimeout(() => tone(1200, 0.12, 'sine', 0.15, 1600), 80); },
+    cruzadoTornado() { tone(300, 0.5, 'sawtooth', 0.3, 800); noise(0.5, 0.25, 1000); },
+    cruzadoDeath() { tone(800, 0.5, 'sine', 0.3, 200); setTimeout(() => tone(1200, 0.5, 'sine', 0.3, 400), 300); setTimeout(() => tone(1600, 0.6, 'sine', 0.35, 600), 600); },
     fireBazuca() { tone(100, 0.25, 'sawtooth', 0.2, 40); noise(0.2, 0.15, 400); },
     explosion() { noise(0.35, 0.25, 600); tone(60, 0.35, 'sawtooth', 0.2, 20); },
     bigExplosion() { noise(0.6, 0.35, 500); tone(40, 0.6, 'sawtooth', 0.3, 10); },
@@ -533,17 +583,22 @@ const Sound = (() => {
     barrilWarning() { tone(200, 0.15, 'triangle', 0.25); },
     barrilExplode() { noise(0.4, 0.35, 500); tone(80, 0.4, 'sawtooth', 0.25, 20); },
     medusaGaze() { tone(300, 0.2, 'sine', 0.2, 100); },
-    stoneShatter() { noise(0.3, 0.25, 800); tone(150, 0.3, 'square', 0.2, 60); },
-    // v21
-    batSpawn() { tone(1200, 0.08, 'sine', 0.15, 800); setTimeout(() => tone(1000, 0.08, 'sine', 0.15, 700), 80); },
-    vampireSuck() { tone(400, 0.3, 'sawtooth', 0.25, 100); setTimeout(() => tone(200, 0.3, 'sawtooth', 0.2, 50), 150); },
-    pentagram() { tone(100, 0.5, 'sawtooth', 0.3, 40); noise(0.4, 0.15, 200); },
+    batSpawn() { tone(1200, 0.08, 'sine', 0.15, 800); },
+    vampireSuck() { tone(400, 0.3, 'sawtooth', 0.25, 100); },
+    pentagram() { tone(100, 0.5, 'sawtooth', 0.3, 40); },
     omegaMissile() { tone(600, 0.15, 'square', 0.2, 200); },
     omegaBeam() { tone(2000, 0.2, 'square', 0.2, 400); },
-    blackKnightCurse() { tone(80, 0.6, 'sawtooth', 0.3, 30); setTimeout(() => tone(60, 0.5, 'sawtooth', 0.25, 25), 300); },
-    reviveSound() { tone(300, 0.1, 'square', 0.2, 800); setTimeout(() => tone(800, 0.15, 'square', 0.15, 400), 100); },
+    blackKnightCurse() { tone(80, 0.6, 'sawtooth', 0.3, 30); },
+    reviveSound() { tone(300, 0.1, 'square', 0.2, 800); },
     colossusPound() { noise(0.5, 0.45, 250); tone(30, 0.6, 'square', 0.35, 10); },
     colossusDeath() { noise(0.9, 0.4, 400); tone(25, 1, 'sawtooth', 0.4, 5); },
+    azazelWarn() { tone(60, 0.5, 'sawtooth', 0.35, 30); setTimeout(() => tone(40, 0.5, 'sawtooth', 0.35, 20), 500); setTimeout(() => tone(30, 1, 'sawtooth', 0.4, 15), 1000); },
+    azazelShockwave() { noise(0.5, 0.4, 300); tone(50, 0.5, 'sawtooth', 0.35, 15); },
+    azazelThunder() { tone(100, 0.3, 'sawtooth', 0.4, 30); noise(0.3, 0.35, 400); },
+    azazelBeams() { tone(2000, 0.1, 'square', 0.25, 3000); setTimeout(() => tone(3000, 0.15, 'square', 0.2, 4000), 100); },
+    azazelCurse() { tone(50, 1, 'sawtooth', 0.4, 20); noise(1, 0.3, 200); },
+    azazelDeath() { tone(40, 2, 'sawtooth', 0.5, 5); noise(2, 0.5, 300); },
+    victory() { tone(400, 0.3, 'square', 0.3); setTimeout(() => tone(500, 0.3, 'square', 0.3), 300); setTimeout(() => tone(600, 0.3, 'square', 0.3), 600); setTimeout(() => tone(800, 0.6, 'square', 0.35), 900); setTimeout(() => tone(1000, 0.8, 'square', 0.4), 1500); },
     enemyHit() { tone(400, 0.03, 'square', 0.08, 200); },
     enemyDeath() { tone(300, 0.08, 'square', 0.15, 100); },
     playerHit() { tone(200, 0.3, 'sawtooth', 0.3, 60); noise(0.2, 0.2, 400); },
@@ -600,8 +655,12 @@ const DRACULA_COL = '#8a0000';
 const OMEGA_COL = '#88aaff';
 const KNIGHT_COL = '#444444';
 const COLOSSUS_COL = '#666666';
+const AZAZEL_COL = '#ff0000';
+const AZAZEL_DARK = '#4a0000';
 const LORD_GOLD = '#ffd700';
 const LORD_PURPLE = '#aa66ff';
+const CRUZADO_COL = '#ffd700';
+const CRUZADO_LIGHT = '#ffffcc';
 
 // ============ MAPAS ============
 const OFFICIAL_MAPS = [
@@ -716,6 +775,9 @@ const STAR_PROGRESSION = {
   ],
   lord: [
     { hp: 500, damage: 1000, range: 15 * PPM, fireRate: 120, isLord: true, healPerSec: 50, splash: 3 * PPM }
+  ],
+  cruzado: [
+    { hp: 500, damage: 100, range: 15 * PPM, fireRate: 60, isCruzado: true, bossDamage: 250, bossFireRate: 300, sacredRange: 8 * PPM, tornadoDamage: 800 }
   ]
 };
 
@@ -734,7 +796,8 @@ const TOWER_TYPES = {
   defensor:     { cost: 270, name: 'DEFENSOR',      desc: 'HP/200 · AURA -50% DANO · 5m', isDefensor: true, hitsAir: false },
   comerciante:  { baseCost: 400, cost: 400, name: 'COMERCIANTE', desc: 'HP/100 · +50 OURO · 5s', income: 50, isMerchant: true, hitsAir: false },
   paradoxo:     { cost: 400, name: 'PARADOXO',      desc: 'HP/100 · PARA TEMPO · 15s · 5m', isParadox: true, hitsAir: false },
-  lord:         { cost: 500, name: '👑 LORD 👑',    desc: 'HP/500 · DMG/1000 · 2s · 15m · ADM', isLord: true, hitsAir: true }
+  lord:         { cost: 500, name: '👑 LORD 👑',    desc: 'HP/500 · DMG/1000 · 2s · 15m · ADM', isLord: true, hitsAir: true },
+  cruzado:      { cost: 100, name: '✝️ CRUZADO ✝️', desc: 'HP/500 · DMG/100 · 1s · 15m · LENDÁRIO', isCruzado: true, hitsAir: true, sacredRange: 8 * PPM }
 };
 
 const TOWER_ORDER = ['recruta','boxeador','drone','faca','sniper','metralhadora','lancachamas','glacial','bazuca','tesla','medico','defensor','comerciante','paradoxo'];
@@ -749,6 +812,8 @@ function loadStars() {
 function saveStars(s) { try { localStorage.setItem('td_stars', JSON.stringify(s)); } catch(e) {} }
 function loadLordUnlocked() { try { return localStorage.getItem('td_lord') === '1'; } catch(e) { return false; } }
 function saveLordUnlocked(v) { try { localStorage.setItem('td_lord', v ? '1' : '0'); } catch(e) {} }
+function loadCruzadoUnlocked() { try { return localStorage.getItem('td_cruzado') === '1'; } catch(e) { return false; } }
+function saveCruzadoUnlocked(v) { try { localStorage.setItem('td_cruzado', v ? '1' : '0'); } catch(e) {} }
 function loadCustomMaps() { try { const s = localStorage.getItem('td_custom_maps'); if (s) return JSON.parse(s); } catch(e) {} return []; }
 function saveCustomMaps(maps) { try { localStorage.setItem('td_custom_maps', JSON.stringify(maps)); } catch(e) {} }
 function loadDeck() { try { const s = localStorage.getItem('td_deck'); if (s) return JSON.parse(s); } catch(e) {} return []; }
@@ -757,6 +822,7 @@ function saveDeck() { try { localStorage.setItem('td_deck', JSON.stringify(selec
 let crystals = loadCrystals();
 let stars = loadStars();
 let lordUnlocked = loadLordUnlocked();
+let cruzadoUnlocked = loadCruzadoUnlocked();
 let customMaps = loadCustomMaps();
 
 // ============ STATE ============
@@ -766,6 +832,7 @@ let gold = 100;
 let waveNum = 0;
 let paused = false;
 let gameOver = false;
+let victory = false;
 let gameMode = null;
 let selectedDeck = [];
 let selectedMap = null;
@@ -782,8 +849,9 @@ let screenFlash = 0;
 let screenFlashColor = '51,255,51';
 let waveComplete = false;
 let waveTransitionTimer = 0;
-let curseWavesLeft = 0; // Black Knight maldição
+let curseWavesLeft = 0;
 let curseActive = false;
+let crystalsEarnedThisRun = 0;
 
 const towers = [];
 const enemies = [];
@@ -807,18 +875,23 @@ const lordAuras = [];
 const webProjectiles = [];
 const poisonClouds = [];
 const barrils = [];
-const petrifyCones = [];
 const medusaWaves = [];
-const bats = [];         // Drácula
-const vampireRays = [];  // Drácula
-const pentagrams = [];   // Drácula
-const omegaMissiles = []; // Ômega
-const omegaBeams = [];    // Ômega
-const debris = [];        // Colossos
-const reviveAuras = [];   // Black Knight
+const bats = [];
+const vampireRays = [];
+const pentagrams = [];
+const omegaMissiles = [];
+const omegaBeams = [];
+const debris = [];
+// v22
+const azazelBeams = [];      // 15 feixes de luz
+const azazelThunders = [];   // Trovões
+const azazelShockwaves = []; // Ondas de choque 8m
+const cruzadoTornados = [];  // Tornados do Cruzado
+const cruzadoSacreds = [];   // Zonas sagradas visual
+const cruzadoBeams = [];     // Feixes do Cruzado visual
 
 function getTowerStats(type) {
-  const level = type === 'lord' ? 0 : (stars[type] || 0);
+  const level = (type === 'lord' || type === 'cruzado') ? 0 : (stars[type] || 0);
   const prog = STAR_PROGRESSION[type][level];
   const baseDef = TOWER_TYPES[type];
   return {
@@ -835,7 +908,11 @@ function getTowerStats(type) {
     iceDur: prog.iceDur || 90,
     duration: prog.duration || 180,
     reduction: prog.reduction || 0.5,
-    healPerSec: prog.healPerSec || 0
+    healPerSec: prog.healPerSec || 0,
+    bossDamage: prog.bossDamage || 0,
+    bossFireRate: prog.bossFireRate || 0,
+    sacredRange: prog.sacredRange || 0,
+    tornadoDamage: prog.tornadoDamage || 0
   };
 }
 function getMerchantCost() { return 400 + towers.filter(t => t.isMerchant).length * 100; }
@@ -863,7 +940,8 @@ const ENEMY_TYPES = {
   dracula:   { hp: 3000, damage: 275, speed: 40, size: 45, reward: 1000, drawStyle: 'dracula', isBoss: true, bossName: 'DRÁCULA' },
   omega:     { hp: 5000, damage: 300, speed: 30, size: 45, reward: 1100, drawStyle: 'omega', isBoss: true, bossName: 'ÔMEGA-04' },
   blackknight: { hp: 5000, damage: 300, speed: 30, size: 45, reward: 1200, drawStyle: 'knight', isBoss: true, bossName: 'BLACK KNIGHT' },
-  colossos:  { hp: 8000, damage: 500, speed: 10, size: 60, reward: 1300, drawStyle: 'colossus', isBoss: true, bossName: 'COLOSSOS' }
+  colossos:  { hp: 8000, damage: 500, speed: 10, size: 60, reward: 1300, drawStyle: 'colossus', isBoss: true, bossName: 'COLOSSOS' },
+  azazel:    { hp: 20000, damage: 9999, speed: 5, size: 70, reward: 1400, drawStyle: 'azazel', isBoss: true, bossName: 'AZAZEL' }
 };
 
 const UNLOCK_WAVE = {
@@ -873,7 +951,7 @@ const UNLOCK_WAVE = {
 
 const BOSS_BY_WAVE = {
   10: 'ogro', 20: 'aracnideo', 30: 'centauro', 40: 'stark', 50: 'medusa',
-  60: 'dracula', 70: 'omega', 80: 'blackknight', 90: 'colossos'
+  60: 'dracula', 70: 'omega', 80: 'blackknight', 90: 'colossos', 100: 'azazel'
 };
 
 function isBossWave(wave) { return wave in BOSS_BY_WAVE; }
@@ -929,8 +1007,8 @@ function addTrail(x, y, color, size, life) { trails.push({ x, y, life: life || 1
 function addShockwave(x, y, color, maxRadius, life) { shockwaves.push({ x, y, radius: 2, maxRadius: maxRadius || 40, life: life || 20, maxLife: life || 20, color: color || GREEN }); }
 function addText(x, y, text, color, life, size) { texts.push({ x, y, text, color: color || GREEN, life: life || 40, maxLife: life || 40, vy: -0.8, size: size || 14 }); }
 function addSpark(x1, y1, x2, y2, color) { sparks.push({ x1, y1, x2, y2, life: 6, maxLife: 6, color: color || GREEN_BRIGHT }); }
-function addShake(amount) { shakeAmount = Math.min(shakeAmount + amount, 20); }
-function addFlash(amount, color) { screenFlash = Math.min(screenFlash + amount, 0.7); if (color) screenFlashColor = color; }
+function addShake(amount) { shakeAmount = Math.min(shakeAmount + amount, 25); }
+function addFlash(amount, color) { screenFlash = Math.min(screenFlash + amount, 0.9); if (color) screenFlashColor = color; }
 function addHealEffect(x, y, amount) {
   heals.push({ x, y, life: 45, maxLife: 45, amount, radius: 12 });
   for (let i = 0; i < 6; i++) addParticle(x + (Math.random() - 0.5) * 20, y, { vx: (Math.random() - 0.5) * 0.5, vy: -1 - Math.random(), life: 40, size: 2, color: GREEN_BRIGHT, friction: 0.98 });
@@ -948,12 +1026,14 @@ function addFireParticle(enemy) {
 function addTeslaBolt(points) { teslaBolts.push({ points, life: 12, maxLife: 12 }); }
 function addAirTrail(x, y) { airTrails.push({ x, y, life: 20, maxLife: 20, vx: (Math.random() - 0.5) * 0.3, vy: 0.3 + Math.random() * 0.5 }); }
 function addLordAura(x, y, range) { lordAuras.push({ x, y, range, life: 8, maxLife: 8 }); }
+function addCruzadoBeam(x1, y1, x2, y2, color) { cruzadoBeams.push({ x1, y1, x2, y2, life: 12, maxLife: 12, color: color || CRUZADO_COL }); }
 
 function damagePlayer(amount) {
-  playerHp -= amount;
+  if (amount >= 9999) { playerHp = 0; } // HIT KILL do Azazel
+  else { playerHp -= amount; }
   if (playerHp < 0) playerHp = 0;
   addFlash(0.45, '255,51,51'); addShake(7);
-  addText(canvas.width / 2, 60, '-' + amount, RED, 70, 22);
+  addText(canvas.width / 2, 60, '-' + (amount >= 9999 ? 'HIT KILL' : amount), RED, 70, 22);
   Sound.playerHit();
   updateGameUI();
   if (playerHp <= 0) { gameOver = true; showMsg('> VOCÊ CAIU <'); Sound.gameOver(); }
@@ -999,7 +1079,7 @@ function updateGameUI() {
     }
     btn.disabled = gold < cost;
     const starBadge = btn.querySelector('.star-badge');
-    if (starBadge && type !== 'lord') {
+    if (starBadge && type !== 'lord' && type !== 'cruzado') {
       const lvl = stars[type] || 0;
       starBadge.textContent = lvl > 0 ? '⭐'.repeat(lvl) : '';
     }
@@ -1043,7 +1123,7 @@ function tryPlace(x, y, type) {
   const def = TOWER_TYPES[type];
   const actualCost = getCostForType(type);
   const stats = getTowerStats(type);
-  const lvl = type === 'lord' ? 3 : (stars[type] || 0);
+  const lvl = (type === 'lord' || type === 'cruzado') ? 3 : (stars[type] || 0);
   towers.push({
     x, y, type, cost: actualCost, starLevel: lvl,
     range: stats.range, damage: stats.damage,
@@ -1058,19 +1138,24 @@ function tryPlace(x, y, type) {
     isBoxer: def.isBoxer || false,
     isDrone: def.isDrone || false,
     isLord: def.isLord || false,
+    isCruzado: def.isCruzado || false,
     hitsAir: def.hitsAir || false,
     chainRange: stats.chainRange, maxChains: stats.maxChains,
     fireDmg: stats.fireDmg, fireDur: stats.fireDur,
     iceDur: stats.iceDur, duration: stats.duration,
     reduction: stats.reduction, healPerSec: stats.healPerSec,
-    hp: stats.hp, maxHp: stats.maxHp,
+    bossDamage: stats.bossDamage, bossFireRate: stats.bossFireRate,
+    sacredRange: stats.sacredRange, tornadoDamage: stats.tornadoDamage,
+    hp: stats.hp, maxHp: stats.hp,
     cooldown: 0, angle: 0,
     spawnAnim: 20, recoil: 0, healPulse: 0, incomePulse: 0,
     defensorPulse: 0, punchAnim: 0, droneRotorAngle: 0,
-    merchantCrystalTimer: 0
+    merchantCrystalTimer: 0,
+    cruzadoHits: 0,
+    cruzadoIsBossMode: false
   });
   gold -= actualCost;
-  const col = def.isLord ? LORD_GOLD : def.isHealer ? GREEN_BRIGHT : def.isMerchant ? GOLD : def.isGlacial ? ICE : def.isTesla ? TESLA : def.isDefensor ? SHIELD : def.isParadox ? PURPLE : def.isFlamethrower ? FIRE : def.isBoxer ? BOXER : def.isDrone ? DRONE : GREEN;
+  const col = def.isCruzado ? CRUZADO_COL : def.isLord ? LORD_GOLD : def.isHealer ? GREEN_BRIGHT : def.isMerchant ? GOLD : def.isGlacial ? ICE : def.isTesla ? TESLA : def.isDefensor ? SHIELD : def.isParadox ? PURPLE : def.isFlamethrower ? FIRE : def.isBoxer ? BOXER : def.isDrone ? DRONE : GREEN;
   addShockwave(x, y, col, 40, 22);
   burst(x, y, 16, { speed: 3, life: 25, color: col, size: 2 });
   addFlash(0.15);
@@ -1135,7 +1220,7 @@ document.addEventListener('keydown', e => {
   if (e.code === 'Escape') clearSelection();
   if (e.code === 'Space') {
     e.preventDefault();
-    if (!gameOver && gameMode) paused = !paused;
+    if (!gameOver && !victory && gameMode) paused = !paused;
   }
 });
 
@@ -1145,11 +1230,12 @@ function showMsg(text) {
   clearTimeout(m._t);
   m._t = setTimeout(() => m.style.display = 'none', 1300);
 }
-function showBanner(text, isBoss) {
+function showBanner(text, isBoss, isAzazel) {
   const b = document.getElementById('hordeBanner');
   b.textContent = text;
-  b.classList.remove('show');
-  b.classList.toggle('boss', !!isBoss);
+  b.classList.remove('show', 'boss', 'azazel');
+  if (isAzazel) b.classList.add('azazel');
+  else if (isBoss) b.classList.add('boss');
   void b.offsetWidth;
   b.classList.add('show');
 }
@@ -1186,6 +1272,16 @@ function spawnEnemy(typeKey, x, y, wp, overrideHp, overrideDmg) {
     barrilCounter: 0,
     medusaWaveFired: false,
     vampireRayUsed: false,
+    beamCounter: 0,
+    poundCounter: 0,
+    curseFired: false,
+    // Azazel
+    shockwaveCounter: 0,        // ondas de choque (a cada 5000 HP)
+    thunderCounter: 0,          // trovões (a cada 1000 HP)
+    beamStormFired: false,      // 15 feixes aos 50%
+    curseFired: false,          // maldição aos 5000 HP
+    pentagramActive: false,     // pentagrama da maldição
+    pentagramX: 0, pentagramY: 0,
     cursed: false,
     isRevived: false
   };
@@ -1197,7 +1293,12 @@ function spawnEnemy(typeKey, x, y, wp, overrideHp, overrideDmg) {
     burst(ex, ey, 50, { speed: 6, life: 40, size: 4, color: bossCol });
     addFlash(0.5, '255,51,51');
     addShake(12);
-    Sound.bossAlert();
+    if (typeKey === 'azazel') {
+      Sound.azazelWarn();
+      addFlash(0.7, '255,0,0');
+    } else {
+      Sound.bossAlert();
+    }
     setTimeout(() => Sound.bossSpawn(), 500);
   } else if (t.isAir) {
     addShockwave(ex, ey - t.airHeight, AIR, 25, 15);
@@ -1219,6 +1320,7 @@ function getBossColor(typeKey) {
     case 'omega': return OMEGA_COL;
     case 'blackknight': return KNIGHT_COL;
     case 'colossos': return COLOSSUS_COL;
+    case 'azazel': return AZAZEL_COL;
     default: return RED;
   }
 }
@@ -1282,7 +1384,6 @@ function startWave() {
   waveComplete = false;
   waveTransitionTimer = 0;
 
-  // Decrementa maldição do Black Knight
   if (curseActive) {
     curseWavesLeft--;
     if (curseWavesLeft <= 0) {
@@ -1296,25 +1397,29 @@ function startWave() {
   barrils.length = 0;
   medusaWaves.length = 0;
   vampireRays.length = 0;
-  // Pentagramas persistem (duram 40s, mas de onda em onda)
-  // Omega missiles/beams limpam
   omegaMissiles.length = 0;
   omegaBeams.length = 0;
-  // Bats limpam
   bats.length = 0;
+  azazelBeams.length = 0;
+  azazelThunders.length = 0;
+  azazelShockwaves.length = 0;
+  cruzadoTornados.length = 0;
+  cruzadoBeams.length = 0;
 
   if (isBossWave(waveNum)) {
     const bossType = getBossType(waveNum);
     const bossDef = ENEMY_TYPES[bossType];
     waveQueue = []; waveActive = true;
-    showBanner('👹 ' + bossDef.bossName + ' 👹', true);
-    addFlash(0.6, '255,51,51'); addShake(15);
+    const isAzazel = bossType === 'azazel';
+    showBanner('👹 ' + bossDef.bossName + ' 👹', true, isAzazel);
+    addFlash(isAzazel ? 0.8 : 0.6, '255,51,51');
+    addShake(isAzazel ? 20 : 15);
     const hp = bossDef.hp;
     const dmg = bossDef.damage;
     setTimeout(() => {
       clearFieldForBoss();
       setTimeout(() => spawnEnemy(bossType, undefined, undefined, undefined, hp, dmg), 300);
-    }, 1500);
+    }, isAzazel ? 2500 : 1500);
     spawnCooldown = 0;
     updateGameUI();
     return;
@@ -1338,16 +1443,38 @@ function areaExplosion(x, y, damage, radius) {
     let dmg = damage;
     if (t.isProtected) dmg = Math.floor(dmg * (t.protReduction || 0.5));
     t.hp -= dmg;
-    addText(t.x, t.y - 15, '-' + dmg, YELLOW, 45);
     if (t.hp <= 0) {
-      addShockwave(t.x, t.y, GREEN, 60, 30);
-      burst(t.x, t.y, 30, { speed: 5, life: 35, size: 3 });
       const idx = towers.indexOf(t);
       if (idx >= 0) towers.splice(idx, 1);
       if (t.isHealer) healPlayer(5);
+      if (t.isCruzado) cruzadoDeath(t.x, t.y);
     }
   }
   updateGameUI();
+}
+
+function cruzadoDeath(x, y) {
+  // Cura 100% de todas as tropas + dano 1000 em 15m
+  const radius = 15 * PPM;
+  addShockwave(x, y, CRUZADO_COL, radius, 60);
+  addShockwave(x, y, WHITE, radius * 0.7, 45);
+  burst(x, y, 100, { speed: 8, life: 50, size: 4, color: CRUZADO_COL });
+  addFlash(0.8, '255,255,200'); addShake(15);
+  Sound.cruzadoDeath();
+  // Cura todas as tropas
+  for (const t of towers) {
+    t.hp = t.maxHp;
+    addHealEffect(t.x, t.y, 999);
+  }
+  // Dano em todos os inimigos
+  for (let i = enemies.length - 1; i >= 0; i--) {
+    const e = enemies[i];
+    const d = Math.hypot(e.x - x, e.y - y);
+    if (d <= radius) {
+      damageEnemy(e, 1000);
+    }
+  }
+  showMsg('> CRUZADO SACRIFICOU-SE!');
 }
 
 function damageEnemy(e, amount, fromX, fromY, isFire, ignoreArmor) {
@@ -1359,7 +1486,7 @@ function damageEnemy(e, amount, fromX, fromY, isFire, ignoreArmor) {
   addText(e.x, e.y - (e.airHeight || 0) - e.size - 5, '-' + real, isFire ? FIRE_BRIGHT : (e.isAir ? AIR : GREEN_BRIGHT), 30, e.isBoss ? 18 : 14);
   if (fromX !== undefined && fromY !== undefined) addSpark(fromX, fromY, e.x, e.y - (e.airHeight || 0), e.isAir ? AIR : GREEN_BRIGHT);
 
-  // Ogro pisão
+  // Skill triggers de bosses
   if (e.type === 'ogro' && e.isBoss) {
     const hpLost = e.maxHp - e.hp;
     const poundsExpected = Math.floor(hpLost / 1000);
@@ -1369,34 +1496,59 @@ function damageEnemy(e, amount, fromX, fromY, isFire, ignoreArmor) {
       ogroPound(e.x, e.y);
     }
   }
-  // Stark barril
   if (e.type === 'stark' && e.isBoss) {
     const hpLost = e.maxHp - e.hp;
     const expected = Math.floor(hpLost / 1000);
     const done = e.barrilCounter || 0;
-    if (expected > done) {
-      e.barrilCounter = expected;
-      spawnBarril(e.x, e.y);
-    }
+    if (expected > done) { e.barrilCounter = expected; spawnBarril(e.x, e.y); }
   }
-  // Ômega feixes
   if (e.type === 'omega' && e.isBoss) {
     const hpLost = e.maxHp - e.hp;
     const expected = Math.floor(hpLost / 1000);
     const done = e.beamCounter || 0;
-    if (expected > done) {
-      e.beamCounter = expected;
-      spawnOmegaBeams(e);
+    if (expected > done) { e.beamCounter = expected; spawnOmegaBeams(e); }
+  }
+  if (e.type === 'colossos' && e.isBoss) {
+    const hpLost = e.maxHp - e.hp;
+    const expected = Math.floor(hpLost / 1000);
+    const done = e.poundCounter || 0;
+    if (expected > done) { e.poundCounter = expected; colossusPound(e.x, e.y); }
+  }
+  // AZAZEL
+  if (e.type === 'azazel' && e.isBoss) {
+    const hpLost = e.maxHp - e.hp;
+    // Onda de choque a cada 5000 HP perdido (8m / 100 dano)
+    const swExpected = Math.floor(hpLost / 5000);
+    const swDone = e.shockwaveCounter || 0;
+    if (swExpected > swDone) {
+      e.shockwaveCounter = swExpected;
+      azazelShockwave(e.x, e.y);
+    }
+    // Trovão a cada 1000 HP perdido (5m / 120 dano)
+    const thExpected = Math.floor(hpLost / 1000);
+    const thDone = e.thunderCounter || 0;
+    if (thExpected > thDone) {
+      e.thunderCounter = thExpected;
+      azazelThunder(e);
+    }
+    // 15 feixes aos 50%
+    if (!e.beamStormFired && e.hp <= e.maxHp * 0.5) {
+      e.beamStormFired = true;
+      azazelBeamStorm(e);
+    }
+    // Maldição aos 5000 HP (25% do HP total)
+    if (!e.curseFired && e.hp <= 5000) {
+      e.curseFired = true;
+      azazelCurse(e);
     }
   }
 }
 
+// ============ SKILLS DOS BOSSES ============
 function ogroPound(x, y) {
   const radius = 5 * PPM;
   addShockwave(x, y, OGRE_COL, radius, 30);
-  addShockwave(x, y, YELLOW, radius * 1.2, 40);
   burst(x, y, 40, { speed: 6, life: 40, size: 4, gravity: 0.3, friction: 0.9, color: OGRE_COL });
-  burst(x, y, 25, { speed: 3, life: 50, size: 3, gravity: 0.4, color: '#6b4c2a' });
   addShake(12); addFlash(0.35, '102,255,51');
   addText(x, y - 30, 'PISÃO!', OGRE_COL, 70, 24);
   Sound.ogroPound();
@@ -1405,26 +1557,21 @@ function ogroPound(x, y) {
     let dmg = 75;
     if (t.isProtected) dmg = Math.floor(dmg * (t.protReduction || 0.5));
     t.hp -= dmg;
-    addText(t.x, t.y - 15, '-' + dmg, OGRE_COL, 55, 18);
     if (t.hp <= 0) {
       const idx = towers.indexOf(t);
       if (idx >= 0) towers.splice(idx, 1);
       if (t.isHealer) healPlayer(5);
+      if (t.isCruzado) cruzadoDeath(t.x, t.y);
     }
   }
   updateGameUI();
 }
 
-function spawnBarril(x, y) {
-  barrils.push({ x, y, life: 180, maxLife: 180 });
-  addShockwave(x, y, STARK_COL, 20, 15);
-  Sound.barrilWarning();
-}
-
+function spawnBarril(x, y) { barrils.push({ x, y, life: 180, maxLife: 180 }); Sound.barrilWarning(); }
 function barrilExplode(x, y) {
   const radius = 6 * PPM;
   addShockwave(x, y, STARK_COL, radius, 25);
-  burst(x, y, 40, { speed: 6, life: 35, size: 3, gravity: 0.2, friction: 0.92, color: FIRE });
+  burst(x, y, 40, { speed: 6, life: 35, size: 3, color: FIRE });
   addFlash(0.5); addShake(10);
   Sound.barrilExplode();
   const inRange = towers.filter(t => Math.hypot(t.x - x, t.y - y) <= radius);
@@ -1432,11 +1579,11 @@ function barrilExplode(x, y) {
     let dmg = 150;
     if (t.isProtected) dmg = Math.floor(dmg * (t.protReduction || 0.5));
     t.hp -= dmg;
-    addText(t.x, t.y - 15, '-' + dmg, FIRE, 55, 18);
     if (t.hp <= 0) {
       const idx = towers.indexOf(t);
       if (idx >= 0) towers.splice(idx, 1);
       if (t.isHealer) healPlayer(5);
+      if (t.isCruzado) cruzadoDeath(t.x, t.y);
     }
   }
   updateGameUI();
@@ -1454,104 +1601,12 @@ function applyIce(e, iceDur) {
   e.iceFrozen = iceDur || 90;
 }
 
-// ============ BOSS SKILLS v21 ============
-// DRÁCULA
-function draculaSpawnBat(boss) {
-  // Spawna 1 morcego 5m atrás
-  const angle = (boss.angle || 0) + Math.PI;
-  const ox = boss.x + Math.cos(angle) * 5 * PPM;
-  const oy = boss.y + Math.sin(angle) * 5 * PPM;
-  bats.push({
-    x: ox, y: oy,
-    hp: 100, maxHp: 100, damage: 50,
-    speed: speedToPixels(100), baseSpeed: speedToPixels(100),
-    size: 12, reward: 12, armor: 0,
-    wp: boss.wp,
-    angle: angle,
-    bobPhase: Math.random() * Math.PI * 2,
-    // Bate pro boss
-    ownerBoss: boss
-  });
-  addShockwave(ox, oy, DRACULA_COL, 20, 12);
-  burst(ox, oy, 8, { speed: 2, life: 15, size: 2, color: DRACULA_COL });
-  Sound.batSpawn();
-}
-
-function draculaVampireRay(boss) {
-  // Pega as 3 tropas mais próximas em 10m
-  const range = 10 * PPM;
-  const candidates = towers
-    .map(t => ({ t, d: Math.hypot(t.x - boss.x, t.y - boss.y) }))
-    .filter(x => x.d <= range)
-    .sort((a, b) => a.d - b.d)
-    .slice(0, 3);
-  if (candidates.length === 0) return;
-  let totalDrained = 0;
-  for (const { t } of candidates) {
-    // Drena 100 HP por tropa
-    let dmg = 100;
-    if (t.isProtected) dmg = Math.floor(dmg * (1 - t.protReduction));
-    t.hp -= dmg;
-    totalDrained += dmg;
-    vampireRays.push({ x1: boss.x, y1: boss.y, x2: t.x, y2: t.y, life: 120, maxLife: 120 });
-    addText(t.x, t.y - 15, '-' + dmg, DRACULA_COL, 50);
-    if (t.hp <= 0) {
-      const idx = towers.indexOf(t);
-      if (idx >= 0) towers.splice(idx, 1);
-    }
-  }
-  // Cura boss
-  const heal = Math.min(totalDrained * 2.5, 800);
-  boss.hp = Math.min(boss.maxHp, boss.hp + heal);
-  addText(boss.x, boss.y - 40, '+' + Math.round(heal) + ' HP', DRACULA_COL, 60, 22);
-  addShockwave(boss.x, boss.y, DRACULA_COL, 100, 40);
-  Sound.vampireSuck();
-  updateGameUI();
-}
-
-function draculaPentagram(boss) {
-  pentagrams.push({
-    x: boss.x, y: boss.y,
-    radius: 10 * PPM,
-    life: 40 * 60, // 40 segundos
-    maxLife: 40 * 60,
-    tickTimer: 0
-  });
-  addShockwave(boss.x, boss.y, DRACULA_COL, 10 * PPM, 50);
-  addText(boss.x, boss.y - 50, 'PENTAGRAMA!', DRACULA_COL, 90, 28);
-  Sound.pentagram();
-}
-
-// ÔMEGA-04
-function omegaShootMissile(boss) {
-  const range = 7 * PPM;
-  let best = null, bestDist = Infinity;
-  for (const t of towers) {
-    const d = Math.hypot(t.x - boss.x, t.y - boss.y);
-    if (d < range && d < bestDist) { bestDist = d; best = t; }
-  }
-  if (best) {
-    omegaMissiles.push({
-      x: boss.x, y: boss.y, target: best,
-      damage: 100, splash: 3 * PPM,
-      speed: 5, angle: 0, life: 300
-    });
-    Sound.omegaMissile();
-  }
-}
-
 function spawnOmegaBeams(boss) {
-  // 5 feixes em direções aleatórias, 1 a cada 24 frames (~0.4s)
   for (let i = 0; i < 5; i++) {
     setTimeout(() => {
       if (enemies.indexOf(boss) === -1) return;
       const angle = Math.random() * Math.PI * 2;
-      omegaBeams.push({
-        x: boss.x, y: boss.y, angle: angle,
-        range: 10 * PPM, damage: 120,
-        life: 20, maxLife: 20,
-        hasHit: new Set()
-      });
+      omegaBeams.push({ x: boss.x, y: boss.y, angle: angle, range: 10 * PPM, damage: 120, life: 20, maxLife: 20, hasHit: new Set() });
       Sound.omegaBeam();
     }, i * 400);
   }
@@ -1562,10 +1617,7 @@ function spawnOmegaBeams(boss) {
 function omegaDeathExplosion(x, y) {
   const radius = 15 * PPM;
   addShockwave(x, y, OMEGA_COL, radius, 55);
-  addShockwave(x, y, RED, radius * 0.7, 45);
-  addShockwave(x, y, YELLOW, radius * 1.2, 65);
-  burst(x, y, 100, { speed: 10, life: 60, size: 4, gravity: 0.2, friction: 0.9, color: OMEGA_COL });
-  burst(x, y, 50, { speed: 15, life: 40, size: 3, color: YELLOW, friction: 0.88 });
+  burst(x, y, 100, { speed: 10, life: 60, size: 4, color: OMEGA_COL });
   addFlash(0.8, '255,100,100'); addShake(20);
   Sound.colossusDeath();
   const inRange = towers.filter(t => Math.hypot(t.x - x, t.y - y) <= radius);
@@ -1573,19 +1625,16 @@ function omegaDeathExplosion(x, y) {
     let dmg = 500;
     if (t.isProtected) dmg = Math.floor(dmg * (1 - t.protReduction));
     t.hp -= dmg;
-    addText(t.x, t.y - 15, '-' + dmg, OMEGA_COL, 60, 24);
     if (t.hp <= 0) {
-      addShockwave(t.x, t.y, OMEGA_COL, 80, 40);
-      burst(t.x, t.y, 30, { speed: 5, life: 35, size: 3, color: OMEGA_COL });
       const idx = towers.indexOf(t);
       if (idx >= 0) towers.splice(idx, 1);
       if (t.isHealer) healPlayer(5);
+      if (t.isCruzado) cruzadoDeath(t.x, t.y);
     }
   }
   updateGameUI();
 }
 
-// BLACK KNIGHT
 function blackKnightCurse() {
   curseActive = true;
   curseWavesLeft = 3;
@@ -1594,13 +1643,10 @@ function blackKnightCurse() {
   Sound.blackKnightCurse();
 }
 
-// COLOSSOS
 function colossusPound(x, y) {
   const radius = 5 * PPM;
   addShockwave(x, y, COLOSSUS_COL, radius, 32);
-  addShockwave(x, y, '#6b4c2a', radius * 1.2, 42);
-  burst(x, y, 50, { speed: 7, life: 45, size: 4, gravity: 0.35, friction: 0.9, color: COLOSSUS_COL });
-  burst(x, y, 30, { speed: 4, life: 55, size: 3, gravity: 0.5, color: '#6b4c2a' });
+  burst(x, y, 50, { speed: 7, life: 45, size: 4, color: COLOSSUS_COL });
   addShake(14); addFlash(0.4, '150,150,150');
   addText(x, y - 35, 'PISÃO!', COLOSSUS_COL, 75, 26);
   Sound.colossusPound();
@@ -1609,11 +1655,11 @@ function colossusPound(x, y) {
     let dmg = 200;
     if (t.isProtected) dmg = Math.floor(dmg * (1 - t.protReduction));
     t.hp -= dmg;
-    addText(t.x, t.y - 15, '-' + dmg, COLOSSUS_COL, 55, 20);
     if (t.hp <= 0) {
       const idx = towers.indexOf(t);
       if (idx >= 0) towers.splice(idx, 1);
       if (t.isHealer) healPlayer(5);
+      if (t.isCruzado) cruzadoDeath(t.x, t.y);
     }
   }
   updateGameUI();
@@ -1622,10 +1668,7 @@ function colossusPound(x, y) {
 function colossusDeathExplosion(x, y) {
   const radius = 10 * PPM;
   addShockwave(x, y, COLOSSUS_COL, radius, 55);
-  addShockwave(x, y, '#6b4c2a', radius * 0.7, 45);
-  addShockwave(x, y, YELLOW, radius * 1.2, 70);
-  burst(x, y, 120, { speed: 12, life: 65, size: 5, gravity: 0.3, friction: 0.9, color: COLOSSUS_COL });
-  burst(x, y, 60, { speed: 8, life: 50, size: 4, color: '#6b4c2a', gravity: 0.4 });
+  burst(x, y, 120, { speed: 12, life: 65, size: 5, color: COLOSSUS_COL });
   addFlash(0.85, '200,200,200'); addShake(22);
   Sound.colossusDeath();
   const inRange = towers.filter(t => Math.hypot(t.x - x, t.y - y) <= radius);
@@ -1633,33 +1676,137 @@ function colossusDeathExplosion(x, y) {
     let dmg = 1000;
     if (t.isProtected) dmg = Math.floor(dmg * (1 - t.protReduction));
     t.hp -= dmg;
-    addText(t.x, t.y - 15, '-' + dmg, COLOSSUS_COL, 65, 28);
     if (t.hp <= 0) {
-      addShockwave(t.x, t.y, COLOSSUS_COL, 90, 45);
-      burst(t.x, t.y, 40, { speed: 6, life: 40, size: 4, color: COLOSSUS_COL });
       const idx = towers.indexOf(t);
       if (idx >= 0) towers.splice(idx, 1);
       if (t.isHealer) healPlayer(5);
+      if (t.isCruzado) cruzadoDeath(t.x, t.y);
     }
   }
-  // Deixa 6 destroços
+  // 6 destroços
   for (let i = 0; i < 6; i++) {
     const angle = Math.random() * Math.PI * 2;
     const dist = Math.random() * 10 * PPM;
     const dx = x + Math.cos(angle) * dist;
     const dy = y + Math.sin(angle) * dist;
     if (!isOnPath(dx, dy)) {
-      debris.push({
-        x: dx, y: dy,
-        radius: 2 * PPM / 2,
-        life: 5 * 60 * 60, // 5 waves
-        wavesLeft: 5,
-        spawnAnim: 30
-      });
+      debris.push({ x: dx, y: dy, radius: 16, life: 5 * 60 * 60, wavesLeft: 5, spawnAnim: 30 });
     }
   }
   showMsg('> COLOSSOS DEIXOU DESTROÇOS!');
   updateGameUI();
+}
+
+// ============ AZAZEL SKILLS ============
+function azazelShockwave(x, y) {
+  const radius = 8 * PPM;
+  azazelShockwaves.push({ x, y, radius, life: 40, maxLife: 40 });
+  addShockwave(x, y, AZAZEL_COL, radius, 40);
+  addShockwave(x, y, AZAZEL_DARK, radius * 1.2, 55);
+  burst(x, y, 60, { speed: 8, life: 45, size: 4, gravity: 0.2, friction: 0.92, color: AZAZEL_COL });
+  addFlash(0.5, '255,0,0'); addShake(15);
+  Sound.azazelShockwave();
+  const inRange = towers.filter(t => Math.hypot(t.x - x, t.y - y) <= radius);
+  for (const t of inRange) {
+    let dmg = 100;
+    if (t.isProtected) dmg = Math.floor(dmg * (1 - t.protReduction));
+    t.hp -= dmg;
+    if (t.hp <= 0) {
+      const idx = towers.indexOf(t);
+      if (idx >= 0) towers.splice(idx, 1);
+      if (t.isHealer) healPlayer(5);
+      if (t.isCruzado) cruzadoDeath(t.x, t.y);
+    }
+  }
+  updateGameUI();
+}
+
+function azazelThunder(boss) {
+  // Trovão na tropa mais próxima num raio de 5m do boss
+  const range = 5 * PPM;
+  let best = null, bestDist = Infinity;
+  for (const t of towers) {
+    const d = Math.hypot(t.x - boss.x, t.y - boss.y);
+    if (d < range && d < bestDist) { bestDist = d; best = t; }
+  }
+  if (!best) return;
+  azazelThunders.push({ x: best.x, y: best.y, life: 30, maxLife: 30 });
+  addShockwave(best.x, best.y, AZAZEL_COL, 3 * PPM, 25);
+  burst(best.x, best.y, 25, { speed: 6, life: 30, size: 3, color: AZAZEL_COL });
+  addFlash(0.3, '255,0,0'); addShake(8);
+  Sound.azazelThunder();
+  // Dano em área de 3m
+  const radius = 3 * PPM;
+  const inRange = towers.filter(t => Math.hypot(t.x - best.x, t.y - best.y) <= radius);
+  for (const t of inRange) {
+    let dmg = 120;
+    if (t.isProtected) dmg = Math.floor(dmg * (1 - t.protReduction));
+    t.hp -= dmg;
+    if (t.hp <= 0) {
+      const idx = towers.indexOf(t);
+      if (idx >= 0) towers.splice(idx, 1);
+      if (t.isHealer) healPlayer(5);
+      if (t.isCruzado) cruzadoDeath(t.x, t.y);
+    }
+  }
+  updateGameUI();
+}
+
+function azazelBeamStorm(boss) {
+  // 15 feixes aleatórios no mapa
+  addFlash(0.7, '255,200,0');
+  Sound.azazelBeams();
+  for (let i = 0; i < 15; i++) {
+    setTimeout(() => {
+      const x = Math.random() * canvas.width;
+      const y = Math.random() * canvas.height;
+      azazelBeams.push({ x, y, life: 30, maxLife: 30 });
+      addShockwave(x, y, GOLD, 3 * PPM, 25);
+      burst(x, y, 20, { speed: 6, life: 30, size: 3, color: GOLD });
+      addFlash(0.2, '255,255,200');
+      addShake(5);
+      // Dano em 3m
+      const radius = 3 * PPM;
+      const inRange = towers.filter(t => Math.hypot(t.x - x, t.y - y) <= radius);
+      for (const t of inRange) {
+        let dmg = 200;
+        if (t.isProtected) dmg = Math.floor(dmg * (1 - t.protReduction));
+        t.hp -= dmg;
+        if (t.hp <= 0) {
+          const idx = towers.indexOf(t);
+          if (idx >= 0) towers.splice(idx, 1);
+          if (t.isHealer) healPlayer(5);
+          if (t.isCruzado) cruzadoDeath(t.x, t.y);
+        }
+      }
+      updateGameUI();
+    }, i * 200);
+  }
+  showMsg('> 15 FEIXES DE LUZ!');
+}
+
+function azazelCurse(boss) {
+  // Volta 15 metros
+  // Encontra waypoint 15m atrás
+  let targetWp = boss.wp;
+  let totalDist = 0;
+  for (let i = boss.wp - 1; i >= 0 && totalDist < 15 * PPM; i--) {
+    const seg = Math.hypot(path[i+1].x - path[i].x, path[i+1].y - path[i].y);
+    totalDist += seg;
+    if (totalDist >= 15 * PPM) { targetWp = i; break; }
+    targetWp = i;
+  }
+  if (targetWp < 1) targetWp = 1;
+  boss.wp = targetWp;
+  boss.x = path[targetWp].x;
+  boss.y = path[targetWp].y;
+  boss.pentagramActive = true;
+  addShockwave(boss.x, boss.y, AZAZEL_COL, 200, 50);
+  burst(boss.x, boss.y, 80, { speed: 10, life: 50, size: 4, color: AZAZEL_COL });
+  addFlash(0.8, '255,0,0'); addShake(18);
+  Sound.azazelCurse();
+  showMsg('> MALDIÇÃO DA TRAIÇÃO!');
+  // Duração: até morrer
 }
 
 // ============ LOOP ============
@@ -1669,8 +1816,9 @@ function loop(time) {
   if (!gameMode) return;
   const dt = Math.min((time - lastTime) / 16.67, 3);
   lastTime = time;
-  if (paused || gameOver) { draw(); return; }
+  if (paused || gameOver || victory) { draw(); return; }
 
+  // Spawns
   if (waveActive && waveQueue.length > 0) {
     spawnCooldown -= dt;
     if (spawnCooldown <= 0) {
@@ -1688,12 +1836,21 @@ function loop(time) {
     waveTransitionTimer -= dt;
     if (waveTransitionTimer <= 0) {
       waveActive = false;
+      // Vitória?
+      if (waveNum === 100) {
+        victory = true;
+        saveCruzadoUnlocked(true);
+        cruzadoUnlocked = true;
+        showVictoryScreen();
+        return;
+      }
       startWave();
     }
   }
 
   for (const t of towers) {
     t.frozenByYeti = false; t.isProtected = false; t.protReduction = 0.5;
+    t.inAzazelPentagram = false;
     if (t.punchAnim > 0) t.punchAnim -= dt * 2;
     if (t.isDrone) t.droneRotorAngle += dt * 0.8;
   }
@@ -1708,6 +1865,7 @@ function loop(time) {
       }
     }
   }
+  // Lord auras
   for (const t of towers) {
     if (t.isLord) {
       if (Math.random() < 0.3) addLordAura(t.x, t.y, t.range);
@@ -1715,6 +1873,25 @@ function loop(time) {
         if (o === t) continue;
         if (Math.hypot(o.x - t.x, o.y - t.y) <= t.range) {
           o.hp = Math.min(o.maxHp, o.hp + t.healPerSec * dt / 60);
+        }
+      }
+    }
+  }
+  // Cruzado sacred zone buff + cura + slow
+  for (const t of towers) {
+    if (t.isCruzado) {
+      cruzadoSacreds.push({ x: t.x, y: t.y, range: t.sacredRange, life: 4, maxLife: 4 });
+      for (const o of towers) {
+        const d = Math.hypot(o.x - t.x, o.y - t.y);
+        if (d <= t.sacredRange) {
+          // Cura 50/s
+          o.hp = Math.min(o.maxHp, o.hp + 50 * dt / 60);
+        }
+      }
+      // Inimigos dentro da zona sagrada ficam 50% mais lentos
+      for (const e of enemies) {
+        if (Math.hypot(e.x - t.x, e.y - t.y) <= t.sacredRange) {
+          e.azazelSlowed = true;
         }
       }
     }
@@ -1727,27 +1904,41 @@ function loop(time) {
     if (e.hitFlash > 0) e.hitFlash -= dt;
 
     if (e.petrified > 0) { e.petrified -= dt; continue; }
+    if (e.iceFrozen > 0) { e.iceFrozen -= dt; continue; }
 
-    if (e.iceFrozen > 0) {
-      e.iceFrozen -= dt;
-      continue;
-    }
     let frozenByParadox = false;
     for (const z of paradoxZones) {
       if (Math.hypot(e.x - z.x, e.y - z.y) <= z.radius) { frozenByParadox = true; break; }
     }
 
-    // ====== BOSS SKILLS ======
+    // Azazel pentagrama: aplica aos inimigos próximos (cura)
+    if (e.type === 'azazel' && e.pentagramActive) {
+      for (const en of enemies) {
+        if (Math.hypot(en.x - e.x, en.y - e.y) <= 3 * PPM) {
+          en.hp = Math.min(en.maxHp, en.hp + 5 * dt / 60);
+        }
+      }
+      // Tropas dentro tomam dano
+      for (const t of towers) {
+        if (Math.hypot(t.x - e.x, t.y - e.y) <= 3 * PPM) {
+          t.hp -= 10 * dt / 60;
+          if (t.hp <= 0) {
+            const idx = towers.indexOf(t);
+            if (idx >= 0) towers.splice(idx, 1);
+            if (t.isCruzado) cruzadoDeath(t.x, t.y);
+          }
+        }
+      }
+    }
+
+    // BOSS SKILLS
     if (e.isBoss) {
-      // OGRA passos
       if (e.type === 'ogro') {
         e.stepTimer -= dt;
         if (e.stepTimer <= 0) {
           e.stepTimer = 120; addShake(0.8);
-          for (let k = 0; k < 6; k++) addParticle(e.x + (Math.random() - 0.5) * e.size, e.y + e.size/2 + Math.random() * 6, { vx: (Math.random() - 0.5) * 1, vy: -0.5 - Math.random() * 0.5, life: 60, size: 3, color: Math.random() < 0.5 ? OGRE_COL : ORANGE, friction: 0.95 });
         }
       }
-      // ARACNÍDEO
       if (e.type === 'aracnideo') {
         e.specialTimer = (e.specialTimer || 0) - dt;
         if (e.specialTimer <= 0) {
@@ -1758,21 +1949,16 @@ function loop(time) {
             const d = Math.hypot(t.x - e.x, t.y - e.y);
             if (d < range && d < bestDist) { bestDist = d; best = t; }
           }
-          if (best) {
-            webProjectiles.push({ x: e.x, y: e.y, target: best, speed: 6, life: 120 });
-            Sound.spiderWeb();
-          }
+          if (best) { webProjectiles.push({ x: e.x, y: e.y, target: best, speed: 6, life: 120 }); Sound.spiderWeb(); }
         }
         if (!e.poisonWaveFired && e.hp <= e.maxHp * 0.5) {
           e.poisonWaveFired = true;
           const radius = 8 * PPM;
           poisonClouds.push({ x: e.x, y: e.y, radius, life: 5 * 60, maxLife: 5 * 60, tickTimer: 0 });
           addShockwave(e.x, e.y, POISON, radius, 40);
-          addText(e.x, e.y - 40, 'VENENO!', POISON, 70, 24);
           Sound.poisonCloud();
         }
       }
-      // CENTAURO
       if (e.type === 'centauro') {
         const auraR = 5 * PPM;
         for (const t of towers) {
@@ -1783,14 +1969,11 @@ function loop(time) {
             if (t.hp <= 0) {
               const idx = towers.indexOf(t);
               if (idx >= 0) towers.splice(idx, 1);
+              if (t.isCruzado) cruzadoDeath(t.x, t.y);
             }
           }
         }
-        if (Math.random() < 0.15) {
-          addShockwave(e.x, e.y, CENTAUR_COL, auraR, 15);
-        }
       }
-      // STARK
       if (e.type === 'stark') {
         e.specialTimer = (e.specialTimer || 0) - dt;
         if (e.specialTimer <= 0) {
@@ -1801,13 +1984,9 @@ function loop(time) {
             const d = Math.hypot(t.x - e.x, t.y - e.y);
             if (d < range && d < bestDist) { bestDist = d; best = t; }
           }
-          if (best) {
-            bullets.push({ x: e.x, y: e.y, target: best, damage: 75, speed: 7, type: 'stark', angle: 0 });
-            Sound.starkShot();
-          }
+          if (best) { bullets.push({ x: e.x, y: e.y, target: best, damage: 75, speed: 7, type: 'stark', angle: 0 }); Sound.starkShot(); }
         }
       }
-      // MEDUSA
       if (e.type === 'medusa') {
         const coneRange = 3 * PPM;
         const coneAngle = e.angle || 0;
@@ -1827,56 +2006,70 @@ function loop(time) {
           const radius = 20 * PPM;
           medusaWaves.push({ x: e.x, y: e.y, radius, life: 40, maxLife: 40 });
           addShockwave(e.x, e.y, MEDUSA_COL, radius, 45);
-          addText(e.x, e.y - 50, 'PETRIFICAÇÃO!', MEDUSA_COL, 80, 26);
-          addFlash(0.5, '136,255,136'); addShake(10);
           Sound.medusaGaze();
           for (const t of towers) {
-            if (Math.hypot(t.x - e.x, t.y - e.y) <= radius) {
-              t.petrified = 3 * 60;
-            }
+            if (Math.hypot(t.x - e.x, t.y - e.y) <= radius) t.petrified = 3 * 60;
           }
         }
       }
-      // DRÁCULA
       if (e.type === 'dracula') {
         e.specialTimer = (e.specialTimer || 0) - dt;
         if (e.specialTimer <= 0) {
           e.specialTimer = 300;
-          draculaSpawnBat(e);
+          // Spawn bat
+          const angle = (e.angle || 0) + Math.PI;
+          const ox = e.x + Math.cos(angle) * 5 * PPM;
+          const oy = e.y + Math.sin(angle) * 5 * PPM;
+          bats.push({ x: ox, y: oy, hp: 100, maxHp: 100, damage: 50,
+            speed: speedToPixels(100), baseSpeed: speedToPixels(100),
+            size: 12, reward: 12, wp: e.wp, angle, bobPhase: Math.random() * Math.PI * 2,
+            ownerBoss: e });
+          Sound.batSpawn();
         }
         if (!e.vampireRayUsed && e.hp <= e.maxHp * 0.5) {
           e.vampireRayUsed = true;
-          draculaVampireRay(e);
+          const range = 10 * PPM;
+          const candidates = towers.map(t => ({ t, d: Math.hypot(t.x - e.x, t.y - e.y) }))
+            .filter(x => x.d <= range).sort((a,b) => a.d - b.d).slice(0, 3);
+          let totalDrained = 0;
+          for (const { t } of candidates) {
+            let dmg = 100;
+            if (t.isProtected) dmg = Math.floor(dmg * (1 - t.protReduction));
+            t.hp -= dmg;
+            totalDrained += dmg;
+            vampireRays.push({ x1: e.x, y1: e.y, x2: t.x, y2: t.y, life: 120, maxLife: 120 });
+            if (t.hp <= 0) {
+              const idx = towers.indexOf(t);
+              if (idx >= 0) towers.splice(idx, 1);
+              if (t.isCruzado) cruzadoDeath(t.x, t.y);
+            }
+          }
+          const heal = Math.min(totalDrained * 2.5, 800);
+          e.hp = Math.min(e.maxHp, e.hp + heal);
+          Sound.vampireSuck();
         }
       }
-      // ÔMEGA-04
       if (e.type === 'omega') {
         e.specialTimer = (e.specialTimer || 0) - dt;
         if (e.specialTimer <= 0) {
           e.specialTimer = 300;
-          omegaShootMissile(e);
-        }
-      }
-      // BLACK KNIGHT
-      if (e.type === 'blackknight') {
-        // Skill só ao morrer
-      }
-      // COLOSSOS
-      if (e.type === 'colossos') {
-        // Pisão a cada 1000 HP
-        const hpLost = e.maxHp - e.hp;
-        const expected = Math.floor(hpLost / 1000);
-        const done = e.poundCounter || 0;
-        if (expected > done) {
-          e.poundCounter = expected;
-          colossusPound(e.x, e.y);
+          const range = 7 * PPM;
+          let best = null, bestDist = Infinity;
+          for (const t of towers) {
+            const d = Math.hypot(t.x - e.x, t.y - e.y);
+            if (d < range && d < bestDist) { bestDist = d; best = t; }
+          }
+          if (best) {
+            omegaMissiles.push({ x: e.x, y: e.y, target: best, damage: 100, splash: 3 * PPM, speed: 5, angle: 0, life: 300 });
+            Sound.omegaMissile();
+          }
         }
       }
     }
 
-    // Medusa cone reset (aplicado por frame — precisa resetar aqui)
-    // Feito no início do loop das towers
-
+    // Slow do Cruzado (aplicado por frame)
+    let speedMult = 1;
+    if (e.azazelSlowed) speedMult = 0.5;
     // Movimento
     if (!frozenByParadox) {
       const target = path[e.wp];
@@ -1896,9 +2089,11 @@ function loop(time) {
         e.lastTrailTime = 4;
       }
       const dist = Math.hypot(dx, dy);
-      if (dist < e.speed * dt) { e.x = target.x; e.y = target.y; e.wp++; }
-      else { e.x += (dx/dist) * e.speed * dt; e.y += (dy/dist) * e.speed * dt; }
+      const moveSpeed = e.speed * speedMult;
+      if (dist < moveSpeed * dt) { e.x = target.x; e.y = target.y; e.wp++; }
+      else { e.x += (dx/dist) * moveSpeed * dt; e.y += (dy/dist) * moveSpeed * dt; }
     }
+    e.azazelSlowed = false; // reset
 
     // Queimadura
     if (e.fireTimer > 0) {
@@ -1914,10 +2109,7 @@ function loop(time) {
     if (e.isAir) {
       e.airBob += dt * 0.1;
       e.airPropTimer -= dt;
-      if (e.airPropTimer <= 0 && !frozenByParadox) {
-        e.airPropTimer = 4;
-        addAirTrail(e.x, e.y - 2);
-      }
+      if (e.airPropTimer <= 0 && !frozenByParadox) { e.airPropTimer = 4; addAirTrail(e.x, e.y - 2); }
     }
 
     // Morte
@@ -1929,16 +2121,13 @@ function loop(time) {
       addText(e.x, e.y - (e.airHeight || 0) - e.size - 5, '+' + e.reward, YELLOW, 40, e.isBoss ? 26 : 14);
       if (!e.isBoss) Sound.enemyDeath();
 
-      // Black Knight maldição: 40% revive se curse ativa
+      // Black Knight maldição revive
       if (curseActive && !e.isBoss && !e.isRevived && e.type !== 'minion') {
         if (Math.random() < 0.4) {
-          // Revive!
           e.hp = Math.floor(e.maxHp * 0.5);
           e.isRevived = true;
           e.hitFlash = 10;
           addShockwave(e.x, e.y, KNIGHT_COL, 40, 25);
-          burst(e.x, e.y, 15, { speed: 4, life: 25, size: 3, color: KNIGHT_COL });
-          addText(e.x, e.y - 20, 'REVIVE!', KNIGHT_COL, 50, 18);
           Sound.reviveSound();
           continue;
         }
@@ -1948,23 +2137,27 @@ function loop(time) {
       else if (e.onDeath === 'explode') areaExplosion(e.x, e.y, 50, 4 * PPM);
       else if (e.onDeath === 'fungusZone') spawnFungusZone(e.x, e.y);
 
-      // Boss death special
       if (e.isBoss) {
+        // Explosões especiais
         if (e.type === 'omega') omegaDeathExplosion(e.x, e.y);
         else if (e.type === 'colossos') colossusDeathExplosion(e.x, e.y);
         else if (e.type === 'dracula') {
-          draculaPentagram(e);
-          bossFinalExplosion(e.x, e.y, DRACULA_COL, false);
-        }
-        else if (e.type === 'blackknight') {
+          pentagrams.push({ x: e.x, y: e.y, radius: 10 * PPM, life: 40 * 60, maxLife: 40 * 60, tickTimer: 0 });
+          addShockwave(e.x, e.y, DRACULA_COL, 10 * PPM, 50);
+          Sound.pentagram();
+        } else if (e.type === 'blackknight') {
           blackKnightCurse();
-          bossFinalExplosion(e.x, e.y, KNIGHT_COL, false);
+        } else if (e.type === 'azazel') {
+          // AZAZEL MORREU = VITÓRIA!
+          azazelDeathExplosion(e.x, e.y);
+        } else {
+          bossFinalExplosion(e.x, e.y, getBossColor(e.type), true);
         }
-        else bossFinalExplosion(e.x, e.y, getBossColor(e.type), true);
         bossRef = null;
         healPlayer(50 + (Math.floor(waveNum / 10) - 1) * 25);
         const crystalReward = getBossCrystalReward(waveNum);
         crystals += crystalReward;
+        crystalsEarnedThisRun += crystalReward;
         saveCrystals(crystals);
         addCrystalPop(e.x, e.y - 40, crystalReward);
         Sound.crystal();
@@ -1976,29 +2169,61 @@ function loop(time) {
     }
   }
 
-  // BATS (Drácula)
+  // Azazel beams
+  for (let i = azazelBeams.length - 1; i >= 0; i--) {
+    azazelBeams[i].life -= dt;
+    if (azazelBeams[i].life <= 0) azazelBeams.splice(i, 1);
+  }
+  for (let i = azazelThunders.length - 1; i >= 0; i--) {
+    azazelThunders[i].life -= dt;
+    if (azazelThunders[i].life <= 0) azazelThunders.splice(i, 1);
+  }
+  for (let i = azazelShockwaves.length - 1; i >= 0; i--) {
+    azazelShockwaves[i].life -= dt;
+    if (azazelShockwaves[i].life <= 0) azazelShockwaves.splice(i, 1);
+  }
+  for (let i = cruzadoSacreds.length - 1; i >= 0; i--) {
+    cruzadoSacreds[i].life -= dt;
+    if (cruzadoSacreds[i].life <= 0) cruzadoSacreds.splice(i, 1);
+  }
+  for (let i = cruzadoTornados.length - 1; i >= 0; i--) {
+    const ct = cruzadoTornados[i];
+    ct.life -= dt;
+    ct.tickTimer = (ct.tickTimer || 0) + dt;
+    // Aplica dano acumulado
+    if (ct.tickTimer >= 60) {
+      ct.tickTimer -= 60;
+      ct.accumulatedDamage = (ct.accumulatedDamage || 0) + 160;
+      if (ct.targetBoss && enemies.indexOf(ct.targetBoss) !== -1) {
+        damageEnemy(ct.targetBoss, 160);
+      }
+    }
+    // Boss imóvel (seta flag)
+    if (ct.targetBoss && enemies.indexOf(ct.targetBoss) !== -1) {
+      ct.targetBoss.petrified = Math.max(ct.targetBoss.petrified || 0, 2);
+    }
+    if (ct.life <= 0) cruzadoTornados.splice(i, 1);
+  }
+  for (let i = cruzadoBeams.length - 1; i >= 0; i--) {
+    cruzadoBeams[i].life -= dt;
+    if (cruzadoBeams[i].life <= 0) cruzadoBeams.splice(i, 1);
+  }
+
+  // Bats
   for (let i = bats.length - 1; i >= 0; i--) {
     const b = bats[i];
     b.bobPhase += dt * 0.3;
-    // Movimento
     const target = path[b.wp];
-    if (!target) {
-      damagePlayer(b.damage);
-      bats.splice(i, 1);
-      continue;
-    }
+    if (!target) { damagePlayer(b.damage); bats.splice(i, 1); continue; }
     const dx = target.x - b.x, dy = target.y - b.y;
     const dist = Math.hypot(dx, dy);
     if (dist < b.speed * dt) { b.x = target.x; b.y = target.y; b.wp++; }
     else { b.x += (dx/dist) * b.speed * dt; b.y += (dy/dist) * b.speed * dt; }
     b.angle = Math.atan2(dy, dx);
-    // Death check
     if (b.hp <= 0) {
       gold += b.reward;
-      // Cura o boss Drácula +50
       if (b.ownerBoss && enemies.indexOf(b.ownerBoss) !== -1) {
         b.ownerBoss.hp = Math.min(b.ownerBoss.maxHp, b.ownerBoss.hp + 50);
-        addText(b.x, b.y - 20, '+50 BOSS', DRACULA_COL, 40, 14);
       }
       burst(b.x, b.y, 10, { speed: 3, life: 20, size: 2, color: DRACULA_COL });
       bats.splice(i, 1);
@@ -2006,32 +2231,30 @@ function loop(time) {
     }
   }
 
-  // VAMPIRE RAYS (visual)
+  // Vampire rays
   for (let i = vampireRays.length - 1; i >= 0; i--) {
     vampireRays[i].life -= dt;
     if (vampireRays[i].life <= 0) vampireRays.splice(i, 1);
   }
 
-  // PENTAGRAMS
+  // Pentagrams
   for (let i = pentagrams.length - 1; i >= 0; i--) {
     const p = pentagrams[i];
     p.life -= dt;
     p.tickTimer += dt;
     if (p.life <= 0) { pentagrams.splice(i, 1); continue; }
-    // Aplica efeitos a cada 1s
     if (p.tickTimer >= 60) {
       p.tickTimer -= 60;
-      // Tropas perdem 10 HP
       for (const t of towers) {
         if (Math.hypot(t.x - p.x, t.y - p.y) <= p.radius) {
           t.hp -= 10;
           if (t.hp <= 0) {
             const idx = towers.indexOf(t);
             if (idx >= 0) towers.splice(idx, 1);
+            if (t.isCruzado) cruzadoDeath(t.x, t.y);
           }
         }
       }
-      // Inimigos ganham 5 HP
       for (const e of enemies) {
         if (Math.hypot(e.x - p.x, e.y - p.y) <= p.radius) {
           e.hp = Math.min(e.maxHp, e.hp + 5);
@@ -2040,15 +2263,12 @@ function loop(time) {
     }
   }
 
-  // OMEGA MISSILES
+  // Omega missiles
   for (let i = omegaMissiles.length - 1; i >= 0; i--) {
     const m = omegaMissiles[i];
     m.life -= dt;
     addTrail(m.x, m.y, OMEGA_COL, 4, 14);
-    if (!m.target || towers.indexOf(m.target) === -1) {
-      omegaMissileExplode(m.x, m.y, m.damage, m.splash);
-      omegaMissiles.splice(i, 1); continue;
-    }
+    if (!m.target || towers.indexOf(m.target) === -1) { omegaMissileExplode(m.x, m.y, m.damage, m.splash); omegaMissiles.splice(i, 1); continue; }
     const desiredAngle = Math.atan2(m.target.y - m.y, m.target.x - m.x);
     let diff = desiredAngle - m.angle;
     while (diff > Math.PI) diff -= Math.PI * 2;
@@ -2056,63 +2276,52 @@ function loop(time) {
     m.angle += Math.max(-0.1, Math.min(0.1, diff)) * dt;
     const dx = m.target.x - m.x, dy = m.target.y - m.y;
     const dist = Math.hypot(dx, dy);
-    if (dist < 12 || m.life <= 0) {
-      omegaMissileExplode(m.x, m.y, m.damage, m.splash);
-      omegaMissiles.splice(i, 1); continue;
-    }
+    if (dist < 12 || m.life <= 0) { omegaMissileExplode(m.x, m.y, m.damage, m.splash); omegaMissiles.splice(i, 1); continue; }
     m.x += Math.cos(m.angle) * m.speed * dt;
     m.y += Math.sin(m.angle) * m.speed * dt;
   }
 
-  // OMEGA BEAMS
+  // Omega beams
   for (let i = omegaBeams.length - 1; i >= 0; i--) {
     const b = omegaBeams[i];
     b.life -= dt;
     if (b.life <= 0) { omegaBeams.splice(i, 1); continue; }
-    // Checa colisão com tropas
     const dirX = Math.cos(b.angle), dirY = Math.sin(b.angle);
     for (const t of towers) {
       if (b.hasHit.has(t)) continue;
       const dx = t.x - b.x, dy = t.y - b.y;
       const proj = dx * dirX + dy * dirY;
       if (proj < 0 || proj > b.range) continue;
-      const perpX = dx - proj * dirX;
-      const perpY = dy - proj * dirY;
-      const perpDist = Math.hypot(perpX, perpY);
+      const perpDist = Math.hypot(dx - proj * dirX, dy - proj * dirY);
       if (perpDist < 12) {
         b.hasHit.add(t);
         let dmg = b.damage;
         if (t.isProtected) dmg = Math.floor(dmg * (1 - t.protReduction));
         t.hp -= dmg;
-        addText(t.x, t.y - 15, '-' + dmg, OMEGA_COL, 45);
         if (t.hp <= 0) {
           const idx = towers.indexOf(t);
           if (idx >= 0) towers.splice(idx, 1);
+          if (t.isCruzado) cruzadoDeath(t.x, t.y);
         }
       }
     }
   }
 
-  // Web projectiles
+  // Web
   for (let i = webProjectiles.length - 1; i >= 0; i--) {
     const wp = webProjectiles[i];
     wp.life -= dt;
-    if (!wp.target || towers.indexOf(wp.target) === -1 || wp.life <= 0) {
-      webProjectiles.splice(i, 1); continue;
-    }
+    if (!wp.target || towers.indexOf(wp.target) === -1 || wp.life <= 0) { webProjectiles.splice(i, 1); continue; }
     const dx = wp.target.x - wp.x, dy = wp.target.y - wp.y;
     const dist = Math.hypot(dx, dy);
     if (dist < wp.speed * dt) {
       wp.target.petrified = 3 * 60;
       addShockwave(wp.target.x, wp.target.y, SPIDER_COL, 20, 15);
       webProjectiles.splice(i, 1);
-    } else {
-      wp.x += (dx/dist) * wp.speed * dt;
-      wp.y += (dy/dist) * wp.speed * dt;
-    }
+    } else { wp.x += (dx/dist) * wp.speed * dt; wp.y += (dy/dist) * wp.speed * dt; }
   }
 
-  // Poison clouds
+  // Poison
   for (let i = poisonClouds.length - 1; i >= 0; i--) {
     const pc = poisonClouds[i];
     pc.life -= dt; pc.tickTimer += dt;
@@ -2127,6 +2336,7 @@ function loop(time) {
           if (t.hp <= 0) {
             const idx = towers.indexOf(t);
             if (idx >= 0) towers.splice(idx, 1);
+            if (t.isCruzado) cruzadoDeath(t.x, t.y);
           }
         }
       }
@@ -2137,31 +2347,23 @@ function loop(time) {
   for (let i = barrils.length - 1; i >= 0; i--) {
     const b = barrils[i];
     b.life -= dt;
-    if (b.life <= 0) {
-      barrilExplode(b.x, b.y);
-      barrils.splice(i, 1);
-    }
+    if (b.life <= 0) { barrilExplode(b.x, b.y); barrils.splice(i, 1); }
   }
-
   // Medusa waves (visual)
   for (let i = medusaWaves.length - 1; i >= 0; i--) {
     medusaWaves[i].life -= dt;
     if (medusaWaves[i].life <= 0) medusaWaves.splice(i, 1);
   }
-
-  // Fungus zones
+  // Fungus
   for (let i = healZones.length - 1; i >= 0; i--) {
     const z = healZones[i];
     z.life -= dt; z.pulse += dt * 0.15;
     if (z.life <= 0) { healZones.splice(i, 1); continue; }
     for (const e of enemies) {
       const d = Math.hypot(e.x - z.x, (e.y - (e.airHeight || 0)) - z.y);
-      if (d <= z.radius) {
-        e.hp = Math.min(e.maxHp, e.hp + 10 / 60 * dt);
-      }
+      if (d <= z.radius) e.hp = Math.min(e.maxHp, e.hp + 10 / 60 * dt);
     }
   }
-
   // Paradox
   for (let i = paradoxZones.length - 1; i >= 0; i--) {
     paradoxZones[i].life -= dt;
@@ -2171,23 +2373,17 @@ function loop(time) {
     lordAuras[i].life -= dt;
     if (lordAuras[i].life <= 0) lordAuras.splice(i, 1);
   }
-
-  // Debris decay
+  // Debris
   for (let i = debris.length - 1; i >= 0; i--) {
     const d = debris[i];
     if (d.spawnAnim > 0) d.spawnAnim -= dt;
     d.life -= dt;
     if (d.life <= 0) debris.splice(i, 1);
   }
-
-  // ====== TOWERS ======
-  for (const t of towers) {
-    if (t.inMedusaCone) continue; // resetado abaixo
-  }
   // Reset Medusa cone
   for (const t of towers) t.inMedusaCone = false;
-  // Reaplica (feito no loop dos bosses)
 
+  // ====== TOWERS ======
   for (const t of towers) {
     if (t.spawnAnim > 0) t.spawnAnim -= dt;
     if (t.recoil > 0) t.recoil -= dt * 3;
@@ -2209,6 +2405,7 @@ function loop(time) {
     }
     t.cooldown -= dt * cooldownSpeed;
 
+    // Healer
     if (t.isHealer) {
       if (t.cooldown <= 0) {
         const targets = towers.filter(o => Math.hypot(o.x - t.x, o.y - t.y) <= t.range);
@@ -2221,16 +2418,16 @@ function loop(time) {
           }
         }
         if (t.starLevel >= 3) healPlayer(5);
-        if (healedAny) { addShockwave(t.x, t.y, GREEN_BRIGHT, t.range, 30); t.healPulse = 1; Sound.heal(); updateGameUI(); }
+        if (healedAny) { addShockwave(t.x, t.y, GREEN_BRIGHT, t.range, 30); t.healPulse = 1; Sound.heal(); }
         t.cooldown = t.fireRate;
       }
       continue;
     }
+    // Merchant
     if (t.isMerchant) {
       if (t.cooldown <= 0) {
         gold += t.income;
         addMoneyPop(t.x, t.y - 15, t.income);
-        addShockwave(t.x, t.y, GOLD, 35, 25);
         t.incomePulse = 1;
         Sound.coin(); updateGameUI(); t.cooldown = t.fireRate;
       }
@@ -2239,7 +2436,7 @@ function loop(time) {
         if (t.merchantCrystalTimer >= 1200 && (t.crystalsGiven || 0) < 5) {
           t.merchantCrystalTimer = 0;
           t.crystalsGiven = (t.crystalsGiven || 0) + 1;
-          crystals += 1;
+          crystals += 1; crystalsEarnedThisRun += 1;
           saveCrystals(crystals);
           addCrystalPop(t.x, t.y - 25, 1);
           updateMenuCrystals();
@@ -2247,6 +2444,7 @@ function loop(time) {
       }
       continue;
     }
+    // Defensor
     if (t.isDefensor) {
       t.cooldown = t.fireRate;
       if (t.starLevel >= 3) {
@@ -2258,6 +2456,7 @@ function loop(time) {
       }
       continue;
     }
+    // Paradox
     if (t.isParadox) {
       if (t.cooldown <= 0) {
         paradoxZones.push({ x: t.x, y: t.y, radius: t.range, life: t.duration, maxLife: t.duration, pulse: 0 });
@@ -2269,17 +2468,26 @@ function loop(time) {
       continue;
     }
 
-    // Target selection (inclui bats!)
+    // Target selection
     let target = null, bestDist = Infinity;
-    // Prioridade aéreo para Drone/Lord
-    if (t.isDrone || t.isLord) {
+    if (t.isDrone || t.isLord || t.isCruzado) {
       for (const e of enemies) {
         if (!e.isAir) continue;
         const d = Math.hypot(e.x - t.x, (e.y - (e.airHeight || 0)) - t.y);
         if (d < t.range && d < bestDist) { bestDist = d; target = e; }
       }
     }
+    // Cruzado: prioriza boss
+    if (t.isCruzado) {
+      for (const e of enemies) {
+        if (e.isBoss) {
+          const d = Math.hypot(e.x - t.x, (e.y - (e.airHeight || 0)) - t.y);
+          if (d < t.range) { target = e; t.cruzadoIsBossMode = true; break; }
+        }
+      }
+    }
     if (!target) {
+      t.cruzadoIsBossMode = false;
       for (const e of enemies) {
         const d = Math.hypot(e.x - t.x, (e.y - (e.airHeight || 0)) - t.y);
         if (d < t.range && d < bestDist) {
@@ -2288,6 +2496,7 @@ function loop(time) {
         }
       }
     }
+
     if (target) {
       const targetY = target.y - (target.airHeight || 0);
       t.angle = Math.atan2(targetY - t.y, target.x - t.x);
@@ -2297,6 +2506,7 @@ function loop(time) {
         let actualDamage = t.damage;
         if (t.isDrone && target.isAir) actualDamage = t.damage * 3;
 
+        // LORD
         if (t.isLord) {
           addShockwave(target.x, targetY, LORD_PURPLE, 40, 25);
           burst(target.x, targetY, 40, { speed: 6, life: 35, size: 4, color: LORD_PURPLE });
@@ -2307,7 +2517,78 @@ function loop(time) {
           }
           Sound.shootLord();
           t.recoil = 5;
-        } else if (t.isFlamethrower) {
+        }
+        // CRUZADO
+        else if (t.isCruzado) {
+          const isBossMode = target.isBoss;
+          let dmg, rate;
+          if (isBossMode) {
+            dmg = t.bossDamage; rate = t.bossFireRate;
+            // Empurra boss 2m
+            const dx = target.x - t.x, dy = targetY - t.y;
+            const dist = Math.hypot(dx, dy);
+            if (dist > 0) {
+              target.x += (dx/dist) * 2 * PPM;
+              target.y += (dy/dist) * 2 * PPM;
+            }
+            t.cruzadoHits = (t.cruzadoHits || 0) + 1;
+            // A cada 5 tiros, 6º é tornado
+            if (t.cruzadoHits >= 6) {
+              t.cruzadoHits = 0;
+              cruzadoTornados.push({
+                x: target.x, y: targetY, radius: 3 * PPM,
+                life: 5 * 60, maxLife: 5 * 60, targetBoss: target,
+                accumulatedDamage: 0, tickTimer: 0
+              });
+              addShockwave(target.x, targetY, CRUZADO_COL, 100, 40);
+              addText(target.x, targetY - 40, 'TORNADO!', CRUZADO_COL, 80, 26);
+              addFlash(0.6, '255,255,200');
+              Sound.cruzadoTornado();
+            }
+          } else {
+            dmg = t.damage; rate = t.fireRate;
+          }
+          // Feixe de energia
+          addCruzadoBeam(t.x, t.y, target.x, targetY, CRUZADO_COL);
+          // Ricochete 5x
+          const hitEnemies = [target];
+          let current = target, currentY = targetY;
+          let currentDmg = dmg;
+          damageEnemy(current, currentDmg);
+          currentDmg = Math.max(20, currentDmg - 5);
+          for (let rico = 0; rico < 4; rico++) {
+            let next = null, nextDist = Infinity, nextY = 0;
+            for (const e of enemies) {
+              if (hitEnemies.indexOf(e) !== -1 || e.hp <= 0) continue;
+              const ey = e.y - (e.airHeight || 0);
+              const d = Math.hypot(e.x - current.x, ey - currentY);
+              if (d <= 5 * PPM && d < nextDist) { nextDist = d; next = e; nextY = ey; }
+            }
+            if (!next) break;
+            addCruzadoBeam(current.x, currentY, next.x, nextY, CRUZADO_COL);
+            damageEnemy(next, currentDmg);
+            hitEnemies.push(next);
+            current = next; currentY = nextY;
+            currentDmg = Math.max(20, currentDmg - 5);
+          }
+          // Se o 5º foi atingido, ele explode
+          if (hitEnemies.length === 5) {
+            const last = hitEnemies[4];
+            const lastY = last.y - (last.airHeight || 0);
+            addShockwave(last.x, lastY, CRUZADO_COL, 5 * PPM, 40);
+            burst(last.x, lastY, 40, { speed: 8, life: 40, size: 4, color: CRUZADO_COL });
+            addFlash(0.5, '255,255,200'); addShake(10);
+            const inRange = enemies.filter(e => Math.hypot(e.x - last.x, (e.y - (e.airHeight || 0)) - lastY) <= 5 * PPM);
+            for (const e of inRange) {
+              if (e === last) continue;
+              damageEnemy(e, 200);
+            }
+            damageEnemy(last, 200);
+          }
+          Sound.shootCruzado();
+          t.recoil = 3;
+        }
+        else if (t.isFlamethrower) {
           addFlameCone(t.x, t.y, t.angle, t.range);
           damageEnemy(target, actualDamage, t.x, t.y);
           applyFire(target, t.fireDmg, t.fireDur);
@@ -2375,10 +2656,7 @@ function loop(time) {
     const m = missiles[i];
     m.life -= dt;
     addTrail(m.x, m.y, ORANGE, 4, 14);
-    if (!m.target || m.target.hp <= 0 || enemies.indexOf(m.target) === -1) {
-      bazookaExplosion(m.x, m.y, m.damage, m.splash, m.splitOnExplode);
-      missiles.splice(i, 1); continue;
-    }
+    if (!m.target || m.target.hp <= 0 || enemies.indexOf(m.target) === -1) { bazookaExplosion(m.x, m.y, m.damage, m.splash, m.splitOnExplode); missiles.splice(i, 1); continue; }
     const targetY = m.target.y - (m.target.airHeight || 0);
     const desiredAngle = Math.atan2(targetY - m.y, m.target.x - m.x);
     let diff = desiredAngle - m.angle;
@@ -2387,10 +2665,7 @@ function loop(time) {
     m.angle += Math.max(-0.12, Math.min(0.12, diff)) * dt;
     const dx = m.target.x - m.x, dy = targetY - m.y;
     const dist = Math.hypot(dx, dy);
-    if (dist < 12 || m.life <= 0) {
-      bazookaExplosion(m.x, m.y, m.damage, m.splash, m.splitOnExplode);
-      missiles.splice(i, 1); continue;
-    }
+    if (dist < 12 || m.life <= 0) { bazookaExplosion(m.x, m.y, m.damage, m.splash, m.splitOnExplode); missiles.splice(i, 1); continue; }
     m.x += Math.cos(m.angle) * m.speed * dt;
     m.y += Math.sin(m.angle) * m.speed * dt;
   }
@@ -2398,12 +2673,7 @@ function loop(time) {
   // Bullets
   for (let i = bullets.length - 1; i >= 0; i--) {
     const b = bullets[i];
-    if (!b.target || b.target.hp <= 0 || enemies.indexOf(b.target) === -1) {
-      if (b.type === 'stark') {
-        // Stark bullet mirava em tropa
-      }
-      bullets.splice(i, 1); continue;
-    }
+    if (!b.target || b.target.hp <= 0 || enemies.indexOf(b.target) === -1) { bullets.splice(i, 1); continue; }
     const targetY = b.target.y - (b.target.airHeight || 0);
     const dx = b.target.x - b.x, dy = targetY - b.y;
     const dist = Math.hypot(dx, dy);
@@ -2412,10 +2682,10 @@ function loop(time) {
         let dmg = b.damage;
         if (b.target.isProtected) dmg = Math.floor(dmg * (1 - b.target.protReduction));
         b.target.hp -= dmg;
-        addText(b.target.x, b.target.y - 15, '-' + dmg, STARK_COL, 45);
         if (b.target.hp <= 0) {
           const idx = towers.indexOf(b.target);
           if (idx >= 0) towers.splice(idx, 1);
+          if (b.target.isCruzado) cruzadoDeath(b.target.x, b.target.y);
         }
       } else {
         damageEnemy(b.target, b.damage, b.x, b.y);
@@ -2470,7 +2740,31 @@ function loop(time) {
   draw();
 }
 
-// ============ DRAW (compacto - só desenha, muito do antigo) ============
+// ============ AZAZEL DEATH ============
+function azazelDeathExplosion(x, y) {
+  // Explosão épica final
+  addShockwave(x, y, AZAZEL_COL, 250, 60);
+  addShockwave(x, y, GOLD, 200, 80);
+  addShockwave(x, y, WHITE, 300, 100);
+  burst(x, y, 200, { speed: 15, life: 80, size: 5, gravity: 0.1, friction: 0.9, color: AZAZEL_COL });
+  burst(x, y, 100, { speed: 10, life: 60, size: 4, color: GOLD, friction: 0.88 });
+  addFlash(1, '255,255,255'); addShake(30);
+  Sound.azazelDeath();
+  // Dano em área gigante
+  const radius = 20 * PPM;
+  const inRange = towers.filter(t => Math.hypot(t.x - x, t.y - y) <= radius);
+  for (const t of inRange) {
+    let dmg = 500;
+    if (t.isProtected) dmg = Math.floor(dmg * (1 - t.protReduction));
+    t.hp -= dmg;
+    if (t.hp <= 0) {
+      const idx = towers.indexOf(t);
+      if (idx >= 0) towers.splice(idx, 1);
+    }
+  }
+}
+
+// ============ DRAW ============
 function draw() {
   if (!path) return;
   ctx.save();
@@ -2488,7 +2782,48 @@ function draw() {
   for (let x = 0; x <= canvas.width; x += PPM * 5) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke(); }
   for (let y = 0; y <= canvas.height; y += PPM * 5) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke(); }
 
-  // Pentagrams
+  // Sacred zones (Cruzado)
+  for (const cs of cruzadoSacreds) {
+    const p = cs.life / cs.maxLife;
+    ctx.globalAlpha = 0.1 * p;
+    ctx.fillStyle = CRUZADO_COL;
+    ctx.beginPath(); ctx.arc(cs.x, cs.y, cs.range, 0, Math.PI * 2); ctx.fill();
+    ctx.globalAlpha = 0.3 * p;
+    ctx.strokeStyle = CRUZADO_COL; ctx.lineWidth = 2;
+    ctx.setLineDash([6, 4]);
+    ctx.beginPath(); ctx.arc(cs.x, cs.y, cs.range, 0, Math.PI * 2); ctx.stroke();
+    ctx.setLineDash([]);
+  }
+  ctx.globalAlpha = 1;
+
+  // Azazel pentagrama (durante maldição)
+  for (const e of enemies) {
+    if (e.type === 'azazel' && e.pentagramActive && e.isBoss) {
+      const p = 0.5 + Math.sin(Date.now() / 200) * 0.2;
+      ctx.globalAlpha = p * 0.4;
+      ctx.fillStyle = AZAZEL_COL;
+      ctx.beginPath(); ctx.arc(e.x, e.y, 3 * PPM, 0, Math.PI * 2); ctx.fill();
+      ctx.globalAlpha = p * 0.9;
+      ctx.strokeStyle = AZAZEL_DARK; ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.arc(e.x, e.y, 3 * PPM, 0, Math.PI * 2); ctx.stroke();
+      // Estrela
+      ctx.beginPath();
+      for (let k = 0; k < 5; k++) {
+        const a1 = (k * 4 * Math.PI / 5) - Math.PI / 2;
+        const a2 = ((k + 1) * 4 * Math.PI / 5) - Math.PI / 2;
+        const x1 = e.x + Math.cos(a1) * 3 * PPM * 0.8;
+        const y1 = e.y + Math.sin(a1) * 3 * PPM * 0.8;
+        const x2 = e.x + Math.cos(a2) * 3 * PPM * 0.8;
+        const y2 = e.y + Math.sin(a2) * 3 * PPM * 0.8;
+        if (k === 0) ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+      }
+      ctx.closePath(); ctx.stroke();
+    }
+  }
+  ctx.globalAlpha = 1;
+
+  // Pentagrams (drácula)
   for (const p of pentagrams) {
     const alpha = 0.4 + Math.sin(Date.now() / 300) * 0.15;
     ctx.globalAlpha = alpha * Math.min(1, p.life / 60);
@@ -2497,7 +2832,6 @@ function draw() {
     ctx.globalAlpha = alpha * 1.5;
     ctx.strokeStyle = DRACULA_COL; ctx.lineWidth = 3;
     ctx.beginPath(); ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2); ctx.stroke();
-    // Estrela de 5 pontas
     ctx.beginPath();
     for (let k = 0; k < 5; k++) {
       const a1 = (k * 4 * Math.PI / 5) - Math.PI / 2;
@@ -2513,7 +2847,7 @@ function draw() {
   }
   ctx.globalAlpha = 1;
 
-  // Poison clouds
+  // Poison
   for (const pc of poisonClouds) {
     const p = pc.life / pc.maxLife;
     ctx.globalAlpha = 0.35 * p;
@@ -2536,7 +2870,16 @@ function draw() {
   }
   ctx.globalAlpha = 1;
 
-  // Fungus zones
+  // Azazel shockwaves
+  for (const sw of azazelShockwaves) {
+    const p = sw.life / sw.maxLife;
+    ctx.globalAlpha = p * 0.6;
+    ctx.strokeStyle = AZAZEL_COL; ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.arc(sw.x, sw.y, sw.radius * (1 - p * 0.5), 0, Math.PI * 2); ctx.stroke();
+  }
+  ctx.globalAlpha = 1;
+
+  // Fungus
   for (const z of healZones) {
     const p = z.life / z.maxLife;
     ctx.globalAlpha = 0.15 * p + Math.sin(z.pulse) * 0.05;
@@ -2569,28 +2912,19 @@ function draw() {
   }
   ctx.globalAlpha = 1;
 
-  // Debris (Colossos)
+  // Debris
   for (const d of debris) {
     const scale = d.spawnAnim > 0 ? 0.3 + (1 - d.spawnAnim / 30) * 0.7 : 1;
     ctx.save();
-    ctx.translate(d.x, d.y);
-    ctx.scale(scale, scale);
+    ctx.translate(d.x, d.y); ctx.scale(scale, scale);
     ctx.fillStyle = '#3a3a3a';
-    ctx.strokeStyle = COLOSSUS_COL;
-    ctx.lineWidth = 2;
-    // Rocha irregular
+    ctx.strokeStyle = COLOSSUS_COL; ctx.lineWidth = 2;
     ctx.beginPath();
-    ctx.moveTo(-d.radius, 0);
-    ctx.lineTo(-d.radius * 0.6, -d.radius);
-    ctx.lineTo(d.radius * 0.4, -d.radius * 0.8);
-    ctx.lineTo(d.radius, 0);
-    ctx.lineTo(d.radius * 0.5, d.radius);
-    ctx.lineTo(-d.radius * 0.7, d.radius * 0.7);
-    ctx.closePath();
-    ctx.fill();
-    ctx.stroke();
+    ctx.moveTo(-d.radius, 0); ctx.lineTo(-d.radius * 0.6, -d.radius);
+    ctx.lineTo(d.radius * 0.4, -d.radius * 0.8); ctx.lineTo(d.radius, 0);
+    ctx.lineTo(d.radius * 0.5, d.radius); ctx.lineTo(-d.radius * 0.7, d.radius * 0.7);
+    ctx.closePath(); ctx.fill(); ctx.stroke();
     ctx.restore();
-    // WavesLeft
     ctx.fillStyle = '#aaa';
     ctx.font = 'bold 10px VT323, monospace';
     ctx.textAlign = 'center';
@@ -2609,7 +2943,7 @@ function draw() {
   ctx.globalAlpha = 1;
   ctx.lineWidth = 2; ctx.setLineDash([6, 5]); ctx.stroke(); ctx.setLineDash([]);
 
-  // Enemy shadows (air)
+  // Enemy shadows
   for (const e of enemies) {
     if (e.isAir) {
       ctx.fillStyle = 'rgba(0,0,0,0.4)';
@@ -2619,15 +2953,12 @@ function draw() {
     }
   }
 
-  // Air trails
   for (const at of airTrails) {
     ctx.globalAlpha = (at.life / at.maxLife) * 0.7;
     ctx.fillStyle = AIR;
     ctx.fillRect(at.x - 1.5, at.y - 1.5, 3, 3);
   }
   ctx.globalAlpha = 1;
-
-  // Trails
   for (const tr of trails) {
     ctx.globalAlpha = (tr.life / tr.maxLife) * 0.7;
     ctx.fillStyle = tr.color;
@@ -2664,6 +2995,12 @@ function draw() {
         ctx.fillStyle = LORD_PURPLE;
         ctx.beginPath(); ctx.arc(t.x, t.y, t.range, 0, Math.PI * 2); ctx.fill();
         ctx.globalAlpha = 1;
+      } else if (t.isCruzado) {
+        // Sacred zone visual
+        ctx.globalAlpha = 0.1;
+        ctx.fillStyle = CRUZADO_COL;
+        ctx.beginPath(); ctx.arc(t.x, t.y, t.sacredRange, 0, Math.PI * 2); ctx.fill();
+        ctx.globalAlpha = 1;
       } else if (t.isDefensor) {
         ctx.strokeStyle = SHIELD; ctx.globalAlpha = 0.3; ctx.lineWidth = 3;
         ctx.setLineDash([8, 6]);
@@ -2677,6 +3014,7 @@ function draw() {
     let col = GREEN;
     if (isPetrified) col = STONE;
     else if (isFrozenByYeti) col = ICE;
+    else if (t.isCruzado) col = CRUZADO_COL;
     else if (t.isHealer) col = GREEN_BRIGHT;
     else if (t.isMerchant) col = GOLD;
     else if (t.isFlamethrower) col = FIRE;
@@ -2691,11 +3029,19 @@ function draw() {
     let scale = 1;
     if (t.spawnAnim > 0) scale = 0.5 + (1 - t.spawnAnim / 20) * 0.5;
 
-    if (t.starLevel > 0 && !t.isLord && !isPetrified) {
+    if (t.starLevel > 0 && !t.isLord && !t.isCruzado && !isPetrified) {
       ctx.strokeStyle = GOLD;
       ctx.globalAlpha = 0.5 + t.starLevel * 0.15;
       ctx.lineWidth = t.starLevel * 0.8;
       ctx.strokeRect(t.x - 13, t.y - 13, 26, 26);
+      ctx.globalAlpha = 1;
+    }
+    // Cruzado sempre dourado
+    if (t.isCruzado) {
+      ctx.strokeStyle = GOLD;
+      ctx.globalAlpha = 0.9;
+      ctx.lineWidth = 3;
+      ctx.strokeRect(t.x - 14, t.y - 14, 28, 28);
       ctx.globalAlpha = 1;
     }
 
@@ -2708,7 +3054,13 @@ function draw() {
     ctx.fillStyle = col;
     ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
 
-    if (t.isLord) {
+    if (t.isCruzado) {
+      // Cruz dourada
+      ctx.shadowColor = CRUZADO_COL; ctx.shadowBlur = 20;
+      ctx.font = 'bold 22px VT323, monospace';
+      ctx.fillText('✝️', t.x, t.y - 2);
+      ctx.shadowBlur = 0;
+    } else if (t.isLord) {
       ctx.shadowColor = LORD_GOLD; ctx.shadowBlur = 20;
       ctx.font = 'bold 20px VT323, monospace';
       ctx.fillText('👑', t.x, t.y - 4);
@@ -2789,6 +3141,43 @@ function draw() {
     ctx.fillStyle = col; ctx.fillRect(bx, by, bw * hpPct, bh);
   }
 
+  // Cruzado beams
+  for (const cb of cruzadoBeams) {
+    const p = cb.life / cb.maxLife;
+    ctx.strokeStyle = cb.color;
+    ctx.globalAlpha = p;
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(cb.x1, cb.y1); ctx.lineTo(cb.x2, cb.y2);
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+  }
+
+  // Cruzado tornados
+  for (const ct of cruzadoTornados) {
+    const p = ct.life / ct.maxLife;
+    ctx.save();
+    ctx.translate(ct.x, ct.y);
+    ctx.rotate(Date.now() / 200);
+    // Coluna dourada
+    ctx.globalAlpha = p * 0.7;
+    ctx.strokeStyle = CRUZADO_COL;
+    ctx.lineWidth = 4;
+    for (let k = 0; k < 4; k++) {
+      const offset = (k / 4) * Math.PI * 2;
+      const r = ct.radius;
+      ctx.beginPath();
+      ctx.arc(0, 0, r * (0.5 + k * 0.15), offset, offset + Math.PI * 1.5);
+      ctx.stroke();
+    }
+    // Centro brilhante
+    ctx.globalAlpha = p * 0.9;
+    ctx.fillStyle = CRUZADO_LIGHT;
+    ctx.beginPath(); ctx.arc(0, 0, 12, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+    ctx.globalAlpha = 1;
+  }
+
   // Vampire rays
   for (const vr of vampireRays) {
     const p = vr.life / vr.maxLife;
@@ -2797,12 +3186,41 @@ function draw() {
     ctx.beginPath();
     ctx.moveTo(vr.x1, vr.y1); ctx.lineTo(vr.x2, vr.y2);
     ctx.stroke();
-    // Bolinhas de HP voltando
-    const prog = 1 - p;
-    const hx = vr.x2 + (vr.x1 - vr.x2) * prog;
-    const hy = vr.y2 + (vr.y1 - vr.y2) * prog;
-    ctx.fillStyle = RED;
-    ctx.beginPath(); ctx.arc(hx, hy, 4, 0, Math.PI * 2); ctx.fill();
+    ctx.globalAlpha = 1;
+  }
+
+  // Azazel beams
+  for (const b of azazelBeams) {
+    const p = b.life / b.maxLife;
+    // Feixe vertical do céu
+    ctx.save();
+    ctx.globalAlpha = p * 0.9;
+    const grad = ctx.createLinearGradient(b.x, 0, b.x, b.y);
+    grad.addColorStop(0, 'rgba(255,255,255,0)');
+    grad.addColorStop(0.5, 'rgba(255,200,100,0.7)');
+    grad.addColorStop(1, 'rgba(255,255,200,1)');
+    ctx.fillStyle = grad;
+    ctx.fillRect(b.x - 6, 0, 12, b.y);
+    // Brilho no impacto
+    ctx.fillStyle = GOLD;
+    ctx.beginPath(); ctx.arc(b.x, b.y, 20, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+  }
+
+  // Azazel thunders
+  for (const th of azazelThunders) {
+    const p = th.life / th.maxLife;
+    ctx.save();
+    ctx.globalAlpha = p;
+    // Raio do céu
+    ctx.strokeStyle = AZAZEL_COL;
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.moveTo(th.x + (Math.random() - 0.5) * 30, 0);
+    ctx.lineTo(th.x + (Math.random() - 0.5) * 20, th.y * 0.5);
+    ctx.lineTo(th.x, th.y);
+    ctx.stroke();
+    ctx.restore();
     ctx.globalAlpha = 1;
   }
 
@@ -2811,8 +3229,6 @@ function draw() {
     ctx.save(); ctx.translate(m.x, m.y); ctx.rotate(m.angle);
     ctx.fillStyle = OMEGA_COL;
     ctx.fillRect(-8, -3, 16, 6);
-    ctx.fillStyle = YELLOW;
-    ctx.beginPath(); ctx.moveTo(8, -3); ctx.lineTo(14, 0); ctx.lineTo(8, 3); ctx.closePath(); ctx.fill();
     ctx.restore();
   }
 
@@ -2821,15 +3237,11 @@ function draw() {
     const p = b.life / b.maxLife;
     ctx.save();
     ctx.translate(b.x, b.y); ctx.rotate(b.angle);
-    const grad = ctx.createLinearGradient(0, 0, b.range, 0);
-    grad.addColorStop(0, `rgba(136,170,255,${p})`);
-    grad.addColorStop(1, `rgba(255,255,255,${p * 0.3})`);
-    ctx.strokeStyle = grad;
-    ctx.lineWidth = 6 * p + 2;
-    ctx.beginPath();
-    ctx.moveTo(0, 0); ctx.lineTo(b.range, 0);
-    ctx.stroke();
+    ctx.globalAlpha = p;
+    ctx.strokeStyle = OMEGA_COL; ctx.lineWidth = 4;
+    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(b.range, 0); ctx.stroke();
     ctx.restore();
+    ctx.globalAlpha = 1;
   }
 
   // Spars
@@ -2866,7 +3278,7 @@ function draw() {
     }
   }
 
-  // Missiles (bazuca)
+  // Missiles
   for (const m of missiles) {
     ctx.save(); ctx.translate(m.x, m.y); ctx.rotate(m.angle);
     ctx.fillStyle = ORANGE; ctx.fillRect(-8, -3, 16, 6);
@@ -2888,9 +3300,6 @@ function draw() {
     ctx.fillStyle = FIRE_BRIGHT;
     const spark = Math.sin(Date.now() / 100) * 2;
     ctx.beginPath(); ctx.arc(b.x, b.y - 12 + spark, 4, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = WHITE; ctx.font = 'bold 12px VT323, monospace';
-    ctx.textAlign = 'center';
-    ctx.fillText(Math.ceil(b.life / 60), b.x, b.y + 4);
   }
 
   // Tesla
@@ -2935,24 +3344,14 @@ function draw() {
     ctx.fillStyle = DRACULA_COL;
     ctx.strokeStyle = '#ff3333';
     ctx.lineWidth = 2;
-    // Corpo
     ctx.beginPath(); ctx.arc(0, 0, 6, 0, Math.PI * 2); ctx.fill();
-    // Asas
     ctx.beginPath();
     ctx.moveTo(-3, -2); ctx.lineTo(-12, -6); ctx.lineTo(-10, 0); ctx.lineTo(-12, 6); ctx.lineTo(-3, 2);
     ctx.closePath(); ctx.fill(); ctx.stroke();
     ctx.beginPath();
     ctx.moveTo(3, -2); ctx.lineTo(12, -6); ctx.lineTo(10, 0); ctx.lineTo(12, 6); ctx.lineTo(3, 2);
     ctx.closePath(); ctx.fill(); ctx.stroke();
-    // Olhos
-    ctx.fillStyle = '#ffff33';
-    ctx.beginPath(); ctx.arc(-2, -2, 1, 0, Math.PI * 2); ctx.fill();
-    ctx.beginPath(); ctx.arc(2, -2, 1, 0, Math.PI * 2); ctx.fill();
     ctx.restore();
-    // HP
-    const w = 14, h = 2;
-    ctx.fillStyle = GREEN_DARK; ctx.fillRect(b.x - w/2, b.y - 22, w, h);
-    ctx.fillStyle = RED; ctx.fillRect(b.x - w/2, b.y - 22, w * (b.hp / b.maxHp), h);
   }
 
   // Texts
@@ -3002,7 +3401,7 @@ function draw() {
   }
 
   if (bossActive) {
-    const pulseAmount = 0.2 + Math.sin(Date.now() / 250) * 0.15;
+    const pulseAmount = 0.25 + Math.sin(Date.now() / 200) * 0.2;
     const grad = ctx.createRadialGradient(240, 240, 150, 240, 240, 340);
     grad.addColorStop(0, 'rgba(255,51,51,0)');
     grad.addColorStop(1, `rgba(255,51,51,${pulseAmount})`);
@@ -3042,7 +3441,7 @@ function draw() {
   }
 }
 
-// Draw enemy - apenas uma versão compacta com novos desenhos
+// drawEnemy compacto
 function drawEnemy(e) {
   const s = e.size;
   const isHit = e.hitFlash > 0;
@@ -3125,12 +3524,8 @@ function drawEnemy(e) {
       break;
     case 'air':
       ctx.fillStyle = isHit ? color : '#0a2a2a';
-      ctx.beginPath();
-      ctx.ellipse(0, 0, s/2 + 4, s/4, 0, 0, Math.PI * 2);
-      ctx.fill(); ctx.stroke();
-      ctx.beginPath();
-      ctx.arc(0, -3, s/3, Math.PI, 0);
-      ctx.closePath(); ctx.fill(); ctx.stroke();
+      ctx.beginPath(); ctx.ellipse(0, 0, s/2 + 4, s/4, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+      ctx.beginPath(); ctx.arc(0, -3, s/3, Math.PI, 0); ctx.closePath(); ctx.fill(); ctx.stroke();
       break;
     case 'ogro':
       ctx.fillStyle = isHit ? color : '#1a3a0a';
@@ -3178,7 +3573,6 @@ function drawEnemy(e) {
       ctx.fillRect(-s/2, -s/2 + 5, s, 4);
       ctx.fillStyle = '#fff';
       ctx.fillRect(-7, -5, 4, 4); ctx.fillRect(3, -5, 4, 4);
-      ctx.fillStyle = '#333'; ctx.fillRect(-3, -s/2 - 8, 6, 20);
       break;
     case 'medusa':
       ctx.fillStyle = isHit ? color : '#2a5a2a';
@@ -3200,84 +3594,120 @@ function drawEnemy(e) {
       ctx.shadowBlur = 0;
       break;
     case 'dracula':
-      // Conde Drácula
       ctx.fillStyle = isHit ? color : '#2a0a0a';
       ctx.fillRect(-s/2, -s/2, s, s);
       ctx.strokeStyle = color; ctx.strokeRect(-s/2, -s/2, s, s);
-      // Capa
       ctx.fillStyle = DRACULA_COL;
       ctx.beginPath();
-      ctx.moveTo(-s/2, -s/2);
-      ctx.lineTo(-s/2 - 10, s/2 + 10);
-      ctx.lineTo(s/2 + 10, s/2 + 10);
-      ctx.lineTo(s/2, -s/2);
+      ctx.moveTo(-s/2, -s/2); ctx.lineTo(-s/2 - 10, s/2 + 10);
+      ctx.lineTo(s/2 + 10, s/2 + 10); ctx.lineTo(s/2, -s/2);
       ctx.closePath(); ctx.fill(); ctx.stroke();
-      // Rosto pálido
       ctx.fillStyle = '#eee';
       ctx.beginPath(); ctx.arc(0, -3, s/3, 0, Math.PI * 2); ctx.fill();
-      ctx.stroke();
-      // Olhos vermelhos
       ctx.fillStyle = '#ff3333';
       ctx.shadowColor = '#ff3333'; ctx.shadowBlur = 10;
       ctx.beginPath(); ctx.arc(-5, -4, 2, 0, Math.PI * 2); ctx.fill();
       ctx.beginPath(); ctx.arc(5, -4, 2, 0, Math.PI * 2); ctx.fill();
       ctx.shadowBlur = 0;
-      // Presas
       ctx.fillStyle = '#fff';
-      ctx.fillRect(-3, 3, 2, 4);
-      ctx.fillRect(1, 3, 2, 4);
+      ctx.fillRect(-3, 3, 2, 4); ctx.fillRect(1, 3, 2, 4);
       break;
     case 'omega':
-      // Robô Ômega-04
       ctx.fillStyle = isHit ? color : '#2a2a3a';
       ctx.fillRect(-s/2, -s/2, s, s);
       ctx.strokeStyle = color; ctx.strokeRect(-s/2, -s/2, s, s);
-      // Visor
       ctx.fillStyle = '#ff3333';
       ctx.shadowColor = '#ff3333'; ctx.shadowBlur = 12;
       ctx.fillRect(-s/2 + 4, -6, s - 8, 6);
       ctx.shadowBlur = 0;
-      // Braços canhão
       ctx.fillStyle = '#444';
       ctx.fillRect(-s/2 - 8, -2, 8, 6);
       ctx.fillRect(s/2, -2, 8, 6);
       break;
     case 'knight':
-      // Black Knight
       ctx.fillStyle = isHit ? color : '#0a0a0a';
       ctx.fillRect(-s/2, -s/2, s, s);
       ctx.strokeStyle = color; ctx.strokeRect(-s/2, -s/2, s, s);
-      // Elmo
       ctx.fillStyle = '#333';
       ctx.fillRect(-s/3, -s/2 - 4, s * 0.66, s/3);
       ctx.strokeStyle = '#666'; ctx.strokeRect(-s/3, -s/2 - 4, s * 0.66, s/3);
-      // Visor vermelho
       ctx.fillStyle = RED;
       ctx.shadowColor = RED; ctx.shadowBlur = 10;
       ctx.fillRect(-s/4, -s/2 + 2, s/2, 3);
       ctx.shadowBlur = 0;
-      // Espada
       ctx.strokeStyle = '#ccc'; ctx.lineWidth = 3;
       ctx.beginPath(); ctx.moveTo(s/2, -s/2); ctx.lineTo(s/2 + 15, s/2); ctx.stroke();
       break;
     case 'colossus':
-      // Colossos - pedra
       ctx.fillStyle = isHit ? color : '#3a3a3a';
       ctx.fillRect(-s/2, -s/2, s, s);
       ctx.strokeStyle = color; ctx.strokeRect(-s/2, -s/2, s, s);
-      // Rachaduras
       ctx.strokeStyle = '#ff6600'; ctx.lineWidth = 2;
       ctx.beginPath();
       ctx.moveTo(-s/4, -s/2); ctx.lineTo(-s/6, -s/6); ctx.lineTo(s/6, -s/4); ctx.lineTo(s/4, 0);
-      ctx.moveTo(-s/3, s/4); ctx.lineTo(0, s/3);
-      ctx.moveTo(s/4, -s/3); ctx.lineTo(s/3, s/6);
       ctx.stroke();
-      // Olhos
       ctx.fillStyle = '#ff6600';
       ctx.shadowColor = '#ff6600'; ctx.shadowBlur = 15;
       ctx.fillRect(-s/4, -s/4, s/6, s/6);
       ctx.fillRect(s/12, -s/4, s/6, s/6);
       ctx.shadowBlur = 0;
+      break;
+    case 'azazel':
+      // AZAZEL - BOSS FINAL
+      // Capa vermelha
+      ctx.fillStyle = isHit ? color : AZAZEL_DARK;
+      ctx.beginPath();
+      ctx.moveTo(-s/2, -s/2); ctx.lineTo(-s/2 - 15, s/2 + 15);
+      ctx.lineTo(s/2 + 15, s/2 + 15); ctx.lineTo(s/2, -s/2);
+      ctx.closePath(); ctx.fill(); ctx.stroke();
+      // Corpo
+      ctx.fillStyle = isHit ? color : '#3a0000';
+      ctx.fillRect(-s/2 + 5, -s/2 + 5, s - 10, s - 10);
+      ctx.strokeStyle = color; ctx.strokeRect(-s/2 + 5, -s/2 + 5, s - 10, s - 10);
+      // Chifres grandes curvos
+      ctx.strokeStyle = '#000'; ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.moveTo(-s/4, -s/2 + 5);
+      ctx.bezierCurveTo(-s/2, -s/2 - 15, -s/2 - 10, -s/2 - 20, -s/2 - 5, -s/2 - 25);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(s/4, -s/2 + 5);
+      ctx.bezierCurveTo(s/2, -s/2 - 15, s/2 + 10, -s/2 - 20, s/2 + 5, -s/2 - 25);
+      ctx.stroke();
+      // 4 olhos vermelhos
+      ctx.fillStyle = '#ff0000';
+      ctx.shadowColor = '#ff0000'; ctx.shadowBlur = 20;
+      const eyeBlink = Math.floor(Date.now() / 300) % 4 === 0;
+      if (!eyeBlink) {
+        ctx.beginPath(); ctx.arc(-8, -6, 3, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(8, -6, 3, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(-8, 2, 2, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(8, 2, 2, 0, Math.PI * 2); ctx.fill();
+      } else {
+        ctx.fillRect(-10, -5, 4, 2);
+        ctx.fillRect(6, -5, 4, 2);
+      }
+      ctx.shadowBlur = 0;
+      // Boca com presas
+      ctx.fillStyle = '#000';
+      ctx.fillRect(-8, 8, 16, 6);
+      ctx.fillStyle = color;
+      for (let i = 0; i < 4; i++) {
+        ctx.beginPath();
+        ctx.moveTo(-8 + i * 4, 8);
+        ctx.lineTo(-6 + i * 4, 13);
+        ctx.lineTo(-4 + i * 4, 8);
+        ctx.closePath(); ctx.fill();
+      }
+      // Coroa de espinhos
+      ctx.strokeStyle = '#666'; ctx.lineWidth = 2;
+      for (let k = 0; k < 5; k++) {
+        const ax = -s/2 + (s/4) * k;
+        ctx.beginPath();
+        ctx.moveTo(ax, -s/2 + 5);
+        ctx.lineTo(ax + 2, -s/2 - 5);
+        ctx.stroke();
+      }
       break;
   }
 
@@ -3313,12 +3743,6 @@ function drawEnemy(e) {
   for (let i = 0; i < filled; i++) {
     ctx.fillRect(e.x - w/2 + i * (w/segs), barY, (w / segs) - 1, h);
   }
-  if (isRevived) {
-    ctx.fillStyle = KNIGHT_COL;
-    ctx.font = 'bold 10px VT323, monospace';
-    ctx.textAlign = 'center';
-    ctx.fillText('👻', e.x, barY - 5);
-  }
 }
 
 // ============ HELPERS ============
@@ -3333,11 +3757,8 @@ function bazookaExplosion(x, y, damage, radius, split) {
     const falloff = 1 - (dist / radius) * 0.6;
     damageEnemy(e, Math.floor(damage * falloff));
   }
-  // Bats também tomam dano
   for (const b of bats) {
-    if (Math.hypot(b.x - x, b.y - y) <= radius) {
-      b.hp -= Math.floor(damage * 0.8);
-    }
+    if (Math.hypot(b.x - x, b.y - y) <= radius) b.hp -= Math.floor(damage * 0.8);
   }
 }
 function findCorrectWaypointForPosition(x, y) {
@@ -3385,6 +3806,7 @@ function bossFinalExplosion(x, y, color, doDamage) {
         const idx = towers.indexOf(t);
         if (idx >= 0) towers.splice(idx, 1);
         if (t.isHealer) healPlayer(5);
+        if (t.isCruzado) cruzadoDeath(t.x, t.y);
       }
     }
     updateGameUI();
@@ -3400,16 +3822,16 @@ function omegaMissileExplode(x, y, damage, radius) {
     let dmg = damage;
     if (t.isProtected) dmg = Math.floor(dmg * (1 - t.protReduction));
     t.hp -= dmg;
-    addText(t.x, t.y - 15, '-' + dmg, OMEGA_COL, 45);
     if (t.hp <= 0) {
       const idx = towers.indexOf(t);
       if (idx >= 0) towers.splice(idx, 1);
+      if (t.isCruzado) cruzadoDeath(t.x, t.y);
     }
   }
   updateGameUI();
 }
 
-// ============ UI SCREENS ============
+// ============ UI ============
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   if (id) document.getElementById(id).classList.add('active');
@@ -3426,21 +3848,38 @@ function showMenu() {
   document.getElementById('soundBtn').style.display = 'none';
   document.body.classList.remove('mode-pc', 'mode-mobile');
   gameMode = null;
+  victory = false;
   updateMenuCrystals();
   showScreen('menu');
+}
+function showVictoryScreen() {
+  document.getElementById('vWaves').textContent = waveNum;
+  document.getElementById('vCrystals').textContent = crystalsEarnedThisRun;
+  document.getElementById('game').style.display = 'none';
+  document.getElementById('titleBar').style.display = 'none';
+  document.getElementById('mapInfoBar').style.display = 'none';
+  document.getElementById('soundBtn').style.display = 'none';
+  document.body.classList.remove('mode-pc', 'mode-mobile');
+  Sound.victory();
+  showScreen('victoryScreen');
 }
 function buildDeckGrid() {
   const grid = document.getElementById('deckGrid');
   grid.innerHTML = '';
   const allTypes = [...TOWER_ORDER];
   if (lordUnlocked) allTypes.push('lord');
+  if (cruzadoUnlocked) allTypes.push('cruzado');
   for (const type of allTypes) {
     const def = TOWER_TYPES[type];
-    const lvl = type === 'lord' ? 3 : (stars[type] || 0);
+    const lvl = (type === 'lord' || type === 'cruzado') ? 3 : (stars[type] || 0);
     const card = document.createElement('button');
     card.className = 'deck-card';
+    if (type === 'cruzado') card.classList.add('cruzado');
     card.dataset.type = type;
-    const starTxt = type === 'lord' ? '👑 ' : ('⭐'.repeat(lvl) + ' ');
+    let starTxt = '';
+    if (type === 'lord') starTxt = '👑 ';
+    else if (type === 'cruzado') starTxt = '✝️ ';
+    else starTxt = '⭐'.repeat(lvl) + ' ';
     card.innerHTML = `
       <div class="card-name">${starTxt}${def.name}</div>
       <div class="card-cost">💰 ${def.cost === 400 && type === 'comerciante' ? '400+' : def.cost}</div>
@@ -3456,9 +3895,9 @@ function toggleDeckCard(type, card) {
   if (idx >= 0) {
     selectedDeck.splice(idx, 1); card.classList.remove('selected');
   } else {
-    if (type !== 'lord') {
-      const nonLordCount = selectedDeck.filter(t => t !== 'lord').length;
-      if (nonLordCount >= DECK_SIZE) { showMsg('> DECK CHEIO (8/8)'); Sound.error(); return; }
+    if (type !== 'lord' && type !== 'cruzado') {
+      const nonSpecialCount = selectedDeck.filter(t => t !== 'lord' && t !== 'cruzado').length;
+      if (nonSpecialCount >= DECK_SIZE) { showMsg('> DECK CHEIO (8/8)'); Sound.error(); return; }
     }
     selectedDeck.push(type); card.classList.add('selected');
   }
@@ -3466,17 +3905,16 @@ function toggleDeckCard(type, card) {
   updateDeckUI(); saveDeck();
 }
 function updateDeckUI() {
-  const nonLordCount = selectedDeck.filter(t => t !== 'lord').length;
-  document.getElementById('deckCount').textContent = nonLordCount;
+  const nonSpecialCount = selectedDeck.filter(t => t !== 'lord' && t !== 'cruzado').length;
+  document.getElementById('deckCount').textContent = nonSpecialCount;
   const info = document.getElementById('deckInfo');
-  if (nonLordCount === DECK_SIZE) info.classList.add('full');
+  if (nonSpecialCount === DECK_SIZE) info.classList.add('full');
   else info.classList.remove('full');
-  document.getElementById('btnDeckStart').disabled = nonLordCount !== DECK_SIZE;
+  document.getElementById('btnDeckStart').disabled = nonSpecialCount !== DECK_SIZE;
 }
 function showDeck() {
   showScreen('deckScreen');
   selectedDeck = loadDeck();
-  if (selectedDeck.length > DECK_SIZE + 1) selectedDeck = selectedDeck.slice(0, DECK_SIZE);
   buildDeckGrid();
   updateDeckUI();
   Sound.select();
@@ -3498,27 +3936,9 @@ function buildUpgradeGrid() {
     else if (lvl === 2) { btnTxt = '3 ESTRELAS — 100💎'; btnDisabled = crystals < 100; }
     else { btnTxt = '⭐ MAX ⭐'; btnDisabled = true; }
 
-    let statsHtml = `<div>HP: ${cur.hp}`;
-    if (next) statsHtml += ` <span class="next">→ ${next.hp}</span>`;
-    statsHtml += `</div>`;
-    if (def.isHealer) {
-      statsHtml += `<div>CURA: ${cur.heal}`;
-      if (next) statsHtml += ` → ${next.heal}`;
-      statsHtml += `</div>`;
-    } else if (def.isMerchant) {
-      statsHtml += `<div>OURO: +${cur.income}</div>`;
-    } else if (def.isDefensor) {
-      statsHtml += `<div>REDUÇÃO: ${Math.round(cur.reduction * 100)}%</div>`;
-    } else if (def.isParadox) {
-      statsHtml += `<div>DURAÇÃO: ${(cur.duration / 60).toFixed(1)}s</div>`;
-    } else if (cur.damage !== undefined) {
-      statsHtml += `<div>DANO: ${cur.damage}`;
-      if (next) statsHtml += ` → ${next.damage}`;
-      statsHtml += `</div>`;
-    }
-    statsHtml += `<div>ALC: ${(cur.range / 16).toFixed(1)}m`;
-    if (next) statsHtml += ` → ${(next.range / 16).toFixed(1)}m`;
-    statsHtml += `</div>`;
+    let statsHtml = `<div>HP: ${cur.hp}</div>`;
+    if (cur.damage !== undefined) statsHtml += `<div>DANO: ${cur.damage}</div>`;
+    statsHtml += `<div>ALC: ${(cur.range / 16).toFixed(1)}m</div>`;
 
     card.innerHTML = `
       <div class="u-name"><span>${def.name}</span><span class="u-stars">${starsText}</span></div>
@@ -3614,8 +4034,9 @@ function startGame() {
   document.body.classList.remove('mode-pc', 'mode-mobile');
   document.body.classList.add('mode-' + gameMode);
 
-  gold = 100; waveNum = 0; paused = false; gameOver = false;
+  gold = 100; waveNum = 0; paused = false; gameOver = false; victory = false;
   playerHp = PLAYER_MAX_HP;
+  crystalsEarnedThisRun = 0;
   towers.length = 0; enemies.length = 0; bullets.length = 0;
   missiles.length = 0; explosions.length = 0; particles.length = 0;
   trails.length = 0; texts.length = 0; shockwaves.length = 0;
@@ -3623,9 +4044,11 @@ function startGame() {
   crystalPops.length = 0; healZones.length = 0; flames.length = 0;
   teslaBolts.length = 0; paradoxZones.length = 0; airTrails.length = 0;
   lordAuras.length = 0; webProjectiles.length = 0; poisonClouds.length = 0;
-  barrils.length = 0; petrifyCones.length = 0; medusaWaves.length = 0;
+  barrils.length = 0; medusaWaves.length = 0;
   bats.length = 0; vampireRays.length = 0; pentagrams.length = 0;
-  omegaMissiles.length = 0; omegaBeams.length = 0; debris.length = 0; reviveAuras.length = 0;
+  omegaMissiles.length = 0; omegaBeams.length = 0; debris.length = 0;
+  azazelBeams.length = 0; azazelThunders.length = 0; azazelShockwaves.length = 0;
+  cruzadoTornados.length = 0; cruzadoSacreds.length = 0; cruzadoBeams.length = 0;
   waveQueue = []; waveActive = false;
   waveComplete = false; waveTransitionTimer = 0;
   curseActive = false; curseWavesLeft = 0;
@@ -3643,12 +4066,14 @@ function buildTroopsShop() {
   grid.innerHTML = '';
   for (const type of selectedDeck) {
     const def = TOWER_TYPES[type];
-    const lvl = type === 'lord' ? 3 : (stars[type] || 0);
+    const lvl = (type === 'lord' || type === 'cruzado') ? 3 : (stars[type] || 0);
     const btn = document.createElement('button');
-    btn.className = 'tower-btn' + (type === 'lord' ? ' lord' : '');
+    btn.className = 'tower-btn';
+    if (type === 'lord') btn.classList.add('lord');
+    if (type === 'cruzado') btn.classList.add('cruzado');
     btn.dataset.type = type;
     btn.innerHTML = `
-      <span class="star-badge">${type === 'lord' ? '👑' : (lvl > 0 ? '⭐'.repeat(lvl) : '')}</span>
+      <span class="star-badge">${type === 'lord' ? '👑' : (type === 'cruzado' ? '✝️' : (lvl > 0 ? '⭐'.repeat(lvl) : ''))}</span>
       ${def.name} · <span class="cost-line" data-cost="${type}">${def.cost}</span>
       <div class="stat-line">${def.desc}</div>
     `;
@@ -3662,7 +4087,7 @@ function buildTroopsShop() {
   }
 }
 
-// ============ SECRET ZONE ============
+// SECRET ZONE
 document.getElementById('secretBtn').addEventListener('click', () => {
   Sound.select();
   document.getElementById('secretModal').classList.add('active');
@@ -3695,6 +4120,10 @@ document.getElementById('adminUnlockLord').addEventListener('click', () => {
   lordUnlocked = true; saveLordUnlocked(true); Sound.upgrade();
   showMsg('> 👑 LORD DESBLOQUEADO');
 });
+document.getElementById('adminUnlockCruzado').addEventListener('click', () => {
+  cruzadoUnlocked = true; saveCruzadoUnlocked(true); Sound.upgrade();
+  showMsg('> ✝️ CRUZADO DESBLOQUEADO');
+});
 document.getElementById('adminResetCrystals').addEventListener('click', () => {
   if (confirm('Resetar cristais?')) { crystals = 0; saveCrystals(0); updateMenuCrystals(); showMsg('> CRISTAIS RESETADOS'); }
 });
@@ -3707,6 +4136,7 @@ document.getElementById('adminResetAll').addEventListener('click', () => {
     for (const t of TOWER_ORDER) stars[t] = 0;
     saveStars(stars);
     lordUnlocked = false; saveLordUnlocked(false);
+    cruzadoUnlocked = false; saveCruzadoUnlocked(false);
     customMaps = []; saveCustomMaps([]);
     updateMenuCrystals(); showMsg('> TUDO RESETADO');
   }
@@ -3721,7 +4151,7 @@ document.getElementById('adminMyMaps').addEventListener('click', () => {
   showMsg('> ' + customMaps.length + ' MAPA(S) SALVO(S)');
 });
 
-// ============ EDITOR ============
+// EDITOR
 let editorPath = [], editorIsDrawing = false, editingMapIndex = -1;
 const editorCanvas = document.getElementById('editorCanvas');
 const editorCtx = editorCanvas.getContext('2d');
@@ -3850,7 +4280,14 @@ document.getElementById('btnLoadCustomMap').addEventListener('click', () => {
 document.getElementById('btnMapSelectStart').addEventListener('click', () => { if (selectedMap) startGame(); });
 document.getElementById('btnMapSelectBack').addEventListener('click', () => { showDeck(); });
 
-// ============ SOUND BTN ============
+// VICTORY EVENTS
+document.getElementById('btnVictoryMenu').addEventListener('click', () => { showMenu(); });
+document.getElementById('btnVictoryDeck').addEventListener('click', () => {
+  showScreen(null);
+  showDeck();
+});
+
+// SOUND
 const soundBtn = document.getElementById('soundBtn');
 soundBtn.addEventListener('click', () => {
   Sound.init();
@@ -3861,7 +4298,7 @@ soundBtn.addEventListener('click', () => {
 });
 document.addEventListener('pointerdown', () => { Sound.init(); Sound.resume(); }, { once: true });
 
-// ============ MENU EVENTS ============
+// MENU EVENTS
 document.querySelectorAll('.mode-btn[data-mode]').forEach(btn => {
   btn.addEventListener('click', () => { gameMode = btn.dataset.mode; showDeck(); });
 });
@@ -3875,8 +4312,8 @@ document.getElementById('btnDeckClear').addEventListener('click', () => {
 document.getElementById('btnDeckBack').addEventListener('click', () => showMenu());
 document.getElementById('btnDeckUpgrade').addEventListener('click', () => showUpgrade());
 document.getElementById('btnDeckStart').addEventListener('click', () => {
-  const nonLordCount = selectedDeck.filter(t => t !== 'lord').length;
-  if (nonLordCount !== DECK_SIZE) return;
+  const nonSpecialCount = selectedDeck.filter(t => t !== 'lord' && t !== 'cruzado').length;
+  if (nonSpecialCount !== DECK_SIZE) return;
   showMapSelect();
 });
 document.getElementById('btnUpgradeBack').addEventListener('click', () => showDeck());
